@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 42" width="240" height="42" role="img" aria-label="Dr. Rao Clinic">
+  <g transform="translate(30.5 0)">
+    <path d="M17.5 9h7v8.5H33v7h-8.5V33h-7v-8.5H9v-7h8.5z" fill="#ffffff"/>
+    <text x="48" y="27.5" font-family="Outfit, Inter, system-ui, sans-serif" font-size="17"
+          font-weight="700" letter-spacing="-0.3" fill="#ffffff">Dr. Rao Clinic</text>
+  </g>
+</svg>

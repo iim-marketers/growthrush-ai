@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 42" width="240" height="42" role="img" aria-label="QuickFix">
+  <g transform="translate(58.6 0)">
+    <path d="M29 11a7 7 0 0 0-9.4 9.4L10 30l3 3 9.6-9.6A7 7 0 0 0 32 14l-4 4-4-4z" fill="#ffffff"/>
+    <text x="48" y="27.5" font-family="Outfit, Inter, system-ui, sans-serif" font-size="17"
+          font-weight="700" letter-spacing="-0.3" fill="#ffffff">QuickFix</text>
+  </g>
+</svg>

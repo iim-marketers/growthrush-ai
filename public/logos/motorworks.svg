@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 42" width="240" height="42" role="img" aria-label="MotorWorks">
+  <g transform="translate(49.2 0)">
+    <circle cx="21" cy="21" r="6" stroke="#ffffff" fill="none" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/><g stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"><path d="M21 7v5M21 30v5M7 21h5M30 21h5M11 11l3.5 3.5M27.5 27.5 31 31M31 11l-3.5 3.5M14.5 27.5 11 31"/></g>
+    <text x="48" y="27.5" font-family="Outfit, Inter, system-ui, sans-serif" font-size="17"
+          font-weight="700" letter-spacing="-0.3" fill="#ffffff">MotorWorks</text>
+  </g>
+</svg>

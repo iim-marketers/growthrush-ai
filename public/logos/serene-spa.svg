@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 42" width="240" height="42" role="img" aria-label="Serene Spa">
+  <g transform="translate(49.2 0)">
+    <path d="M31 11c0 12-7 19-17 19 0-12 7-19 17-19z" fill="#ffffff"/><path d="M14 31 26 17" stroke="#050814" stroke-width="2.2" stroke-linecap="round"/>
+    <text x="48" y="27.5" font-family="Outfit, Inter, system-ui, sans-serif" font-size="17"
+          font-weight="700" letter-spacing="-0.3" fill="#ffffff">Serene Spa</text>
+  </g>
+</svg>

@@ -1,0 +1,279 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ------------------------------------------------------------------
+   growthrush.ai design tokens
+   ------------------------------------------------------------------ */
+:root {
+  /* brand surface */
+  --bg-color: #050814;
+  --card-bg: #060d1d;
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --border-color: #1a2437;
+  --brand: #5b7fff;
+  --brand-soft: #a8c0ff;
+  --orange: #f97316;
+  --purple: #7e22ce;
+  --success: #10b981;
+  --danger: #ef4444;
+  --cyan: #5bc5f8;
+
+  /* Vertical spacing scale — compacted on short viewports further down. */
+  --screen-pad-y: 1.5rem;
+  --panel-pad-y: 2rem;
+  --panel-pad-y-roomy: 2.5rem;
+  --panel-pad-x-roomy: 1.25rem;
+  --rhythm-lg: 2rem;
+  --rhythm-md: 1.5rem;
+
+  /* shadcn tokens, remapped onto the brand palette */
+  --radius: 0.75rem;
+  --background: var(--bg-color);
+  --foreground: var(--text-primary);
+  --card: var(--card-bg);
+  --card-foreground: var(--text-primary);
+  --popover: #0a0f24;
+  --popover-foreground: var(--text-primary);
+  --primary: var(--brand);
+  --primary-foreground: #ffffff;
+  --secondary: rgba(255, 255, 255, 0.06);
+  --secondary-foreground: var(--text-primary);
+  --muted: rgba(255, 255, 255, 0.05);
+  --muted-foreground: var(--text-secondary);
+  --accent: rgba(91, 127, 255, 0.12);
+  --accent-foreground: var(--brand);
+  --destructive: var(--danger);
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: var(--brand);
+  --chart-1: #5b7fff;
+  --chart-2: #a855f7;
+  --chart-3: #f97316;
+  --chart-4: #10b981;
+  --chart-5: #ef4444;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* brand-named utilities: bg-brand, text-brand, border-brand … */
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-ink: var(--text-primary);
+  --color-subtle: var(--text-secondary);
+  --color-faint: var(--text-muted);
+  --color-hairline: var(--border-color);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-orange: var(--orange);
+  --color-grape: var(--purple);
+  --color-cyan-glow: var(--cyan);
+
+  --font-sans: var(--font-inter), "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-outfit), "Outfit", system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-outfit), "Outfit", system-ui, sans-serif;
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+
+  --animate-pulse-soft: pulse-soft 3s ease-in-out infinite;
+  --animate-slide-up: slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    /* Reserve the scrollbar gutter on every route so the centred shell does not
+       shift sideways when navigating between short and tall screens. */
+    scrollbar-gutter: stable;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    line-height: 1.5;
+    -webkit-tap-highlight-color: transparent;
+  }
+  h1,
+  h2 {
+    @apply font-display font-extrabold tracking-tight;
+  }
+}
+
+@layer utilities {
+  /*
+   * Full-bleed shell. Each screen sets its own max width per breakpoint.
+   * `clip` rather than `hidden`: `overflow-x: hidden` forces `overflow-y: auto`,
+   * which would turn the shell into a scroll container and surface a scrollbar
+   * for any decorative overflow. `clip` trims without scrolling.
+   */
+  .app-shell {
+    @apply relative min-h-dvh w-full bg-background;
+    overflow-x: clip;
+  }
+
+  /* Frosted panel the login screen sits in. */
+  .glass-panel {
+    @apply relative z-[1] flex w-full flex-col rounded-[1.25rem] border;
+    padding: var(--panel-pad-y) 1.5rem;
+    background: rgba(6, 13, 29, 0.6);
+    border-color: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Login uses a slightly roomier version of the same panel. */
+  .glass-panel-roomy {
+    padding: var(--panel-pad-y-roomy) var(--panel-pad-x-roomy);
+  }
+
+  /*
+   * Vertical rhythm. These collapse on short viewports (see the max-height
+   * query below) so a screen that nearly fits a laptop window stops
+   * triggering a scrollbar over a handful of pixels.
+   */
+  .rhythm-lg {
+    margin-bottom: var(--rhythm-lg);
+  }
+  .rhythm-md {
+    margin-bottom: var(--rhythm-md);
+  }
+
+  /* Outer breathing room around a centred screen. */
+  .screen-pad-y {
+    padding-block: var(--screen-pad-y);
+  }
+
+  /* Soft radial glows behind the glass panels. */
+  .glow {
+    @apply pointer-events-none absolute z-0 rounded-full;
+    width: clamp(260px, 45vw, 620px);
+    height: clamp(260px, 45vw, 620px);
+  }
+
+  .btn-glow {
+    box-shadow: 0 4px 14px rgba(91, 127, 255, 0.39);
+  }
+  .btn-glow:hover {
+    box-shadow: 0 6px 20px rgba(91, 127, 255, 0.5);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Short viewports (most laptop windows). Tightens the vertical rhythm so
+   screens fit without a scrollbar appearing over a few pixels of overflow.
+   ------------------------------------------------------------------ */
+@media (max-height: 800px) {
+  :root {
+    --panel-pad-y: 1.25rem;
+    --panel-pad-y-roomy: 1.5rem;
+    --rhythm-lg: 1.25rem;
+    --rhythm-md: 1rem;
+  }
+}
+
+/* Wider phones and up: the panel can afford more horizontal padding. */
+@media (min-width: 400px) {
+  :root {
+    --panel-pad-x-roomy: 1.75rem;
+  }
+}
+
+@media (min-width: 640px) {
+  :root {
+    --screen-pad-y: 3rem;
+  }
+}
+
+/* Very short viewports (small phones, landscape). Squeeze the rhythm further. */
+@media (max-height: 640px) {
+  :root {
+    --screen-pad-y: 0.75rem;
+    --panel-pad-y: 1rem;
+    --panel-pad-y-roomy: 1.125rem;
+    --rhythm-lg: 1rem;
+    --rhythm-md: 0.75rem;
+  }
+}
+
+/*
+ * Landscape phones. Too little height for the full stack, so tighten hard and
+ * drop the in-card logo — the heading carries the context there.
+ */
+@media (max-height: 480px) {
+  :root {
+    --screen-pad-y: 0.5rem;
+    --panel-pad-y-roomy: 0.875rem;
+    --rhythm-lg: 0.625rem;
+    --rhythm-md: 0.5rem;
+  }
+  .hide-on-short {
+    display: none;
+  }
+}
+
+/* Honour the OS "reduce motion" setting for the ambient animations. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

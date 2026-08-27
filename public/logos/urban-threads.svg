@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 42" width="240" height="42" role="img" aria-label="Urban Threads">
+  <g transform="translate(35.2 0)">
+    <rect x="10" y="10" width="22" height="22" rx="5" stroke="#ffffff" fill="none" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/><rect x="17" y="17" width="8" height="8" rx="2" fill="#ffffff"/>
+    <text x="48" y="27.5" font-family="Outfit, Inter, system-ui, sans-serif" font-size="17"
+          font-weight="700" letter-spacing="-0.3" fill="#ffffff">Urban Threads</text>
+  </g>
+</svg>
