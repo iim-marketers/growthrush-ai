@@ -140,27 +140,6 @@ export const features = [
   },
 ] as const;
 
-export const results = [
-  {
-    business: "Sharma Coaching Classes",
-    city: "Kolkata",
-    metric: "6 → 120",
-    caption: "leads per month in the first quarter",
-  },
-  {
-    business: "Glow & Co. Salon",
-    city: "Pune",
-    metric: "₹142",
-    caption: "average cost per booked appointment",
-  },
-  {
-    business: "Apex Fitness",
-    city: "Jaipur",
-    metric: "3.1x",
-    caption: "return on ad spend across 90 days",
-  },
-] as const;
-
 export const testimonials = [
   {
     quote:

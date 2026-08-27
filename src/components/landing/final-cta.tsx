@@ -9,7 +9,10 @@ export function FinalCta() {
     <section className="px-4 pb-20 sm:px-6 sm:pb-28 lg:px-8">
       <Reveal className="mx-auto w-full max-w-5xl">
         <div className="relative overflow-hidden rounded-3xl border border-white/10 px-6 py-16 text-center sm:px-12 sm:py-20">
-          <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+          <div
+            className="pointer-events-none absolute inset-0 overflow-hidden"
+            aria-hidden
+          >
             <div
               className="absolute top-1/2 left-1/2 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full"
               style={{
@@ -24,8 +27,8 @@ export function FinalCta() {
               Your competitors are already running ads
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-base text-subtle sm:text-lg">
-              Find out how many customers you are missing this month — free, and it takes
-              under a minute.
+              Find out how many customers you are missing this month — free, and
+              it takes under a minute.
             </p>
             <Link
               href="/login"

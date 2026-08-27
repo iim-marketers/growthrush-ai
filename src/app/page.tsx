@@ -6,6 +6,7 @@ import { Features } from "@/components/landing/features";
 import { CaseStudies } from "@/components/landing/case-studies";
 import { Results } from "@/components/landing/results";
 import { Faq } from "@/components/landing/faq";
+import { Closing } from "@/components/landing/closing";
 
 export const metadata: Metadata = {
   // No `title` here on purpose: `title.template` in the root layout only applies
@@ -26,6 +27,7 @@ export default function LandingPage() {
         <CaseStudies />
         <Results />
         <Faq />
+        <Closing />
       </main>
     </>
   );
