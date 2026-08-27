@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { Logo } from "@/components/logo";
+import { ScrollLink } from "@/components/scroll-link";
 import { hero, heroStats } from "@/lib/landing-data";
 
 export function Hero() {
@@ -33,8 +34,8 @@ export function Hero() {
       <div className="relative mx-auto w-full max-w-6xl px-4 text-center sm:px-6 lg:px-8">
         <Logo size="sm" className="animate-slide-up mb-12 justify-center" />
 
-        <a
-          href="#how-it-works"
+        <ScrollLink
+          targetId="how-it-works"
           style={{ animationDelay: "0s" }}
           className="animate-slide-up inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold text-subtle backdrop-blur-sm transition-colors hover:border-white/20 hover:text-ink sm:text-sm"
         >
@@ -43,7 +44,7 @@ export function Hero() {
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
           </span>
           {hero.eyebrow}
-        </a>
+        </ScrollLink>
 
         <h1
           style={{ animationDelay: "0.06s" }}
@@ -77,12 +78,12 @@ export function Hero() {
               className="transition-transform group-hover:translate-x-1"
             />
           </Link>
-          <a
-            href="#how-it-works"
+          <ScrollLink
+            targetId="how-it-works"
             className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/12 bg-white/5 px-7 py-4 font-display text-base font-bold text-ink transition-colors hover:border-white/25 hover:bg-white/10 sm:w-auto sm:text-lg"
           >
             {hero.secondaryCta}
-          </a>
+          </ScrollLink>
         </div>
 
         {/* <p
