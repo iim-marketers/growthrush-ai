@@ -10,7 +10,7 @@ import { showcaseBrands } from "@/lib/landing-data";
  */
 export function LogoGrid() {
   return (
-    <section className="border-y border-white/10 bg-white/[0.02] py-12 sm:py-16">
+    <section className="border-y border-white/10 bg-white/[0.02] py-12 md:py-16">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <Reveal className="text-center">
           <h2 className="text-[clamp(1.35rem,1rem+1.3vw,2rem)] leading-tight">

@@ -7,7 +7,7 @@ import { caseStudies } from "@/lib/landing-data";
 
 export function CaseStudies() {
   return (
-    <section id="results" className="scroll-mt-16 py-12 sm:py-16">
+    <section id="results" className="scroll-mt-16 pt-6 pb-12 md:py-16">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
           <SectionLabel>Results</SectionLabel>

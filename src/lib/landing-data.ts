@@ -1,17 +1,9 @@
-/**
- * Copy for the marketing page.
- *
- * NOTE: the businesses, metrics and testimonials below are illustrative
- * placeholders for the static build — not real customers or verified results.
- * Swap them for genuine, substantiated figures before this goes live.
- */
-
 export const hero = {
   eyebrow: "AI-run Meta ads for local businesses",
   title: "More customers.",
   titleAccent: "Zero ad agencies.",
   subtitle:
-    "growthrush.ai writes the copy, designs the creatives and runs your Instagram & Facebook ads — then delivers ready-to-buy leads straight to your WhatsApp.",
+    "growthrush.ai writes the copy, designs the creatives and runs your Facebook ads — then delivers ready-to-buy leads straight to your WhatsApp.",
   primaryCta: "Get Started",
   secondaryCta: "See how it works",
   note: "No card needed · Live in under 10 minutes",
@@ -23,11 +15,6 @@ export const heroStats = [
   { value: "₹300", label: "Minimum daily ad budget" },
 ] as const;
 
-/**
- * Logo wall — a static grid, 7 columns on desktop (mirroring the reference).
- * Files live in `public/logos/`. These are invented businesses, not real
- * customers: replace the SVGs (keeping the filenames) with genuine client logos.
- */
 export const showcaseBrands = [
   { name: "Sharma Coaching", src: "/logos/sharma-coaching.svg" },
   { name: "Glow &amp; Co.", src: "/logos/glow-co.svg" },
@@ -246,17 +233,14 @@ export const faqs = [
     a: "Most campaigns go live the same day. Meta's delivery typically stabilises within 48–72 hours, and that is when cost per lead starts settling.",
   },
   {
-    q: "What if the ads do not work for my business?",
-    a: "There is a 30-day results guarantee and you can cancel anytime. No lock-in and no notice period.",
-  },
-  {
     q: "Do I have to approve the ads before they run?",
     a: "Yes. You see every creative and headline before anything goes live, and you can request changes at any point.",
   },
 ] as const;
 
 export const footer = {
-  tagline: "AI-run Instagram & Facebook ads that send leads straight to your WhatsApp.",
+  tagline:
+    "AI-run Instagram & Facebook ads that send leads straight to your WhatsApp.",
   columns: [
     {
       title: "Product",

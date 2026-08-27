@@ -5,7 +5,7 @@ import { steps } from "@/lib/landing-data";
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="scroll-mt-24 py-12 sm:py-16">
+    <section id="how-it-works" className="scroll-mt-24 py-12 md:py-16">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
           <SectionLabel>How it works</SectionLabel>

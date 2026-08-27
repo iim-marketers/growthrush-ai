@@ -85,12 +85,12 @@ export function Hero() {
           </a>
         </div>
 
-        <p
+        {/* <p
           style={{ animationDelay: "0.3s" }}
           className="animate-slide-up mt-4 text-sm text-faint"
         >
           {hero.note}
-        </p>
+        </p> */}
 
         {/* Product glimpse: the lead notification this whole thing produces. */}
         <div
