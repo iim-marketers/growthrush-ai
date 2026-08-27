@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Reveal, Stagger, StaggerItem } from "./motion-primitives";
-import { Frame } from "./frame";
+import { Frame, cardRail, cardRailItem } from "./frame";
 import { SectionLabel } from "./how-it-works";
 import { caseStudies } from "@/lib/landing-data";
 
@@ -12,19 +12,19 @@ export function CaseStudies() {
     <Frame locked id="results">
       <Reveal className="mx-auto max-w-2xl text-center">
         <SectionLabel>Results</SectionLabel>
-        <h2 className="mt-4 text-[clamp(1.75rem,1.2rem+2.2vw,2.75rem)] leading-tight">
+        <h2 className="mt-3 text-[clamp(1.75rem,1.2rem+2.2vw,2.75rem)] leading-tight sm:mt-4">
           Real businesses, real enquiries
         </h2>
-        <p className="mt-4 text-base text-subtle sm:text-lg">
+        <p className="mt-3 text-base text-subtle sm:mt-4 sm:text-lg">
           Not impressions. Not reach. Leads you can actually call back.
         </p>
       </Reveal>
 
-      <Stagger className="mt-10 grid gap-5 md:grid-cols-3">
+      <Stagger className={`mt-8 gap-5 sm:mt-10 md:grid-cols-3 ${cardRail}`}>
         {caseStudies.map((study) => (
-          <StaggerItem key={study.business}>
+          <StaggerItem key={study.business} className={cardRailItem}>
             <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-card/60 backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-brand/30">
-              <div className="relative aspect-[16/10] overflow-hidden">
+              <div className="relative aspect-[16/9] overflow-hidden sm:aspect-[16/10]">
                 <Image
                   src={study.image}
                   alt=""
@@ -46,14 +46,14 @@ export function CaseStudies() {
                 </div>
               </div>
 
-              <div className="flex flex-1 flex-col p-5 sm:p-6">
+              <div className="flex flex-1 flex-col p-4 sm:p-6">
                 <h3 className="text-lg leading-snug font-bold text-ink">
                   {study.headline}
                 </h3>
-                <p className="mt-2.5 flex-1 text-sm leading-relaxed text-subtle">
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-subtle sm:mt-2.5">
                   {study.body}
                 </p>
-                <div className="mt-4 border-t border-white/10 pt-4">
+                <div className="mt-3 border-t border-white/10 pt-3 sm:mt-4 sm:pt-4">
                   <p className="text-sm font-bold text-ink">{study.business}</p>
                   <p className="text-xs text-faint">{study.city}</p>
                 </div>

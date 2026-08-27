@@ -1,7 +1,7 @@
 "use client";
 
 import { Reveal, Stagger, StaggerItem } from "./motion-primitives";
-import { Frame } from "./frame";
+import { Frame, cardRail, cardRailItem } from "./frame";
 import { SectionLabel } from "./how-it-works";
 import { testimonials } from "@/lib/landing-data";
 
@@ -22,9 +22,9 @@ export function Results() {
         </p>
       </Reveal>
 
-      <Stagger className="mt-10 grid gap-4 md:grid-cols-3">
+      <Stagger className={`mt-10 gap-4 md:grid-cols-3 ${cardRail}`}>
         {testimonials.map((t) => (
-          <StaggerItem key={t.name}>
+          <StaggerItem key={t.name} className={cardRailItem}>
             <figure className="flex h-full flex-col rounded-2xl border border-white/10 bg-card/60 p-6 backdrop-blur-sm sm:p-7">
               <blockquote className="flex-1 text-sm leading-relaxed text-subtle">
                 &ldquo;{t.quote}&rdquo;

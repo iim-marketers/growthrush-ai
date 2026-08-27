@@ -27,7 +27,7 @@ export function LogoGrid() {
 
       <Stagger
         gap={0.03}
-        className="mt-12 grid grid-cols-3 gap-x-6 gap-y-10 sm:grid-cols-4 sm:gap-x-8 lg:grid-cols-7 lg:gap-x-6"
+        className="mt-8 grid grid-cols-4 gap-x-5 gap-y-6 sm:mt-12 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-7 lg:gap-x-6"
       >
         {showcaseBrands.map((brand) => (
           <StaggerItem
@@ -45,7 +45,7 @@ export function LogoGrid() {
         ))}
       </Stagger>
 
-      <Stagger className="mt-14 grid grid-cols-1 gap-6 border-t border-white/10 pt-10 sm:mt-16 sm:grid-cols-3">
+      <Stagger className="mt-10 grid grid-cols-1 gap-5 border-t border-white/10 pt-8 sm:mt-16 sm:gap-6 sm:pt-10 sm:grid-cols-3">
         {heroStats.map((stat) => (
           <StaggerItem key={stat.label}>
             <div className="font-display text-3xl font-extrabold text-ink sm:text-4xl">

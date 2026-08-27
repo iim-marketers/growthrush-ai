@@ -1,7 +1,7 @@
 "use client";
 
 import { Reveal, Stagger, StaggerItem } from "./motion-primitives";
-import { Frame } from "./frame";
+import { Frame, cardRail, cardRailItem } from "./frame";
 import { steps } from "@/lib/landing-data";
 
 /** Frame 3 — the mechanism, in three steps. */
@@ -18,14 +18,14 @@ export function HowItWorks() {
         </p>
       </Reveal>
 
-      <Stagger className="relative mt-14 grid gap-6 md:grid-cols-3">
+      <Stagger className={`relative mt-14 gap-6 md:grid-cols-3 ${cardRail}`}>
         {/* Connecting rule behind the cards on wide screens. */}
         <div
           className="pointer-events-none absolute top-[3.25rem] right-[16%] left-[16%] hidden h-px bg-gradient-to-r from-transparent via-white/15 to-transparent md:block"
           aria-hidden
         />
         {steps.map((step) => (
-          <StaggerItem key={step.n}>
+          <StaggerItem key={step.n} className={cardRailItem}>
             <div className="relative h-full rounded-2xl border border-white/10 bg-card/60 p-6 backdrop-blur-sm transition-colors hover:border-white/20 sm:p-7">
               <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand/12 font-display text-base font-extrabold text-brand">
                 {step.n}

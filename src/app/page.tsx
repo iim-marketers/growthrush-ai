@@ -9,8 +9,6 @@ import { Faq } from "@/components/landing/faq";
 import { Closing } from "@/components/landing/closing";
 
 export const metadata: Metadata = {
-  // No `title` here on purpose: `title.template` in the root layout only applies
-  // to child segments, so the homepage inherits the layout's `title.default`.
   description:
     "growthrush.ai writes the copy, designs the creatives and runs your Instagram & Facebook ads — then delivers ready-to-buy leads straight to your WhatsApp. Live in under 10 minutes.",
   alternates: { canonical: "/" },

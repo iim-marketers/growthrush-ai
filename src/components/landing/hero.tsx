@@ -59,7 +59,10 @@ export function Hero() {
         </div>
       }
     >
-      <Logo size="sm" className="animate-slide-up mb-6 justify-center" />
+      <Logo
+        size="sm"
+        className="animate-slide-up mb-4 justify-center sm:mb-6"
+      />
 
       <ScrollLink
         targetId="how-it-works"
@@ -116,7 +119,7 @@ export function Hero() {
       {/* Product glimpse: the lead notification this whole thing produces. */}
       <div
         style={{ animationDelay: "0.36s" }}
-        className="animate-slide-up mx-auto mt-8 max-w-md"
+        className="animate-slide-up mx-auto mt-6 max-w-md sm:mt-8"
       >
         <div className="relative rounded-2xl border border-white/10 bg-card/70 p-4 text-left shadow-[0_24px_70px_-20px_rgba(0,0,0,0.8)] backdrop-blur-xl sm:p-5">
           <div className="flex items-center gap-3">

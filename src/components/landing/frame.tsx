@@ -31,6 +31,24 @@ type FrameProps = {
 };
 
 /**
+ * A three-up card grid that becomes a swipeable rail on phones.
+ *
+ * Stacking three cards vertically is what pushed the narrative frames past one
+ * screen on mobile — the grid is the cause, not the card design. Laid out
+ * side by side the same content fits a phone screen with room to spare, and
+ * the partially visible next card is its own affordance that more exists.
+ *
+ * The snapping here is horizontal and scoped to this track. It is not the
+ * page-level vertical snap that was removed: there is no free vertical scroll
+ * for it to drag the reader back out of.
+ */
+export const cardRail =
+  "-mx-4 flex snap-x snap-mandatory overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:px-6 md:mx-0 md:grid md:overflow-visible md:px-0 md:pb-0";
+
+/** Sits on each child of a `cardRail`. */
+export const cardRailItem = "w-[82%] shrink-0 snap-center md:w-auto md:shrink";
+
+/**
  * One scroll of the landing page.
  *
  * The page is composed as a sequence of these rather than as a stack of
@@ -57,7 +75,7 @@ export function Frame({
             // threshold, which reads as the page fighting them. The frames
             // still compose as one screenful each; where the reader stops is
             // left to the reader.
-            "flex min-h-dvh flex-col [justify-content:safe_center] py-10 sm:py-12"
+            "flex min-h-dvh flex-col [justify-content:safe_center] py-8 sm:py-12"
           : "py-16 md:py-24",
         className,
       )}
