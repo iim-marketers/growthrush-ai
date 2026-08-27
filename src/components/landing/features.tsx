@@ -24,7 +24,7 @@ const icons = {
 
 export function Features() {
   return (
-    <section id="features" className="scroll-mt-16 pt-6 pb-12 md:py-16">
+    <section id="features" className="scroll-mt-16 pt-6 pb-12 md:pt-8 md:pb-16">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
           <SectionLabel>What you get</SectionLabel>
