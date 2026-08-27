@@ -5,7 +5,11 @@ import { useCallback, type AnchorHTMLAttributes, type MouseEvent } from "react";
 type ScrollLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   /** id of the section to scroll to, without the leading `#`. */
   targetId: string;
-  /** Breathing room left above the section once it lands. */
+  /**
+   * Breathing room left above the section once it lands. Defaults to 0: the
+   * landing frames are full-height with their own internal padding, so
+   * aligning their top edge to the viewport top is what fills the screen.
+   */
   offset?: number;
 };
 
@@ -16,7 +20,7 @@ type ScrollLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
  */
 export function ScrollLink({
   targetId,
-  offset = 16,
+  offset = 0,
   onClick,
   children,
   ...rest

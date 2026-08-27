@@ -47,7 +47,9 @@ export function Pricing() {
                 <p className="mt-1.5 text-sm text-subtle">{plan.desc}</p>
 
                 <div className="mt-6 flex items-baseline gap-2">
-                  <span className="text-sm text-faint line-through">{plan.oldPrice}</span>
+                  <span className="text-sm text-faint line-through">
+                    {plan.oldPrice}
+                  </span>
                   <span className="font-display text-4xl font-extrabold text-ink">
                     {plan.price}
                   </span>
@@ -56,7 +58,10 @@ export function Pricing() {
 
                 <ul className="mt-7 flex flex-1 flex-col gap-3">
                   {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3 text-sm text-subtle">
+                    <li
+                      key={feature}
+                      className="flex items-start gap-3 text-sm text-subtle"
+                    >
                       <span
                         className={cn(
                           "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
@@ -92,9 +97,9 @@ export function Pricing() {
           <div className="mt-6 flex items-start gap-3 rounded-xl border border-amber-500/25 bg-amber-500/[0.07] p-4 sm:p-5">
             <Info size={18} className="mt-0.5 shrink-0 text-amber-400" />
             <p className="text-sm leading-relaxed text-subtle">
-              <strong className="text-ink">Your ad budget is separate</strong> and stays
-              in your own account — set it from ₹300/day and change it anytime. The plan
-              fee covers creatives, targeting and management.
+              <strong className="text-ink">Your ad budget is separate</strong>{" "}
+              and stays in your own account — set it from ₹300/day and change it
+              anytime. The plan fee covers creatives, targeting and management.
             </p>
           </div>
         </Reveal>

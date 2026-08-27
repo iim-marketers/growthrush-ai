@@ -98,7 +98,8 @@
   --color-cyan-glow: var(--cyan);
 
   --font-sans: var(--font-inter), "Inter", system-ui, -apple-system, sans-serif;
-  --font-display: var(--font-outfit), "Outfit", system-ui, -apple-system, sans-serif;
+  --font-display:
+    var(--font-outfit), "Outfit", system-ui, -apple-system, sans-serif;
   --font-heading: var(--font-outfit), "Outfit", system-ui, sans-serif;
 
   --radius-sm: calc(var(--radius) * 0.6);

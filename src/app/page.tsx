@@ -5,11 +5,8 @@ import { HowItWorks } from "@/components/landing/how-it-works";
 import { Features } from "@/components/landing/features";
 import { CaseStudies } from "@/components/landing/case-studies";
 import { Results } from "@/components/landing/results";
-import { Scarcity } from "@/components/landing/scarcity";
-import { Pricing } from "@/components/landing/pricing";
 import { Faq } from "@/components/landing/faq";
-import { FinalCta } from "@/components/landing/final-cta";
-import { SiteFooter } from "@/components/landing/site-footer";
+import { Closing } from "@/components/landing/closing";
 
 export const metadata: Metadata = {
   // No `title` here on purpose: `title.template` in the root layout only applies
@@ -29,12 +26,9 @@ export default function LandingPage() {
         <Features />
         <CaseStudies />
         <Results />
-        {/* <Scarcity /> */}
-        {/* <Pricing /> */}
         <Faq />
-        {/* <FinalCta /> */}
+        <Closing />
       </main>
-      {/* <SiteFooter /> */}
     </>
   );
 }
