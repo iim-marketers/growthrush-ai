@@ -13,13 +13,15 @@ export default function LoginPage() {
         <div
           className="glow -top-[15%] -right-[10%]"
           style={{
-            background: "radial-gradient(circle, rgba(91,127,255,0.15) 0%, transparent 70%)",
+            background:
+              "radial-gradient(circle, rgba(91,127,255,0.15) 0%, transparent 70%)",
           }}
         />
         <div
           className="glow -bottom-[15%] -left-[10%]"
           style={{
-            background: "radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%)",
+            background:
+              "radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%)",
           }}
         />
       </div>
@@ -33,7 +35,11 @@ export default function LoginPage() {
 
         <div className="glass-panel glass-panel-roomy animate-slide-up w-full max-w-[26rem] shrink-0 sm:max-w-[27rem] lg:mx-0">
           {/* On lg the pitch panel carries the logo, so hide this one. */}
-          <Logo size="md" glow className="hide-on-short rhythm-lg justify-center lg:hidden" />
+          <Logo
+            size="md"
+            glow
+            className="hide-on-short rhythm-lg justify-center lg:hidden"
+          />
 
           <h1 className="mb-2 text-center text-[clamp(1.5rem,1.2rem+1.4vw,2rem)] lg:text-left">
             Welcome back
@@ -60,7 +66,7 @@ export default function LoginPage() {
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:gap-3">
-            <SocialButton label="Google">
+            <SocialButton label="Google" disabled>
               <svg viewBox="0 0 24 24" width={20} height={20} aria-hidden>
                 <path
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -80,12 +86,6 @@ export default function LoginPage() {
                 />
               </svg>
             </SocialButton>
-
-            <SocialButton label="Apple">
-              <svg viewBox="0 0 24 24" width={20} height={20} fill="currentColor" aria-hidden>
-                <path d="M17.05 20.28c-.98.68-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 13.25 3.51 5.92 9.05 5.92c1.31 0 2.27.5 3.01.5.72 0 1.95-.58 3.44-.52 1.69.07 2.85.73 3.6 1.83-3.14 1.85-2.64 5.91.43 7.02-1.02 2.37-2.12 4.41-2.48 5.53zM12.03 5.4c-.16-2.06 1.66-3.8 3.73-3.92.29 2.07-1.78 4-3.73 3.92z" />
-              </svg>
-            </SocialButton>
           </div>
         </div>
       </div>
@@ -100,10 +100,13 @@ function PitchPanel() {
       <Logo size="lg" glow />
 
       <h2 className="mt-8 text-[clamp(2rem,1.4rem+1.8vw,3rem)] leading-[1.1]">
-        {pitch.headline} <span className="text-brand">{pitch.headlineAccent}</span>.
+        {pitch.headline}{" "}
+        <span className="text-brand">{pitch.headlineAccent}</span>.
       </h2>
 
-      <p className="mt-5 max-w-lg text-lg leading-relaxed text-subtle">{pitch.body}</p>
+      <p className="mt-5 max-w-lg text-lg leading-relaxed text-subtle">
+        {pitch.body}
+      </p>
 
       <ul className="mt-8 flex flex-col gap-3">
         {pitch.points.map((point) => (
@@ -127,16 +130,21 @@ function PitchPanel() {
 }
 
 function SocialButton({
+  disabled,
   label,
   children,
 }: {
   label: string;
   children: React.ReactNode;
+  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
-      className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 py-3.5 text-base font-semibold text-ink transition-all hover:border-white/20 hover:bg-white/[0.08]"
+      className={`flex w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 py-3.5 text-base font-semibold text-ink transition-all hover:border-white/20 hover:bg-white/[0.08] ${
+        disabled ? "cursor-not-allowed opacity-50" : ""
+      }`}
+      disabled={disabled}
     >
       {children}
       {label}
