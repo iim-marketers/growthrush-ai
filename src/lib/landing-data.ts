@@ -30,13 +30,13 @@ export const showcaseBrands = [
   { name: "GreenLeaf", src: "/logos/greenleaf.svg" },
   { name: "Anand Dental", src: "/logos/anand-dental.svg" },
   { name: "FitZone 24", src: "/logos/fitzone.svg" },
-  { name: "Bella Boutique", src: "/logos/bella-boutique.svg" },
-  { name: "QuickFix", src: "/logos/quickfix.svg" },
-  { name: "Sunrise Academy", src: "/logos/sunrise-academy.svg" },
-  { name: "Cafe Mocha", src: "/logos/cafe-mocha.svg" },
-  { name: "Prime Motors", src: "/logos/prime-motors.svg" },
-  { name: "Lotus Yoga", src: "/logos/lotus-yoga.svg" },
-  { name: "TechCare", src: "/logos/techcare.svg" },
+  // { name: "Bella Boutique", src: "/logos/bella-boutique.svg" },
+  // { name: "QuickFix", src: "/logos/quickfix.svg" },
+  // { name: "Sunrise Academy", src: "/logos/sunrise-academy.svg" },
+  // { name: "Cafe Mocha", src: "/logos/cafe-mocha.svg" },
+  // { name: "Prime Motors", src: "/logos/prime-motors.svg" },
+  // { name: "Lotus Yoga", src: "/logos/lotus-yoga.svg" },
+  // { name: "TechCare", src: "/logos/techcare.svg" },
 ] as const;
 
 /**
