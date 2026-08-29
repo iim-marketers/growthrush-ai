@@ -3,12 +3,13 @@
 import Image from "next/image";
 import { Reveal, Stagger, StaggerItem } from "./motion-primitives";
 import { Frame } from "./frame";
-import { showcaseBrands, heroStats } from "@/lib/landing-data";
+import { showcaseBrands } from "@/lib/landing-data";
+import { brand as company } from "@/lib/data";
 
 /**
  * Frame 2 — credibility, which is the objection that stops most readers right
- * after the pitch. The headline stats moved here from the hero so this frame
- * answers "does this actually work, and for people like me?" in one screen.
+ * after the pitch. The headline numbers sit in the hero card now, so this
+ * frame answers the narrower question: "people like me, using this?"
  */
 export function LogoGrid() {
   return (
@@ -19,15 +20,19 @@ export function LogoGrid() {
       innerClassName="text-center"
     >
       <Reveal>
-        <h2 className="text-[clamp(1.35rem,1rem+1.3vw,2rem)] leading-tight">
-          Join other fast-growing local businesses
+        <h2 className="mx-auto max-w-xl text-[clamp(1.35rem,1rem+1.3vw,2rem)] leading-tight">
+          Join other fastest-growing local businesses
         </h2>
-        <div className="mx-auto mt-6 h-px w-24 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+        <div className="mx-auto mt-5 h-1 w-14 rounded-full bg-brand" />
+        <p className="mx-auto mt-5 max-w-md text-sm text-subtle sm:text-base">
+          Salons, clinics, coaching centres, studios and D2C brands run their
+          Meta ads on growthrush.ai.
+        </p>
       </Reveal>
 
       <Stagger
         gap={0.03}
-        className="mt-8 grid grid-cols-4 gap-x-5 gap-y-6 sm:mt-12 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-7 lg:gap-x-6"
+        className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:mt-14 sm:grid-cols-4 sm:gap-x-10 sm:gap-y-12 lg:grid-cols-7"
       >
         {showcaseBrands.map((brand) => (
           <StaggerItem
@@ -39,22 +44,18 @@ export function LogoGrid() {
               alt={brand.name}
               width={220}
               height={42}
-              className="h-auto w-full max-w-37.5 opacity-50 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0"
+              className="h-auto w-full max-w-40 opacity-55 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0"
             />
           </StaggerItem>
         ))}
       </Stagger>
 
-      <Stagger className="mt-10 grid grid-cols-1 gap-5 border-t border-white/10 pt-8 sm:mt-16 sm:gap-6 sm:pt-10 sm:grid-cols-3">
-        {heroStats.map((stat) => (
-          <StaggerItem key={stat.label}>
-            <div className="font-display text-3xl font-extrabold text-ink sm:text-4xl">
-              {stat.value}
-            </div>
-            <div className="mt-1 text-sm text-subtle">{stat.label}</div>
-          </StaggerItem>
-        ))}
-      </Stagger>
+      <Reveal delay={0.1}>
+        <p className="mt-12 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-subtle sm:mt-16 sm:text-sm">
+          <span className="text-brand-soft">{company.rating}</span>
+          business owners rate us
+        </p>
+      </Reveal>
     </Frame>
   );
 }

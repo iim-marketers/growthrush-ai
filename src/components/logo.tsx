@@ -1,47 +1,60 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { brand } from "@/lib/data";
 
+/**
+ * The real wordmark, in two tones. `light` is the white-lettered cut for the
+ * dark app surface; `dark` is the black-lettered original, for the white
+ * surfaces (the hero's logo pill, print). Both share the purple mark.
+ */
+const wordmark = {
+  light: "/brand/wordmark-light.png",
+  dark: "/brand/wordmark.png",
+} as const;
+
+/** Height only — the aspect ratio comes from the file (1078 × 166). */
 const sizes = {
-  sm: { box: "rounded-lg p-2", icon: 18, text: "text-lg sm:text-xl" },
-  md: { box: "rounded-lg p-2", icon: 20, text: "text-xl sm:text-2xl" },
-  lg: {
-    box: "rounded-xl p-2.5 sm:p-3",
-    icon: 32,
-    text: "text-3xl sm:text-4xl lg:text-[2.75rem]",
-  },
+  sm: "h-5 sm:h-6",
+  md: "h-6 sm:h-7",
+  lg: "h-8 sm:h-10",
 } as const;
 
 export function Logo({
   size = "sm",
+  tone = "light",
   className,
   glow = false,
+  eager = false,
 }: {
   size?: keyof typeof sizes;
+  tone?: keyof typeof wordmark;
   className?: string;
   glow?: boolean;
+  /** Above the fold: skip lazy-loading. (`priority` is deprecated in Next 16.) */
+  eager?: boolean;
 }) {
-  const s = sizes[size];
   return (
-    <div className={cn("flex items-center gap-2.5 sm:gap-3", className)}>
-      <div
-        className={cn("flex bg-brand", s.box)}
-        style={glow ? { boxShadow: "0 8px 32px rgba(91,127,255,0.4)" } : undefined}
-      >
-        <TrendIcon size={s.icon} />
-      </div>
-      <div
-        className={cn(
-          "font-display font-extrabold tracking-tight text-ink",
-          s.text,
-        )}
-      >
-        {brand.name}
-        <span className="text-brand">{brand.suffix}</span>
-      </div>
+    <div className={cn("flex items-center", className)}>
+      <Image
+        src={wordmark[tone]}
+        alt={`${brand.name}${brand.suffix}`}
+        width={1078}
+        height={166}
+        sizes="(max-width: 640px) 200px, 260px"
+        loading={eager ? "eager" : "lazy"}
+        fetchPriority={eager ? "high" : "auto"}
+        className={cn("w-auto", sizes[size])}
+        style={
+          glow
+            ? { filter: "drop-shadow(0 6px 24px rgba(96,69,244,0.45))" }
+            : undefined
+        }
+      />
     </div>
   );
 }
 
+/** The mark on its own, for favicons and tight spots. */
 export function TrendIcon({ size = 18 }: { size?: number }) {
   return (
     <svg

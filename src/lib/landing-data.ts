@@ -9,6 +9,7 @@ export const hero = {
   note: "No card needed · Live in under 10 minutes",
 } as const;
 
+/** The headline numbers, shown in the pill inside the hero card. */
 export const heroStats = [
   { value: "48,000+", label: "Local buyers reached per city" },
   { value: "12x", label: "Average lead lift in 90 days" },
