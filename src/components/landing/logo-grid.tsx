@@ -38,7 +38,7 @@ export function LogoGrid() {
               alt={brand.name}
               width={240}
               height={96}
-              className="h-12 w-full max-w-full object-contain sm:h-16"
+              className="h-10 w-full max-w-full object-contain sm:h-14"
             />
           </StaggerItem>
         ))}
