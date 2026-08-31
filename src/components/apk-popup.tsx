@@ -24,13 +24,14 @@ export function ApkPopup() {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 p-8 backdrop-blur-sm">
+    <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/60 p-8 backdrop-blur-sm">
       <div
-        className="animate-slide-up relative flex w-full max-w-[360px] flex-col items-center rounded-[1.25rem] border border-white/10 p-10 px-8 text-center"
+        className="animate-slide-up relative flex w-full max-w-90 flex-col items-center rounded-[1.25rem] border border-white/10 p-10 px-8 text-center"
         style={{
           background: "rgba(10,15,36,0.7)",
           backdropFilter: "blur(16px)",
-          boxShadow: "0 20px 50px rgba(0,0,0,0.6), inset 0 1px rgba(255,255,255,0.1)",
+          boxShadow:
+            "0 20px 50px rgba(0,0,0,0.6), inset 0 1px rgba(255,255,255,0.1)",
         }}
       >
         <button
@@ -42,14 +43,14 @@ export function ApkPopup() {
           <X size={18} />
         </button>
 
-        <div className="mb-4 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-brand/20 text-brand">
+        <div className="mb-4 flex h-12.5 w-12.5 items-center justify-center rounded-full bg-brand/20 text-brand">
           <Download size={24} />
         </div>
 
         <h3 className="mb-2 text-xl font-bold text-ink">Get the Mobile App</h3>
         <p className="mb-6 text-sm leading-snug text-subtle">
-          For the best experience, download the native Android app directly to your
-          device.
+          For the best experience, download the native Android app directly to
+          your device.
         </p>
 
         <Button

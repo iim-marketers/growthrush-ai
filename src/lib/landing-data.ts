@@ -211,30 +211,10 @@ export const faqs = [
 export const footer = {
   tagline:
     "AI-run Instagram & Facebook ads that send leads straight to your WhatsApp.",
-  columns: [
-    {
-      title: "Product",
-      links: [
-        { label: "How it works", href: "#how-it-works" },
-        { label: "What you get", href: "#features" },
-        { label: "Pricing", href: "#pricing" },
-        { label: "FAQ", href: "#faq" },
-      ],
-    },
-    {
-      title: "Company",
-      links: [
-        { label: "About", href: "#" },
-        { label: "Careers", href: "#" },
-        { label: "Contact", href: "#" },
-      ],
-    },
-    {
-      title: "Legal",
-      links: [
-        { label: "Privacy", href: "#" },
-        { label: "Terms", href: "#" },
-      ],
-    },
+  /* Flat, because the footer renders these inline rather than as a column. */
+  legal: [
+    { label: "Terms", href: "/legal/terms" },
+    { label: "Privacy", href: "/legal/privacy" },
+    { label: "Refunds", href: "/legal/refunds" },
   ],
 } as const;

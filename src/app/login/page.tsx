@@ -1,11 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { Check } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { CtaButton } from "@/components/cta-button";
+import { ConsentCheckbox } from "@/components/consent-checkbox";
 import { account, brand, pitch } from "@/lib/data";
 
 export default function LoginPage() {
+  /* Consent is required before the account is created, so it gates Continue. */
+  const [agreed, setAgreed] = useState(false);
+
   return (
     <div className="relative min-h-dvh w-full bg-background">
       {/* Decorative only — clipped to the viewport so it never drives scroll. */}
@@ -59,7 +64,15 @@ export default function LoginPage() {
             />
           </div>
 
-          <CtaButton className="rhythm-lg">Continue</CtaButton>
+          <ConsentCheckbox
+            checked={agreed}
+            onChange={setAgreed}
+            className="rhythm-md"
+          />
+
+          <CtaButton className="rhythm-lg" disabled={!agreed}>
+            Continue
+          </CtaButton>
 
           <div className="rhythm-md flex items-center text-[0.85rem] text-faint before:flex-1 before:border-b before:border-white/10 after:flex-1 after:border-b after:border-white/10">
             <span className="px-4">or continue with</span>
