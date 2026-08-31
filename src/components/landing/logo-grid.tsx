@@ -45,12 +45,12 @@ export function LogoGrid() {
         ))}
       </Stagger>
 
-      <Reveal delay={0.1}>
+      {/* <Reveal delay={0.1}>
         <p className="mt-12 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-subtle sm:mt-16 sm:text-sm">
           <span className="text-brand-soft">{company.rating}</span>
           business owners rate us
         </p>
-      </Reveal>
+      </Reveal> */}
     </Frame>
   );
 }
