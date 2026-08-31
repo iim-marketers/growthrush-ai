@@ -4,14 +4,13 @@ import Image from "next/image";
 import { Reveal, Stagger, StaggerItem } from "./motion-primitives";
 import { Frame } from "./frame";
 import { showcaseBrands } from "@/lib/landing-data";
-import { brand as company } from "@/lib/data";
 
 export function LogoGrid() {
   return (
     <Frame
       locked
       id="proof"
-      className="border-y border-white/10 bg-white/[0.02]"
+      className="border-y border-white/10 bg-white/2"
       innerClassName="text-center"
     >
       <Reveal>

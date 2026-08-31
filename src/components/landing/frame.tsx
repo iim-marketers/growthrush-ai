@@ -4,13 +4,21 @@ import { cn } from "@/lib/utils";
 type FrameProps = {
   id?: string;
   /**
-   * Lock the section to one screenful: it fills the viewport and centres its
-   * content, so a reader who stops here lands on a complete, composed screen.
+   * Lock the section to one screenful **from `md` up**: it fills the viewport
+   * and centres its content, so a reader who stops here lands on a complete,
+   * composed screen.
+   *
+   * Phones opt out entirely. Mobile browsers grow and shrink the viewport as
+   * their address bar hides and reappears, so a page of `dvh`-tall sections
+   * re-lays-out mid-gesture — every frame changes height at once and the
+   * scroll position is pulled to a new offset. That is the scroll "sticking"
+   * and then jumping on the way back up. Below `md` the frames are ordinary
+   * padded sections that just scroll.
    *
    * `min-h` rather than `h`, and `safe center` rather than plain centring, so
-   * a frame whose content genuinely outgrows the viewport (a phone, a very
-   * short laptop, large text settings) simply grows downward instead of
-   * clipping its own top off the screen.
+   * a frame whose content genuinely outgrows the viewport (a very short
+   * laptop, large text settings) simply grows downward instead of clipping
+   * its own top off the screen.
    */
   locked?: boolean;
   className?: string;
@@ -75,7 +83,11 @@ export function Frame({
             // threshold, which reads as the page fighting them. The frames
             // still compose as one screenful each; where the reader stops is
             // left to the reader.
-            "flex min-h-dvh flex-col [justify-content:safe_center] py-8 sm:py-12"
+            //
+            // The full-height treatment starts at `md`, the same breakpoint at
+            // which `cardRail` becomes a grid: on phones the cards are a
+            // horizontal rail and the frame is a plain scrolling section.
+            "py-16 md:flex md:min-h-dvh md:flex-col md:py-12 md:[justify-content:safe_center]"
           : "py-16 md:py-24",
         className,
       )}
