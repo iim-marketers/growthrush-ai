@@ -17,27 +17,17 @@ export const heroStats = [
 ] as const;
 
 export const showcaseBrands = [
-  { name: "Sharma Coaching", src: "/logos/sharma-coaching.svg" },
-  { name: "Glow &amp; Co.", src: "/logos/glow-co.svg" },
-  { name: "Apex Fitness", src: "/logos/apex-fitness.svg" },
-  { name: "Dr. Rao Clinic", src: "/logos/rao-clinic.svg" },
-  { name: "Spice Route", src: "/logos/spice-route.svg" },
-  { name: "Nova Realty", src: "/logos/nova-realty.svg" },
-  { name: "Bright Minds", src: "/logos/bright-minds.svg" },
-  { name: "Urban Threads", src: "/logos/urban-threads.svg" },
-  { name: "Serene Spa", src: "/logos/serene-spa.svg" },
-  { name: "MotorWorks", src: "/logos/motorworks.svg" },
-  { name: "Pixel Studio", src: "/logos/pixel-studio.svg" },
-  { name: "GreenLeaf", src: "/logos/greenleaf.svg" },
-  { name: "Anand Dental", src: "/logos/anand-dental.svg" },
-  { name: "FitZone 24", src: "/logos/fitzone.svg" },
-  // { name: "Bella Boutique", src: "/logos/bella-boutique.svg" },
-  // { name: "QuickFix", src: "/logos/quickfix.svg" },
-  // { name: "Sunrise Academy", src: "/logos/sunrise-academy.svg" },
-  // { name: "Cafe Mocha", src: "/logos/cafe-mocha.svg" },
-  // { name: "Prime Motors", src: "/logos/prime-motors.svg" },
-  // { name: "Lotus Yoga", src: "/logos/lotus-yoga.svg" },
-  // { name: "TechCare", src: "/logos/techcare.svg" },
+  { name: "Haldiram's", src: "/logos/haldiram.png" },
+  { name: "EY", src: "/logos/ey.png" },
+  { name: "Emami", src: "/logos/emami.png" },
+  { name: "ITC", src: "/logos/itc.png" },
+  { name: "Joy", src: "/logos/joy.png" },
+  { name: "Nephrocare", src: "/logos/nephrocare.png" },
+  { name: "Adyant Ayurveda", src: "/logos/adyant-ayurveda.png" },
+  { name: "Emporium Solutions", src: "/logos/emporium-solutions.png" },
+  { name: "Pepsi", src: "/logos/pepsi.png" },
+  { name: "Magik LED", src: "/logos/magik-led.png" },
+  { name: "Century Ply", src: "/logos/centuryply.png" },
 ] as const;
 
 /**

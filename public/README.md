@@ -5,26 +5,30 @@ Everything here is served from the site root, so `public/logos/foo.svg` is
 
 ## `logos/` — the logo wall
 
-21 client logos in a static grid under the hero — 7 columns on desktop, 4 on
+11 client logos in a static wall under the hero — 6 across on desktop, 4 on
 tablet, 3 on mobile (`src/components/landing/logo-grid.tsx`).
 
-**These are invented businesses, not real customers.** They were generated as
-placeholders so the section renders — a live marketing page must not imply that
-real brands are clients.
+**These are real brands.** Only list a company here that has actually agreed to
+be named as a client — a logo on this page reads as an endorsement.
 
-To swap: drop your logo in as `logos/<name>.svg` (or `.png`), then point at it in
-`showcaseBrands` in `src/lib/landing-data.ts`. Keeping the existing filenames
-means you don't touch any code.
+To swap: drop your logo in as `logos/<name>.png`, then point at it in
+`showcaseBrands` in `src/lib/landing-data.ts`.
 
-- Best format: SVG with the artwork in **white** — the grid renders it muted and
-  greyscaled, brightening on hover. An `<img>`-referenced SVG cannot inherit
-  `currentColor` from the page, so the colour has to be baked into the file.
-- **Use one shared aspect ratio for every logo.** These all use a `240x42`
-  viewBox with the artwork centred inside, and the grid sizes them by width
-  (`max-w-[150px]`). That is what keeps them at an identical scale — if one file
-  has a tighter viewBox it will render visibly larger than its neighbours.
-- 21 logos fills the 7-column grid exactly (3 full rows). A different count
-  still works, the last row just won't be full.
+- **Supply the artwork already re-inked to flat white on transparent.** The wall
+  sits on the dark page background and the component applies no filter, because
+  no filter can do this correctly: a mark like Haldiram's or Joy is white type
+  knocked out of a coloured shape, and `invert` would fill the type back in. The
+  rule to apply when converting: anything that is not near-neutral-white becomes
+  opaque white, and anything that is becomes transparent — that keeps the
+  knockout as a hole. Greyscale-plus-alpha PNG (`LA` mode) keeps the files small.
+- **Aspect ratio does not need to match.** Each logo is fitted into a
+  fixed-height box with `object-contain`, so a square mark and a long wordmark
+  land at the same optical weight. Just crop the file tight to the artwork —
+  built-in whitespace is what makes one logo look smaller than its neighbours.
+- Roughly 640x256 is plenty of resolution; the largest on-screen box is about
+  150x64 CSS px.
+- Any count works. The final row centres itself, so there is no need to pad the
+  list out to a multiple of six.
 
 ## `images/` — photography
 
