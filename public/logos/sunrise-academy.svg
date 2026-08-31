@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 42" width="240" height="42" role="img" aria-label="Sunrise Academy">
-  <g transform="translate(25.9 0)">
-    <circle cx="21" cy="21" r="7" fill="#ffffff"/><g stroke="#ffffff" stroke-width="3" stroke-linecap="round"><path d="M21 6v4M21 32v4M6 21h4M32 21h4M10.5 10.5l3 3M28.5 28.5l3 3M31.5 10.5l-3 3M13.5 28.5l-3 3"/></g>
-    <text x="48" y="27.5" font-family="Outfit, Inter, system-ui, sans-serif" font-size="17"
-          font-weight="700" letter-spacing="-0.3" fill="#ffffff">Sunrise Academy</text>
-  </g>
-</svg>

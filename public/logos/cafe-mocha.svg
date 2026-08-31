@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 42" width="240" height="42" role="img" aria-label="Cafe Mocha">
-  <g transform="translate(49.2 0)">
-    <path d="M11 13h17v11a8 8 0 0 1-8 8h-1a8 8 0 0 1-8-8z" stroke="#ffffff" fill="none" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M28 16h3a4 4 0 0 1 0 8h-3" stroke="#ffffff" fill="none" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
-    <text x="48" y="27.5" font-family="Outfit, Inter, system-ui, sans-serif" font-size="17"
-          font-weight="700" letter-spacing="-0.3" fill="#ffffff">Cafe Mocha</text>
-  </g>
-</svg>
