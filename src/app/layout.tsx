@@ -16,7 +16,8 @@ const outfit = Outfit({
   display: "swap",
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://growthrush.ai";
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.growthrush.ai";
 const SITE_NAME = "growthrush.ai";
 const DESCRIPTION =
   "AI-run Facebook ads for local businesses. growthrush.ai writes the copy, designs the creatives and sends ready-to-buy leads straight to your WhatsApp.";

@@ -490,7 +490,7 @@ export const refundPolicy: LegalDoc = {
             "CIN: U74909WB2023PTC265098",
             "GSTIN: 19AAHCE7862Q1ZN",
             "Email: [Hello@growthrush.ai](mailto:Hello@growthrush.ai)",
-            "Website: [growthrush.ai](https://growthrush.ai)",
+            "Website: [growthrush.ai](https://www.growthrush.ai)",
           ],
         },
       ],

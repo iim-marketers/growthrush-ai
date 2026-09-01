@@ -188,7 +188,10 @@ export const privacyPolicy: LegalDoc = {
           t: "table",
           head: ["Purpose", "Categories used"],
           rows: [
-            ["Creating and administering your account", "Account and contact data"],
+            [
+              "Creating and administering your account",
+              "Account and contact data",
+            ],
             [
               "Delivering Business Intelligence Services — analytics, reconciliation, alerts, buffer status, recommendations",
               "Business Data",
@@ -217,7 +220,10 @@ export const privacyPolicy: LegalDoc = {
               "Security monitoring, fraud prevention and abuse detection",
               "Log and usage data",
             ],
-            ["Communicating service updates, outages and changes", "Contact data"],
+            [
+              "Communicating service updates, outages and changes",
+              "Contact data",
+            ],
             [
               "Marketing communications, where permitted",
               "Contact data, subject to opt-out",
@@ -368,7 +374,10 @@ export const privacyPolicy: LegalDoc = {
           t: "table",
           head: ["Data category", "Retention period"],
           rows: [
-            ["Account and contact data", "Duration of the relationship, plus 3 years"],
+            [
+              "Account and contact data",
+              "Duration of the relationship, plus 3 years",
+            ],
             [
               "Business Data",
               "Duration of the subscription, plus 30 days for retrieval, then deleted",
@@ -377,15 +386,24 @@ export const privacyPolicy: LegalDoc = {
               "Advertising Data",
               "Duration of the subscription, plus 30 days, subject to shorter periods required by platform terms",
             ],
-            ["Generated creative assets", "Duration of the subscription, plus 30 days"],
+            [
+              "Generated creative assets",
+              "Duration of the subscription, plus 30 days",
+            ],
             [
               "Billing, invoicing and tax records",
               "8 years, as required under Indian tax and companies law",
             ],
             ["Security and access logs", "12 months"],
-            ["Change and audit logs for actions taken in your accounts", "24 months"],
+            [
+              "Change and audit logs for actions taken in your accounts",
+              "24 months",
+            ],
             ["Support correspondence", "3 years"],
-            ["Aggregated anonymised data", "Retained indefinitely; not personal data"],
+            [
+              "Aggregated anonymised data",
+              "Retained indefinitely; not personal data",
+            ],
             [
               "Backups",
               "Purged on the rolling backup cycle, not exceeding 90 days",
@@ -586,7 +604,7 @@ export const privacyPolicy: LegalDoc = {
             "A-60 Brahmapur South, Kolkata, West Bengal 700096, India",
             "CIN: U74909WB2023PTC265098",
             "Email: [Hello@growthrush.ai](mailto:Hello@growthrush.ai)",
-            "Website: [growthrush.ai](https://growthrush.ai)",
+            "Website: [growthrush.ai](https://www.growthrush.ai)",
           ],
         },
       ],
