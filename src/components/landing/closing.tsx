@@ -6,23 +6,12 @@ import { Reveal } from "./motion-primitives";
 import { Frame } from "./frame";
 import { hero } from "@/lib/landing-data";
 
-/**
- * The reassurances that sit between wanting this and clicking the button.
- * Deliberately short: this frame's job is the ask, not another feature list.
- */
 const reassurances = [
   "No card needed",
   "Your budget stays in your account",
   "You approve every ad",
 ] as const;
 
-/**
- * Frame 8 — the close.
- *
- * A page built as a sequence of screens should end on an ask rather than on
- * an open accordion, so the last thing on screen is the same action the hero
- * opened with.
- */
 export function Closing() {
   return (
     <Frame
@@ -35,7 +24,7 @@ export function Closing() {
           aria-hidden
         >
           <div
-            className="absolute bottom-[-30%] left-1/2 h-[60vw] max-h-[620px] w-[60vw] max-w-[620px] -translate-x-1/2 rounded-full"
+            className="absolute bottom-[-30%] left-1/2 h-[60vw] max-h-155 w-[60vw] max-w-155 -translate-x-1/2 rounded-full"
             style={{
               background:
                 "radial-gradient(circle, rgba(91,127,255,0.22) 0%, rgba(91,127,255,0.06) 45%, transparent 70%)",
@@ -47,7 +36,7 @@ export function Closing() {
       <Reveal>
         <h2 className="mx-auto max-w-2xl text-[clamp(2rem,1.3rem+3vw,3.5rem)] leading-[1.08] tracking-tight">
           Your next customer is{" "}
-          <span className="bg-gradient-to-r from-brand to-brand-soft bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-brand to-brand-soft bg-clip-text text-transparent">
             already scrolling.
           </span>
         </h2>

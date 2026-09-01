@@ -37,7 +37,6 @@ export default async function LegalDocPage(props: PageProps<"/legal/[slug]">) {
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 ">
-      {/* Sibling documents, so a reader can move between them without going back. */}
       <nav aria-label="Legal documents" className="mb-10 flex flex-wrap gap-2">
         {legalNav.map((entry) => {
           const current = entry.slug === slug;
@@ -58,7 +57,6 @@ export default async function LegalDocPage(props: PageProps<"/legal/[slug]">) {
         })}
       </nav>
 
-      {/* The contents list only earns its space once there is a sidebar to put it in. */}
       <div className="lg:grid lg:grid-cols-[1fr_16rem] lg:gap-12">
         <LegalDocument doc={doc} />
         <aside className="mt-14 hidden lg:sticky lg:top-24 lg:mt-0 lg:block lg:self-start">

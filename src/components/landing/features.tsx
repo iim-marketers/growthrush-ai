@@ -23,11 +23,6 @@ const icons = {
   chart: BarChart3,
 } as const;
 
-/**
- * Frame 4 — what you get. Left at its natural height on purpose: six cards
- * with imagery cannot honestly be squeezed into one screen, and forcing it
- * would shrink the cards to the point of illegibility on a phone.
- */
 export function Features() {
   return (
     <Frame id="features">

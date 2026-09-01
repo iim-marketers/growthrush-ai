@@ -93,7 +93,7 @@ export function Hero() {
         {/* The numbers, in the pill the reference hangs its credibility on. */}
         <div
           style={{ animationDelay: "0.22s" }}
-          className="animate-slide-up relative mx-auto mt-6 grid max-w-xl grid-cols-3 divide-x divide-white/10 overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/[0.06] px-2 py-4 backdrop-blur-md sm:mt-8 sm:rounded-[2.25rem] sm:px-6 sm:py-5 md:mt-5 md:py-4"
+          className="animate-slide-up relative mx-auto mt-6 grid max-w-xl grid-cols-3 divide-x divide-white/10 overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/6 px-2 py-4 backdrop-blur-md sm:mt-8 sm:rounded-[2.25rem] sm:px-6 sm:py-5 md:mt-5 md:py-4"
         >
           <span
             aria-hidden
