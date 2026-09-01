@@ -24,10 +24,38 @@ pnpm build    # production build
 | Route | Screen |
 | --- | --- |
 | `/` | Marketing landing page — hero, logo wall, how it works, features, results, testimonials, scarcity, pricing, FAQ, CTA, footer |
-| `/login` | Mobile-number sign in, Google / Apple options |
+| `/legal`, `/legal/[slug]` | Terms, privacy and refund policies |
+| `/login` | Mobile-number sign in, Google option |
+| `/login/verify` | Six-box OTP entry, resend countdown |
+| `/onboarding` | Eight-step setup wizard (see below) |
+| `/dashboard` | Leads per day, KPI row, budget meter, latest enquiries |
+| `/leads` | Every enquiry, filterable by status, with a WhatsApp reply link |
+| `/billing` | Plan, ad budget, payment method, invoices |
 
-Every **Get Started** button on the landing page routes to `/login`. The login
-"Continue" button is currently inert — there is no screen after it yet.
+Every **Get Started** button on the landing page routes to `/login`, and the
+flow runs `/login` → `/login/verify` → `/onboarding` → `/dashboard`. There is no
+backend: the OTP accepts any six digits, and nothing is persisted.
+
+### The onboarding wizard
+
+One page, eight steps. The first four ask questions; the last four play back
+what the AI "found" and ask for the sale:
+
+| # | Step | What it does |
+| --- | --- | --- |
+| 1 | About your business | Name + category |
+| 2 | Your location | City, and why it is asked |
+| 3 | Confirm your business | Pick your Google listing |
+| 4 | Your goal | Lead type + monthly ad budget band |
+| 5 | Live audience | Reach, and who is searching nearby |
+| 6 | Lead readiness | Score gauge and today-vs-with-AI |
+| 7 | Your ad is ready | Preview of the generated Meta ad |
+| 8 | Pick your plan | The two landing-page plans |
+
+Steps 5–8 deliberately reuse the marketing numbers: the reach is `heroStats[0]`,
+the "6 → 120 leads" comparison is the first entry in `caseStudies`, and the plan
+cards read straight from `plans`. Change a figure on the landing page and the
+onboarding flow follows, rather than quoting a second set of numbers.
 
 There is deliberately **no navbar**, matching the reference site: the logo sits at
 the top of the hero and the page relies on repeated CTAs instead of nav links.
@@ -63,16 +91,27 @@ alongside `icon.svg` and `apple-icon.png`. Next.js picks these up by filename.
 ```
 src/
   app/
-    page.tsx           splash
-    login/page.tsx
+    page.tsx           landing page
+    legal/             policy documents
+    login/             sign in + OTP verify
+    onboarding/        the eight-step wizard
+    (app)/             signed-in shell: dashboard, leads, billing
     globals.css        design tokens + shared utilities
     layout.tsx         fonts, metadata, mobile shell
   components/
     cta-button.tsx     full-width brand CTA
     apk-popup.tsx      install prompt (disabled)
     logo.tsx
+    auth/              shared auth shell + OTP form
+    onboarding/        wizard shell, step bodies, form controls
+    app/               nav, stat tiles, lead rows, leads chart
+    landing/           marketing sections
     ui/                shadcn primitives
-  lib/data.ts          static content
+  lib/
+    data.ts            splash + login content
+    landing-data.ts    marketing content
+    app-data.ts        signed-in content (imports from landing-data)
+    session.ts         the scraps of state passed between screens
 ```
 
 Design tokens (brand palette, glass surfaces, animations) live in

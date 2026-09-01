@@ -10,16 +10,19 @@ export function CtaButton({
   style,
   onClick,
   disabled,
+  type = "button",
 }: {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
   onClick?: () => void;
   disabled?: boolean;
+  /** `submit` where the button ends a form, so Enter works from the inputs. */
+  type?: "button" | "submit";
 }) {
   return (
     <Button
-      type="button"
+      type={type}
       onClick={onClick}
       style={style}
       disabled={disabled}
