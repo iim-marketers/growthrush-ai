@@ -21,7 +21,7 @@ export function HowItWorks() {
       <Stagger className={`relative mt-14 gap-6 md:grid-cols-3 ${cardRail}`}>
         {/* Connecting rule behind the cards on wide screens. */}
         <div
-          className="pointer-events-none absolute top-[3.25rem] right-[16%] left-[16%] hidden h-px bg-gradient-to-r from-transparent via-white/15 to-transparent md:block"
+          className="pointer-events-none absolute top-13 right-[16%] left-[16%] hidden h-px bg-linear-to-r from-transparent via-white/15 to-transparent md:block"
           aria-hidden
         />
         {steps.map((step) => (

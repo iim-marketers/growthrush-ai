@@ -24,7 +24,7 @@ export function CaseStudies() {
         {caseStudies.map((study) => (
           <StaggerItem key={study.business} className={cardRailItem}>
             <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-card/60 backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-brand/30">
-              <div className="relative aspect-[16/9] overflow-hidden sm:aspect-[16/10]">
+              <div className="relative aspect-video overflow-hidden sm:aspect-16/10">
                 <Image
                   src={study.image}
                   alt=""
@@ -32,9 +32,8 @@ export function CaseStudies() {
                   sizes="(min-width: 768px) 33vw, 100vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                {/* Tint keeps the placeholder photography on-brand. */}
-                {/* Keeps the overlaid metric legible over any photograph. */}
-                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/75 to-brand/10" />
+
+                <div className="absolute inset-0 bg-linear-to-t from-card via-card/75 to-brand/10" />
                 <span className="absolute top-4 left-4 rounded-full border border-white/15 bg-black/45 px-3 py-1 text-[11px] font-bold text-ink backdrop-blur-sm">
                   {study.category}
                 </span>

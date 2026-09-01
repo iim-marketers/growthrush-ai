@@ -5,7 +5,6 @@ type FrameProps = {
   id?: string;
   locked?: boolean;
   className?: string;
-  /** Extra classes for the inner max-width container. */
   innerClassName?: string;
   backdrop?: ReactNode;
   overlay?: ReactNode;
@@ -15,7 +14,6 @@ type FrameProps = {
 export const cardRail =
   "-mx-4 flex snap-x snap-mandatory overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:px-6 md:mx-0 md:grid md:overflow-visible md:px-0 md:pb-0";
 
-/** Sits on each child of a `cardRail`. */
 export const cardRailItem = "w-[82%] shrink-0 snap-center md:w-auto md:shrink";
 
 export function Frame({

@@ -5,10 +5,6 @@ import { Frame, cardRail, cardRailItem } from "./frame";
 import { SectionLabel } from "./how-it-works";
 import { testimonials } from "@/lib/landing-data";
 
-/**
- * Frame 6 — proof in voice. Distinct from the case-study frame: that one is
- * numbers, this one is the owners saying it themselves.
- */
 export function Results() {
   return (
     <Frame locked>

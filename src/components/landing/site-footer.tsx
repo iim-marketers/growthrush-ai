@@ -2,11 +2,6 @@ import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { footer } from "@/lib/landing-data";
 
-/**
- * Deliberately short. The close above already carries the ask, so this only
- * has to identify the company and reach the policies — a tall column layout
- * would be mostly empty air.
- */
 export function SiteFooter() {
   return (
     <footer className="border-t border-white/10 bg-white/2">
@@ -36,11 +31,6 @@ export function SiteFooter() {
           </nav>
         </div>
 
-        {/*
-          No `items-center` while stacked: in a flex column it sizes children
-          to max-content, so the company line would run off a narrow screen
-          instead of wrapping. Centre the text, not the boxes.
-        */}
         <div className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-6 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
           <p className="text-sm text-faint">
             © {new Date().getFullYear()} growthrush.ai — Estrellingent

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState } from "react";
@@ -125,12 +126,12 @@ function PitchPanel() {
         ))}
       </ul>
 
-      <div className="mt-10 flex items-center gap-3">
+      {/* <div className="mt-10 flex items-center gap-3">
         <span className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-sm font-bold text-amber-400">
           {brand.rating}
         </span>
         <span className="text-sm text-faint">businesses growing with us</span>
-      </div>
+      </div> */}
     </section>
   );
 }
