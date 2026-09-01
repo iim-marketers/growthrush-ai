@@ -11,7 +11,7 @@ import { SiteFooter } from "@/components/landing/site-footer";
 
 export const metadata: Metadata = {
   description:
-    "growthrush.ai writes the copy, designs the creatives and runs your Instagram & Facebook ads — then delivers ready-to-buy leads straight to your WhatsApp. Live in under 10 minutes.",
+    "growthrush.ai writes the copy, designs the creatives and runs your Facebook ads — then delivers ready-to-buy leads straight to your WhatsApp. Live in under 10 minutes.",
   alternates: { canonical: "/" },
 };
 
