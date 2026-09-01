@@ -71,7 +71,7 @@ export function LegalToc({ doc }: { doc: LegalDoc }) {
                 aria-current={current ? "location" : undefined}
                 className={`-ml-px flex gap-2 border-l-2 pl-4 leading-snug transition-colors ${
                   current
-                    ? "border-brand font-semibold text-ink"
+                    ? "border-brand font-medium text-ink"
                     : "border-transparent text-subtle hover:border-white/25 hover:text-ink"
                 }`}
               >
