@@ -88,7 +88,7 @@ export const steps = [
   {
     n: "03",
     title: "Leads land in WhatsApp",
-    body: "Ads go live on Instagram & Facebook. Every enquiry arrives on your phone, and the AI optimises daily for the lowest cost per lead.",
+    body: "Ads go live on Facebook. Every enquiry arrives on your phone, and the AI optimises daily for the lowest cost per lead.",
   },
 ] as const;
 
@@ -141,13 +141,6 @@ export const testimonials = [
   },
   {
     quote:
-      "We were invisible on Instagram. Two weeks in, we had more bookings than we could take — I had to hire a second stylist.",
-    name: "Rhea Mehta",
-    role: "Founder, Glow & Co.",
-    initial: "R",
-  },
-  {
-    quote:
       "The part I like is that the ad money stays in my account. I set ₹500 a day and I can see where every rupee went.",
     name: "Vikram Nair",
     role: "Owner, Apex Fitness",
@@ -191,7 +184,7 @@ export const plans = [
 
 export const faqs = [
   {
-    q: "Do I need a Facebook or Instagram page already?",
+    q: "Do I need a Facebook page already?",
     a: "It helps, but it is not required. If you do not have one, we will create and set it up during onboarding — it takes a few minutes.",
   },
   {
@@ -209,8 +202,7 @@ export const faqs = [
 ] as const;
 
 export const footer = {
-  tagline:
-    "AI-run Instagram & Facebook ads that send leads straight to your WhatsApp.",
+  tagline: "AI-run Facebook ads that send leads straight to your WhatsApp.",
   /* Flat, because the footer renders these inline rather than as a column. */
   legal: [
     { label: "Terms", href: "/legal/terms" },

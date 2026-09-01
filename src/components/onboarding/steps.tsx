@@ -220,7 +220,9 @@ export function GoalStep({ answers, set }: StepProps) {
                 aria-hidden
                 className={cn(
                   "flex h-10 w-10 items-center justify-center rounded-xl transition-colors",
-                  selected ? "bg-brand/20 text-brand" : "bg-surface-hover text-subtle",
+                  selected
+                    ? "bg-brand/20 text-brand"
+                    : "bg-surface-hover text-subtle",
                 )}
               >
                 <Icon size={18} />
@@ -270,8 +272,8 @@ export function AudienceStep() {
           {audience.reach}
         </p>
         <p className="mt-3 text-sm leading-relaxed text-subtle">
-          interested in <strong className="text-ink">{audience.interest}</strong>{" "}
-          on Instagram &amp; Facebook
+          interested in{" "}
+          <strong className="text-ink">{audience.interest}</strong> on Facebook
         </p>
         <div className="mt-5 flex justify-center gap-2">
           {audience.networks.map((network) => (
@@ -286,7 +288,9 @@ export function AudienceStep() {
       </div>
 
       <div className="mt-4 rounded-2xl border border-hairline bg-surface-subtle p-5 sm:p-6">
-        <p className="text-sm font-bold text-ink">Who&rsquo;s searching near you</p>
+        <p className="text-sm font-bold text-ink">
+          Who&rsquo;s searching near you
+        </p>
         <dl className="mt-4 flex flex-col gap-3.5">
           {audience.breakdown.map((row) => (
             <div key={row.label} className="flex items-center gap-3">
@@ -428,7 +432,9 @@ function GrowthCard({
     <div
       className={cn(
         "flex-1 rounded-xl border p-4 text-center",
-        good ? "border-success/35 bg-success/[0.08]" : "border-hairline bg-surface-subtle",
+        good
+          ? "border-success/35 bg-success/[0.08]"
+          : "border-hairline bg-surface-subtle",
       )}
     >
       <span
@@ -599,7 +605,9 @@ function PlanCard({
           aria-hidden
           className={cn(
             "mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors",
-            selected ? "border-brand bg-brand text-white" : "border-line-strong",
+            selected
+              ? "border-brand bg-brand text-white"
+              : "border-line-strong",
           )}
         >
           {selected && <Check size={12} strokeWidth={3} />}
@@ -619,7 +627,10 @@ function PlanCard({
 
       <span className="mt-5 flex flex-col gap-2.5 border-t border-hairline pt-5">
         {plan.features.map((feature) => (
-          <span key={feature} className="flex items-start gap-2.5 text-sm text-subtle">
+          <span
+            key={feature}
+            className="flex items-start gap-2.5 text-sm text-subtle"
+          >
             <span className="mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full bg-brand/20 text-brand">
               <Check size={11} strokeWidth={3} aria-hidden />
             </span>

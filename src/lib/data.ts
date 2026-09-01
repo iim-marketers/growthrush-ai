@@ -13,7 +13,7 @@ export const brand = {
 export const pitch = {
   headline: "Leads that land in your",
   headlineAccent: "WhatsApp",
-  body: "AI writes the copy, designs the creatives and runs your Instagram & Facebook ads — so ready-to-buy customers near you reach out first.",
+  body: "AI writes the copy, designs the creatives and runs your Facebook ads — so ready-to-buy customers near you reach out first.",
   points: [
     "Ads live in minutes, not weeks",
     "Auto-targets your local audience",

@@ -19,7 +19,7 @@ const outfit = Outfit({
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://growthrush.ai";
 const SITE_NAME = "growthrush.ai";
 const DESCRIPTION =
-  "AI-run Instagram & Facebook ads for local businesses. growthrush.ai writes the copy, designs the creatives and sends ready-to-buy leads straight to your WhatsApp.";
+  "AI-run Facebook ads for local businesses. growthrush.ai writes the copy, designs the creatives and sends ready-to-buy leads straight to your WhatsApp.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -31,7 +31,6 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   keywords: [
     "Meta ads",
-    "Instagram ads",
     "Facebook ads",
     "lead generation",
     "WhatsApp leads",

@@ -17,7 +17,7 @@ export function Pricing() {
             Plans that pay for themselves
           </h2>
           <p className="mt-4 text-base text-subtle sm:text-lg">
-            Both run your Instagram &amp; Facebook ads. Cancel anytime.
+            Both run your Facebook ads. Cancel anytime.
           </p>
         </Reveal>
 

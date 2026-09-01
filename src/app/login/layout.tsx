@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from "next";
 export const metadata: Metadata = {
   title: "Log in",
   description:
-    "Log in to growthrush.ai to see your free lead report and put your Instagram & Facebook ads live.",
+    "Log in to growthrush.ai to see your free lead report and put your Facebook ads live.",
   alternates: { canonical: "/login" },
   robots: { index: false, follow: true },
 };
