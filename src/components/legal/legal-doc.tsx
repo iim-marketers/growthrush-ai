@@ -2,10 +2,6 @@ import Link from "next/link";
 import { Download } from "lucide-react";
 import type { Block, LegalDoc, Section } from "@/lib/legal/types";
 
-/**
- * Renders a policy from `lib/legal` as a server component. All three documents
- * go through here so they stay typographically identical.
- */
 export function LegalDocument({ doc }: { doc: LegalDoc }) {
   return (
     <article className="min-w-0">
@@ -182,11 +178,6 @@ function BlockBody({ block }: { block: Block }) {
   }
 }
 
-/**
- * Tiny inline formatter for the policy text: `**bold**` and `[label](href)`.
- * The source is our own content, so there is nothing to sanitise — this exists
- * to keep the data files readable, not to accept untrusted markdown.
- */
 const INLINE = /\*\*(.+?)\*\*|\[([^\]]+)\]\(([^)]+)\)/g;
 
 export function Inline({ text }: { text: string }) {
@@ -229,28 +220,4 @@ export function Inline({ text }: { text: string }) {
 
   if (last < text.length) nodes.push(text.slice(last));
   return <>{nodes}</>;
-}
-
-/** Jump list rendered beside the document on wide screens. */
-export function LegalToc({ doc }: { doc: LegalDoc }) {
-  return (
-    <nav aria-label={`${doc.title} contents`} className="text-sm">
-      <p className="text-xs font-bold tracking-[0.14em] text-faint uppercase">
-        On this page
-      </p>
-      <ol className="mt-4 flex flex-col gap-2.5">
-        {doc.sections.map((section) => (
-          <li key={section.id}>
-            <a
-              href={`#${section.id}`}
-              className="flex gap-2 leading-snug text-subtle transition-colors hover:text-ink"
-            >
-              <span className="text-faint">{section.number}.</span>
-              {section.title}
-            </a>
-          </li>
-        ))}
-      </ol>
-    </nav>
-  );
 }

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { LegalDocument, LegalToc } from "@/components/legal/legal-doc";
+import { LegalDocument } from "@/components/legal/legal-doc";
+import { LegalToc } from "@/components/legal/legal-toc";
 import { legalDocs, legalNav, type LegalSlug } from "@/lib/legal";
 
 function isLegalSlug(value: string): value is LegalSlug {
