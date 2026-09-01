@@ -48,7 +48,7 @@ export function SiteFooter() {
           </p>
           <Link
             href="/login"
-            className="text-sm font-semibold text-brand transition-colors hover:text-brand-soft"
+            className="hidden md:inline-block text-sm font-semibold text-brand transition-colors hover:text-brand-soft"
           >
             Get Started →
           </Link>
