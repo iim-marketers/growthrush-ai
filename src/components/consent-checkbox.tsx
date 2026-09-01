@@ -32,7 +32,7 @@ export function ConsentCheckbox({
           type="checkbox"
           checked={checked}
           onChange={(event) => onChange(event.target.checked)}
-          className="peer h-5 w-5 cursor-pointer appearance-none rounded-[0.3rem] border border-white/20 bg-white/5 transition-colors checked:border-brand checked:bg-brand focus-visible:ring-[3px] focus-visible:ring-brand/30 focus-visible:outline-none"
+          className="peer h-5 w-5 cursor-pointer appearance-none rounded-[0.3rem] border border-line-strong bg-surface-hover transition-colors checked:border-brand checked:bg-brand focus-visible:ring-[3px] focus-visible:ring-brand/30 focus-visible:outline-none"
         />
         <Check
           size={13}

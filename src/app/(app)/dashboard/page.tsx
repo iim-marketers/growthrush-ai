@@ -67,7 +67,7 @@ export default function DashboardPage() {
             </div>
             <p className="mt-2 text-xs text-faint">{spentPct}% used</p>
 
-            <div className="mt-6 border-t border-white/8 pt-5">
+            <div className="mt-6 border-t border-hairline pt-5">
               <p className="text-sm font-bold text-ink">{campaign.name}</p>
               <p className="mt-1 text-xs leading-relaxed text-faint">
                 Budget goes to Meta from your own account. Change it any day
@@ -98,7 +98,7 @@ export default function DashboardPage() {
           </Link>
         }
       >
-        <ul className="divide-y divide-white/8">
+        <ul className="divide-y divide-hairline">
           {recent.map((lead) => (
             <LeadRow key={lead.id} lead={lead} />
           ))}

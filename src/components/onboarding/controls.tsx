@@ -33,7 +33,7 @@ export function TextInput({
   icon?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/3 px-4 transition-all focus-within:border-brand focus-within:bg-white/6 focus-within:ring-[3px] focus-within:ring-brand/15">
+    <div className="flex items-center gap-3 rounded-xl border border-hairline bg-surface-subtle px-4 transition-all focus-within:border-brand focus-within:bg-surface-hover focus-within:ring-[3px] focus-within:ring-brand/15">
       {icon && <span className="shrink-0 text-faint">{icon}</span>}
       <input
         type="text"
@@ -65,7 +65,7 @@ export function Chip({
         "rounded-full border px-4 py-2 text-sm font-semibold transition-colors",
         selected
           ? "border-brand bg-brand/15 text-ink"
-          : "border-white/10 bg-white/3 text-subtle hover:border-white/20 hover:text-ink",
+          : "border-hairline bg-surface-subtle text-subtle hover:border-line-strong hover:text-ink",
       )}
     >
       {children}

@@ -15,14 +15,33 @@
   --text-secondary: #9ca3af;
   --text-muted: #6b7280;
   --input-bg: rgba(255, 255, 255, 0.05);
-  --border-color: #1a2437;
   --brand: #5b7fff;
   --brand-soft: #a8c0ff;
   --orange: #f97316;
   --purple: #7e22ce;
   --success: #10b981;
   --danger: #ef4444;
+  --warn: #facc15;
   --cyan: #5bc5f8;
+
+  /*
+   * Surfaces and lines, as tokens rather than `bg-white/5` literals. The app
+   * side of the product (see `.theme-light` below) sits on a white ground,
+   * where a translucent white would vanish — so every panel, input and hairline
+   * inside it reads its shade from here instead of hard-coding one.
+   */
+  --surface-subtle: rgba(255, 255, 255, 0.03);
+  --surface-hover: rgba(255, 255, 255, 0.06);
+  --surface-mute: rgba(255, 255, 255, 0.08);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+
+  /* The frosted auth panel and the ambient glows behind it. */
+  --panel-bg: rgba(6, 13, 29, 0.6);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --panel-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --glow-brand: rgba(91, 127, 255, 0.15);
+  --glow-warm: rgba(249, 115, 22, 0.08);
 
   /* Vertical spacing scale — compacted on short viewports further down. */
   --screen-pad-y: 1.5rem;
@@ -32,31 +51,116 @@
   --rhythm-lg: 2rem;
   --rhythm-md: 1.5rem;
 
-  /* shadcn tokens, remapped onto the brand palette */
-  --radius: 0.75rem;
-  --background: var(--bg-color);
-  --foreground: var(--text-primary);
-  --card: var(--card-bg);
-  --card-foreground: var(--text-primary);
+  /* Palette-specific shadcn values. The derived ones are shared, below. */
   --popover: #0a0f24;
-  --popover-foreground: var(--text-primary);
-  --primary: var(--brand);
-  --primary-foreground: #ffffff;
   --secondary: rgba(255, 255, 255, 0.06);
-  --secondary-foreground: var(--text-primary);
   --muted: rgba(255, 255, 255, 0.05);
-  --muted-foreground: var(--text-secondary);
   --accent: rgba(91, 127, 255, 0.12);
-  --accent-foreground: var(--brand);
-  --destructive: var(--danger);
   --border: rgba(255, 255, 255, 0.08);
   --input: rgba(255, 255, 255, 0.1);
-  --ring: var(--brand);
   --chart-1: #5b7fff;
   --chart-2: #a855f7;
   --chart-3: #f97316;
   --chart-4: #10b981;
   --chart-5: #ef4444;
+}
+
+/* ------------------------------------------------------------------
+   Light theme.
+
+   Everything past the landing page — sign-in, onboarding and the signed-in
+   app — runs on a white ground. It is a scoped override rather than a second
+   palette: `.theme-light` restates the same token names, so every component
+   underneath switches without knowing a theme exists. The marketing site keeps
+   the dark `:root` values.
+
+   The accent hues are deepened rather than reused. #5b7fff clears 3.5:1 on
+   white, which is under the 4.5:1 that text needs, so brand, success, danger
+   and amber each get a darker cut here.
+   ------------------------------------------------------------------ */
+.theme-light {
+  color-scheme: light;
+  /* `body` sets its colour from the dark `:root`, and headings inherit it —
+     so the scope has to restate the text colour, not only the tokens. */
+  color: var(--text-primary);
+
+  --bg-color: #ffffff;
+  --card-bg: #f9fafb;
+  --text-primary: #0b1220;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --input-bg: #f8fafc;
+
+  --brand: #4059e8;
+  --brand-soft: #2f4bd8;
+  --orange: #c2410c;
+  --success: #047857;
+  --danger: #dc2626;
+  --warn: #b45309;
+
+  --surface-subtle: #f8fafc;
+  --surface-hover: #f1f5f9;
+  --surface-mute: #eef2f7;
+  --border-color: #e5e7eb;
+  --border-strong: #cbd5e1;
+
+  --panel-bg: rgba(255, 255, 255, 0.75);
+  --panel-border: #e5e7eb;
+  --panel-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
+  --glow-brand: rgba(64, 89, 232, 0.1);
+  --glow-warm: rgba(249, 115, 22, 0.07);
+
+  /* Palette-specific shadcn values, mirroring the dark block above. */
+  --popover: #ffffff;
+  --secondary: #f1f5f9;
+  --muted: #f1f5f9;
+  --accent: rgba(64, 89, 232, 0.1);
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --chart-1: #4059e8;
+  --chart-2: #9333ea;
+  --chart-3: #c2410c;
+  --chart-4: #047857;
+  --chart-5: #dc2626;
+}
+
+/*
+ * The shadcn tokens that are just aliases of the palette above.
+ *
+ * These have to be restated per theme rather than living in `:root` alone: a
+ * custom property declared as `var(--other)` is substituted where it is
+ * declared, so a `--background: var(--bg-color)` on `:root` would inherit into
+ * `.theme-light` already resolved to the dark value.
+ */
+:root,
+.theme-light {
+  --radius: 0.75rem;
+  --background: var(--bg-color);
+  --foreground: var(--text-primary);
+  --card: var(--card-bg);
+  --card-foreground: var(--text-primary);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--brand);
+  --primary-foreground: #ffffff;
+  --secondary-foreground: var(--text-primary);
+  --muted-foreground: var(--text-secondary);
+  --accent-foreground: var(--brand);
+  --destructive: var(--danger);
+  --ring: var(--brand);
+}
+
+/*
+ * The root layout paints `body`/`.app-shell` from the dark `:root`, which the
+ * light screens would otherwise show through overscroll and the scrollbar
+ * gutter. Reach up from the themed subtree instead of threading a prop down
+ * from the root layout, which does not know the route.
+ */
+html:has(.theme-light) {
+  color-scheme: light;
+}
+body:has(.theme-light),
+.app-shell:has(.theme-light) {
+  background-color: #ffffff;
 }
 
 @theme inline {
@@ -91,8 +195,13 @@
   --color-subtle: var(--text-secondary);
   --color-faint: var(--text-muted);
   --color-hairline: var(--border-color);
+  --color-line-strong: var(--border-strong);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-mute: var(--surface-mute);
   --color-success: var(--success);
   --color-danger: var(--danger);
+  --color-warn: var(--warn);
   --color-orange: var(--orange);
   --color-grape: var(--purple);
   --color-cyan-glow: var(--cyan);
@@ -149,11 +258,11 @@
   .glass-panel {
     @apply relative z-[1] flex w-full flex-col rounded-[1.25rem] border;
     padding: var(--panel-pad-y) 1.5rem;
-    background: rgba(6, 13, 29, 0.6);
-    border-color: rgba(255, 255, 255, 0.08);
+    background: var(--panel-bg);
+    border-color: var(--panel-border);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--panel-shadow);
   }
 
   /* Login uses a slightly roomier version of the same panel. */
@@ -183,6 +292,14 @@
     @apply pointer-events-none absolute z-0 rounded-full;
     width: clamp(260px, 45vw, 620px);
     height: clamp(260px, 45vw, 620px);
+  }
+
+  /* Tints for `.glow`, as classes so they follow the theme's tokens. */
+  .glow-brand {
+    background: radial-gradient(circle, var(--glow-brand) 0%, transparent 70%);
+  }
+  .glow-warm {
+    background: radial-gradient(circle, var(--glow-warm) 0%, transparent 70%);
   }
 
   .btn-glow {

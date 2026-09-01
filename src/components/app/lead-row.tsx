@@ -21,7 +21,7 @@ export function LeadRow({ lead }: { lead: Lead }) {
     <li className="flex items-start gap-3 px-5 py-4">
       <span
         aria-hidden
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/6 font-display font-extrabold text-subtle"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-hover font-display font-extrabold text-subtle"
       >
         {lead.name.charAt(0)}
       </span>

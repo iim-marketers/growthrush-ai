@@ -19,7 +19,7 @@ export function LeadsChart() {
   const total = leadsByDay.reduce((sum, d) => sum + d.leads, 0);
 
   return (
-    <figure className="rounded-2xl border border-white/10 bg-card/60 p-5 backdrop-blur-sm sm:p-6">
+    <figure className="rounded-2xl border border-hairline bg-card p-5 backdrop-blur-sm sm:p-6">
       <figcaption className="mb-6 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <span>
           <span className="block font-display text-base font-bold text-ink">
@@ -45,7 +45,7 @@ export function LeadsChart() {
           {/* Hairline gridlines, one step off the surface and behind the bars. */}
           <div aria-hidden className="absolute inset-0 flex flex-col justify-between">
             {ticks.map((tick) => (
-              <span key={tick} className="block h-px w-full bg-white/8" />
+              <span key={tick} className="block h-px w-full bg-surface-mute" />
             ))}
           </div>
 
@@ -72,7 +72,7 @@ export function LeadsChart() {
 
                 <span
                   role="tooltip"
-                  className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 rounded-lg border border-white/12 bg-popover px-2.5 py-1.5 text-center whitespace-nowrap opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
+                  className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 rounded-lg border border-hairline bg-popover px-2.5 py-1.5 text-center whitespace-nowrap opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
                 >
                   <span className="block text-[0.7rem] text-faint">{day.day}</span>
                   <span className="block text-sm font-bold tabular-nums text-ink">

@@ -87,24 +87,18 @@ export function OnboardingWizard() {
   const props = { answers, set };
 
   return (
-    <div className="relative flex min-h-dvh flex-col bg-background">
+    <div className="theme-light relative flex min-h-dvh flex-col bg-background">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div
-          className="glow top-[-20%] left-1/2 -translate-x-1/2"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(91,127,255,0.14) 0%, transparent 70%)",
-          }}
-        />
+        <div className="glow glow-brand top-[-20%] left-1/2 -translate-x-1/2" />
       </div>
 
-      <header className="relative z-1 border-b border-white/10">
+      <header className="relative z-1 border-b border-hairline">
         <div className="mx-auto flex w-full max-w-xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
           {index === 0 ? (
             <Link
               href="/login"
               aria-label="Back to sign in"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-subtle transition-colors hover:bg-white/6 hover:text-ink"
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-subtle transition-colors hover:bg-surface-hover hover:text-ink"
             >
               <ArrowLeft size={18} aria-hidden />
             </Link>
@@ -113,12 +107,12 @@ export function OnboardingWizard() {
               type="button"
               onClick={back}
               aria-label="Previous step"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-subtle transition-colors hover:bg-white/6 hover:text-ink"
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-subtle transition-colors hover:bg-surface-hover hover:text-ink"
             >
               <ArrowLeft size={18} aria-hidden />
             </button>
           )}
-          <Logo size="sm" />
+          <Logo size="sm" tone="dark" />
           <span className="w-9 text-right text-xs font-semibold text-faint">
             {index + 1}/{onboardingSteps.length}
           </span>
@@ -126,7 +120,7 @@ export function OnboardingWizard() {
         <Progress
           value={((index + 1) / onboardingSteps.length) * 100}
           aria-label="Setup progress"
-          className="rounded-none bg-white/6"
+          className="rounded-none bg-surface-hover"
         />
       </header>
 
@@ -168,7 +162,7 @@ export function OnboardingWizard() {
       </main>
 
       {/* Sticky so the action stays reachable on a phone without scrolling. */}
-      <footer className="sticky bottom-0 z-1 border-t border-white/10 bg-background/85 backdrop-blur-md">
+      <footer className="sticky bottom-0 z-1 border-t border-hairline bg-background/85 backdrop-blur-md">
         <div className="mx-auto w-full max-w-xl px-4 py-4 sm:px-6">
           <CtaButton onClick={next} disabled={!canContinue}>
             {isLast ? `${step.cta} with ${planName(answers.plan)}` : step.cta}

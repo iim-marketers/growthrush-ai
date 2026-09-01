@@ -37,8 +37,8 @@ export default function LoginPage() {
         </p>
 
         <form onSubmit={submit} noValidate>
-          <div className="rhythm-md flex items-center rounded-xl border border-white/10 bg-white/3 px-3 py-2 transition-all focus-within:border-brand focus-within:bg-white/6 focus-within:ring-[3px] focus-within:ring-brand/15 sm:px-4">
-            <div className="mr-3 shrink-0 border-r border-white/10 pr-3 font-semibold text-subtle sm:mr-4 sm:pr-4">
+          <div className="rhythm-md flex items-center rounded-xl border border-hairline bg-surface-subtle px-3 py-2 transition-all focus-within:border-brand focus-within:bg-surface-hover focus-within:ring-[3px] focus-within:ring-brand/15 sm:px-4">
+            <div className="mr-3 shrink-0 border-r border-hairline pr-3 font-semibold text-subtle sm:mr-4 sm:pr-4">
               {account.countryCode} {account.dialCode}
             </div>
             <input
@@ -67,7 +67,7 @@ export default function LoginPage() {
           </CtaButton>
         </form>
 
-        <div className="rhythm-md flex items-center text-[0.85rem] text-faint before:flex-1 before:border-b before:border-white/10 after:flex-1 after:border-b after:border-white/10">
+        <div className="rhythm-md flex items-center text-[0.85rem] text-faint before:flex-1 before:border-b before:border-hairline after:flex-1 after:border-b after:border-hairline">
           <span className="px-4">or continue with</span>
         </div>
 
@@ -110,7 +110,7 @@ function SocialButton({
   return (
     <button
       type="button"
-      className={`flex w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 py-3.5 text-base font-semibold text-ink transition-all hover:border-white/20 hover:bg-white/8 ${
+      className={`flex w-full items-center justify-center gap-3 rounded-xl border border-hairline bg-surface-hover py-3.5 text-base font-semibold text-ink transition-all hover:border-line-strong hover:bg-surface-mute ${
         disabled ? "cursor-not-allowed opacity-50" : ""
       }`}
       disabled={disabled}
