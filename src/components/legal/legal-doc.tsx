@@ -23,7 +23,7 @@ export function LegalDocument({ doc }: { doc: LegalDoc }) {
             <dd className="text-subtle">{doc.effective}</dd>
           </div>
         </dl>
-        <a
+        {/* <a
           href={doc.pdf}
           target="_blank"
           rel="noopener"
@@ -31,7 +31,7 @@ export function LegalDocument({ doc }: { doc: LegalDoc }) {
         >
           <Download size={15} aria-hidden />
           Download the signed PDF
-        </a>
+        </a> */}
       </header>
 
       {doc.intro ? (
@@ -58,7 +58,7 @@ function SectionBody({ section }: { section: Section }) {
     <section
       id={section.id}
       /* Clears the sticky header when jumped to from the contents list. */
-      className="scroll-mt-24 pt-12"
+      className="scroll-mt-24 pt-8"
     >
       <h2 className="text-xl leading-snug sm:text-2xl">
         <span className="mr-2 text-brand">{section.number}.</span>
@@ -121,14 +121,14 @@ function BlockBody({ block }: { block: Block }) {
       return (
         /* Legal tables are wide; let them scroll rather than the page body. */
         <div className="mt-6 overflow-x-auto rounded-xl border border-white/10">
-          <table className="w-full min-w-[34rem] border-collapse text-left text-sm">
+          <table className="w-full min-w-136 border-collapse text-left text-sm">
             <thead>
-              <tr className="bg-white/[0.04]">
+              <tr className="bg-white/4">
                 {block.head.map((cell) => (
                   <th
                     key={cell}
                     scope="col"
-                    className="px-4 py-3 text-xs font-bold tracking-[0.1em] text-faint uppercase"
+                    className="px-4 py-3 text-xs font-bold tracking-widest text-faint uppercase"
                   >
                     {cell}
                   </th>
@@ -164,7 +164,7 @@ function BlockBody({ block }: { block: Block }) {
 
     case "contact":
       return (
-        <div className="mt-6 rounded-xl border border-white/10 bg-white/[0.02] px-5 py-4">
+        <div className="mt-6 rounded-xl border border-white/10 bg-white/2 px-5 py-4">
           {block.title ? (
             <p className="font-display text-sm font-bold text-ink">
               {block.title}

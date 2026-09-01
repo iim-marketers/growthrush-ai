@@ -35,7 +35,7 @@ export default async function LegalDocPage(props: PageProps<"/legal/[slug]">) {
   const doc = legalDocs[slug];
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+    <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 ">
       {/* Sibling documents, so a reader can move between them without going back. */}
       <nav aria-label="Legal documents" className="mb-10 flex flex-wrap gap-2">
         {legalNav.map((entry) => {
