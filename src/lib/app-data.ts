@@ -1,13 +1,4 @@
-/**
- * Static content for the signed-in app — OTP verify, onboarding, dashboard,
- * leads and billing. There is no backend yet, so every screen reads from here
- * the same way the marketing page reads from `landing-data.ts`.
- *
- * The figures below are one illustrative demo account, not real campaign
- * performance. They are internally consistent (128 leads × ₹142 = ₹18,176 of
- * spend) so the screens hold together — replace the whole block with API data
- * rather than editing numbers piecemeal.
- */
+import { caseStudies, heroStats } from "@/lib/landing-data";
 
 /* ------------------------------------------------------------------ *
  * Auth — the step between /login and onboarding
@@ -15,76 +6,234 @@
 
 export const verify = {
   length: 6,
-  /** Seconds before "Resend code" becomes clickable again. */
   resendSeconds: 30,
   title: "Enter the code",
-  /** `%s` is replaced with the masked number the code went to. */
   subtitle: "We sent a 6-digit code to %s",
   cta: "Verify & continue",
+  /* No SMS gateway yet, so the prototype has one fixed code and shows it in a
+     mock notification — otherwise the flow is a locked door. Delete this and
+     the mock message together once real OTPs are sent. */
+  demoCode: "000000",
+  sender: "GRWTHR",
+  smsBody: "%s is your growthrush.ai code",
+  wrongCode: "That code is not right — use the one in the message above.",
 } as const;
 
 /* ------------------------------------------------------------------ *
- * Onboarding — the three questions the AI needs before it can build ads
+ * Onboarding — the guided walk from "who are you?" to a live campaign
  * ------------------------------------------------------------------ */
 
-export const categories = [
-  "Coaching / Tuition",
-  "Salon & Spa",
-  "Restaurant / Café",
-  "Gym & Fitness",
-  "Clinic / Dental",
-  "Real Estate",
-  "Retail Store",
-  "Interior & Home",
-  "Something else",
-] as const;
+const demo = caseStudies[0];
 
-/** Radius the ads are served within, in kilometres. */
-export const radiusOptions = [
-  { km: 3, label: "3 km", note: "Tight — dense neighbourhoods" },
-  { km: 5, label: "5 km", note: "Recommended for most shops" },
-  { km: 10, label: "10 km", note: "Wider — clinics, showrooms" },
-  { km: 25, label: "25 km", note: "City-wide" },
-] as const;
+export type StepId =
+  | "business"
+  | "location"
+  | "confirm"
+  | "goal"
+  | "audience"
+  | "readiness"
+  | "ad"
+  | "plan";
 
-/** Daily ad spend. Stays in the customer's own Meta account. */
-export const budgetPresets = [
-  { amount: 300, label: "₹300", note: "Starter" },
-  { amount: 500, label: "₹500", note: "Popular" },
-  { amount: 800, label: "₹800", note: "Recommended" },
-  { amount: 1500, label: "₹1,500", note: "Aggressive" },
-] as const;
+type OnboardingStep = {
+  id: StepId;
+  eyebrow: string;
+  title: string;
+  accent?: string;
+  tail?: string;
+  body?: string;
+  cta: string;
+};
 
-/**
- * The wizard steps. `field` names the slice of form state each one owns, so the
- * "can I continue?" check stays in one place instead of a switch per step.
- */
-export const onboardingSteps = [
+export const onboardingSteps: readonly OnboardingStep[] = [
   {
     id: "business",
-    eyebrow: "Step 1 of 4",
-    title: "What do you do?",
-    body: "We pull your live Google listing and size the real audience near you.",
+    eyebrow: "About your business",
+    title: "What's your business called?",
+    cta: "Next",
   },
   {
-    id: "area",
-    eyebrow: "Step 2 of 4",
-    title: "Where should the ads run?",
-    body: "Your customers are the people who can actually reach your door.",
+    id: "location",
+    eyebrow: "Your location",
+    title: "Where do you get customers?",
+    body: "We'll size your real audience on Instagram & Facebook here.",
+    cta: "Next",
   },
   {
-    id: "budget",
-    eyebrow: "Step 3 of 4",
-    title: "Set your daily budget",
-    body: "This is ad spend, not a fee — it stays in your own account and you can change it any day.",
+    id: "confirm",
+    eyebrow: "Confirm your business",
+    title: "Which one is you?",
+    body: `We found these on Google near ${demo.city}.`,
+    cta: "Confirm & continue",
   },
   {
-    id: "whatsapp",
-    eyebrow: "Step 4 of 4",
-    title: "Where should leads land?",
-    body: "Every enquiry arrives here the moment someone fills your ad form.",
+    id: "goal",
+    eyebrow: "Your goal",
+    title: "What do you want more of?",
+    cta: "See my results",
+  },
+  {
+    id: "audience",
+    eyebrow: `Live audience · ${demo.city}`,
+    title: "Your customers are scrolling",
+    accent: "right now",
+    cta: "Can I reach them?",
+  },
+  {
+    id: "readiness",
+    eyebrow: "Your lead readiness",
+    title: "Right now, you're",
+    accent: "invisible",
+    tail: "to them",
+    cta: "Build my lead campaign",
+  },
+  {
+    id: "ad",
+    eyebrow: "Your ad is ready",
+    title: "Here's your first Meta ad 🎉",
+    body: `Made for ${demo.business} — ready to go live.`,
+    cta: "Choose my plan & go live",
+  },
+  {
+    id: "plan",
+    eyebrow: "Pick your plan",
+    title: "Go live and start getting leads",
+    body: "Both plans run your Instagram & Facebook ads. Cancel anytime.",
+    cta: "Go live",
+  },
+];
+
+export const businessStep = {
+  placeholder: "Business name",
+  prefill: demo.business,
+  categoryLabel: "What do you offer?",
+} as const;
+
+export const categories = [
+  "Coaching / Classes",
+  "Real estate",
+  "Salon / Spa",
+  "Clinic / Health",
+  "Restaurant",
+  "Retail store",
+  "Gym / Fitness",
+  "Services",
+] as const;
+
+export const locationStep = {
+  placeholder: "Location",
+  prefill: demo.city,
+  noteTitle: "Why we ask",
+  noteBody:
+    "We pull your live Google listing and calculate how many people near you are ready to buy — before you spend a rupee.",
+} as const;
+
+export const googleListings = [
+  {
+    id: "sharma-coaching",
+    name: demo.business,
+    address: "14B Rashbehari Ave, Gariahat, Kolkata 700019",
+    rating: 4.3,
+    reviews: 58,
+  },
+  {
+    id: "sharma-tutorials",
+    name: "Sharma Tutorials & Academy",
+    address: "7 Southern Ave, Lake Market, Kolkata 700029",
+    rating: 4.1,
+    reviews: 37,
+  },
+  {
+    id: "sharma-home",
+    name: "Sharma Home Tuition",
+    address: "22 Hindustan Rd, Gariahat, Kolkata 700019",
+    rating: 3.6,
+    reviews: 12,
   },
 ] as const;
+
+export const notListed = {
+  id: "not-listed",
+  name: "My business isn't listed",
+  note: "We'll create your profile during setup",
+} as const;
+
+export const goals = [
+  {
+    id: "whatsapp",
+    icon: "message",
+    title: "WhatsApp leads",
+    desc: "Chats to your phone",
+  },
+  {
+    id: "phone",
+    icon: "phone",
+    title: "Phone calls",
+    desc: "Ready-to-buy callers",
+  },
+  {
+    id: "form",
+    icon: "form",
+    title: "Form leads",
+    desc: "Name, number & need",
+  },
+  {
+    id: "store",
+    icon: "store",
+    title: "Store visits",
+    desc: "Footfall near you",
+  },
+] as const;
+
+export const monthlyBudgets = [
+  { id: "under-10k", label: "Under ₹10k" },
+  { id: "10k-30k", label: "₹10k – ₹30k" },
+  { id: "30k-plus", label: "₹30k +" },
+  { id: "not-sure", label: "Not sure" },
+] as const;
+
+export const audience = {
+  reach: heroStats[0].value,
+  caption: "People near you who match your ideal customer",
+  interest: "coaching & classes",
+  networks: ["Facebook", "Instagram"],
+  breakdown: [
+    { label: "Age 25–34", pct: 41 },
+    { label: "Age 35–44", pct: 32 },
+    { label: "Age 18–24", pct: 19 },
+    { label: "Within 5 km", pct: 28 },
+  ],
+} as const;
+
+export const readiness = {
+  score: 14,
+  grade: "Poor",
+  benchmark: "Businesses scoring 75+ get 40–300 leads every month",
+  today: { label: "Today", value: "~6" },
+  withAi: { label: "With AI", value: "120+" },
+  unit: "leads / month",
+  source: demo.headline,
+} as const;
+
+export const adPreview = {
+  badge: "Generated for you",
+  author: demo.business,
+  meta: `Sponsored · ${demo.city}`,
+  eyebrow: `Now enrolling · ${demo.city}`,
+  headline: `Looking for the best coaching in ${demo.city}?`,
+  cta: "Book a free demo",
+  leadCta: "Send WhatsApp",
+  footer: "AI writes fresh copy & creatives every week",
+} as const;
+
+export const planStep = {
+  budgetNote: {
+    strong: "Your ad budget is separate",
+    body: `and fully yours — set it from ${heroStats[2].value}/day, change anytime. The plan fee covers creatives & management.`,
+  },
+  guarantee: "30-day results guarantee",
+  guaranteeNote: "cancel anytime",
+} as const;
 
 /* ------------------------------------------------------------------ *
  * The signed-in shell
@@ -113,15 +262,10 @@ export const campaign = {
   status: "live",
   liveSince: "24 days",
   dailyBudget: 800,
-  /** Month-to-date spend against a 30-day cap, for the budget meter. */
   spent: 18176,
   monthlyCap: 24000,
 } as const;
 
-/**
- * KPI row. `up` is the direction of the delta; `upIsGood` says how to colour it
- * — a rising cost per lead is bad news, a rising lead count is not.
- */
 export const dashboardStats = [
   {
     id: "leads",
@@ -157,10 +301,6 @@ export const dashboardStats = [
   },
 ] as const;
 
-/**
- * Leads per day, oldest first. One series over time — plotted as columns in a
- * single hue, with only the peak directly labelled.
- */
 export const leadsByDay = [
   { day: "18 Aug", leads: 3 },
   { day: "19 Aug", leads: 5 },
@@ -182,10 +322,6 @@ export const leadsByDay = [
  * Leads
  * ------------------------------------------------------------------ */
 
-/**
- * Lead states. `tone` maps to a status colour; every badge also carries its
- * label, so state is never communicated by colour alone.
- */
 export const leadStatuses = [
   { id: "new", label: "New", tone: "brand" },
   { id: "contacted", label: "Contacted", tone: "amber" },
@@ -275,15 +411,18 @@ export const leads = [
  * ------------------------------------------------------------------ */
 
 export const billing = {
-  /** Matches an `id` in `plans` from `landing-data.ts` — the source of truth
-   *  for what each plan costs and includes. */
   planId: "ai",
   renewsOn: "28 September 2026",
   paymentMethod: { brand: "HDFC Visa", last4: "4417", expiry: "08/29" },
 } as const;
 
 export const invoices = [
-  { id: "GR-2026-0812", period: "August 2026", amount: "₹2,399", status: "Paid" },
+  {
+    id: "GR-2026-0812",
+    period: "August 2026",
+    amount: "₹2,399",
+    status: "Paid",
+  },
   { id: "GR-2026-0711", period: "July 2026", amount: "₹2,399", status: "Paid" },
   { id: "GR-2026-0610", period: "June 2026", amount: "₹2,399", status: "Paid" },
 ] as const;

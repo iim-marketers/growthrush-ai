@@ -3,27 +3,21 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { Pencil } from "lucide-react";
+import { MessageSquare, Pencil } from "lucide-react";
 import { CtaButton } from "@/components/cta-button";
 import { verify } from "@/lib/app-data";
 import { PENDING_NUMBER_KEY, maskNumber } from "@/lib/session";
+import { cn } from "@/lib/utils";
 
-/**
- * Six single-character boxes rather than one long input. Each box owns one
- * digit; typing advances, Backspace on an empty box retreats, and a pasted code
- * fills the row in one go.
- */
 export function VerifyForm() {
   const router = useRouter();
   const [digits, setDigits] = useState(() =>
     Array.from({ length: verify.length }, () => ""),
   );
   const [secondsLeft, setSecondsLeft] = useState<number>(verify.resendSeconds);
+  const [wrong, setWrong] = useState(false);
   const boxes = useRef<(HTMLInputElement | null)[]>([]);
 
-  /* sessionStorage is an external store, not React state: read it through
-     useSyncExternalStore so the server render gets a defined snapshot and the
-     client swaps in the real number on hydration, with no cascading effect. */
   const number = useSyncExternalStore(
     subscribeToNothing,
     () => sessionStorage.getItem(PENDING_NUMBER_KEY) ?? "",
@@ -44,9 +38,9 @@ export function VerifyForm() {
     const clean = value.replace(/\D/g, "");
     if (!clean) return;
 
+    setWrong(false);
     setDigits((current) => {
       const next = [...current];
-      /* A paste lands as one long value — spread it across the row from here. */
       for (let i = 0; i < clean.length && index + i < next.length; i++) {
         next[index + i] = clean[i];
       }
@@ -57,19 +51,26 @@ export function VerifyForm() {
     boxes.current[landed]?.focus();
   };
 
+  const paste = () => {
+    setWrong(false);
+    setDigits(verify.demoCode.split(""));
+    boxes.current[verify.length - 1]?.focus();
+  };
+
   const onKeyDown = (index: number, event: React.KeyboardEvent) => {
     if (event.key === "Backspace") {
       event.preventDefault();
+      setWrong(false);
       setDigits((current) => {
         const next = [...current];
-        /* Clear this box, or step back and clear that one if already empty. */
         if (next[index]) next[index] = "";
         else if (index > 0) next[index - 1] = "";
         return next;
       });
       if (!digits[index] && index > 0) boxes.current[index - 1]?.focus();
     }
-    if (event.key === "ArrowLeft" && index > 0) boxes.current[index - 1]?.focus();
+    if (event.key === "ArrowLeft" && index > 0)
+      boxes.current[index - 1]?.focus();
     if (event.key === "ArrowRight" && index < verify.length - 1) {
       boxes.current[index + 1]?.focus();
     }
@@ -78,7 +79,11 @@ export function VerifyForm() {
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
     if (!complete) return;
-    /* No backend to check the code against — any six digits go through. */
+    if (code !== verify.demoCode) {
+      setWrong(true);
+      boxes.current[0]?.focus();
+      return;
+    }
     sessionStorage.removeItem(PENDING_NUMBER_KEY);
     router.push("/onboarding");
   };
@@ -116,10 +121,27 @@ export function VerifyForm() {
               onChange={(event) => write(index, event.target.value)}
               onKeyDown={(event) => onKeyDown(index, event)}
               onFocus={(event) => event.target.select()}
-              className="h-14 w-full min-w-0 rounded-xl border border-white/10 bg-white/3 text-center font-display text-xl font-bold text-ink transition-all outline-none focus:border-brand focus:bg-white/6 focus:ring-[3px] focus:ring-brand/15"
+              aria-invalid={wrong}
+              className={cn(
+                "h-14 w-full min-w-0 rounded-xl border bg-white/3 text-center font-display text-xl font-bold text-ink transition-all outline-none focus:bg-white/6 focus:ring-[3px]",
+                wrong
+                  ? "border-danger focus:border-danger focus:ring-danger/20"
+                  : "border-white/10 focus:border-brand focus:ring-brand/15",
+              )}
             />
           ))}
         </div>
+
+        {wrong && (
+          <p
+            role="alert"
+            className="mt-2 text-[0.8rem] font-semibold text-danger"
+          >
+            {verify.wrongCode}
+          </p>
+        )}
+
+        <DemoSms onPaste={paste} />
 
         <CtaButton type="submit" className="rhythm-md" disabled={!complete}>
           {verify.cta}
@@ -143,8 +165,34 @@ export function VerifyForm() {
   );
 }
 
-/* The pending number is written once, on the screen before this one, and never
-   changes while this screen is open — so there is nothing to subscribe to. */
+function DemoSms({ onPaste }: { onPaste: () => void }) {
+  return (
+    <div className="rhythm-md mt-4 flex items-center gap-3 rounded-xl border border-white/10 bg-white/3 p-3">
+      <span
+        aria-hidden
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand/15 text-brand"
+      >
+        <MessageSquare size={17} />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-[0.7rem] font-bold tracking-wide text-faint">
+          {verify.sender} · now
+        </span>
+        <span className="block truncate text-[0.85rem] text-ink">
+          {verify.smsBody.replace("%s", verify.demoCode)}
+        </span>
+      </span>
+      <button
+        type="button"
+        onClick={onPaste}
+        className="shrink-0 rounded-lg border border-white/12 px-3 py-1.5 text-[0.8rem] font-semibold text-brand transition-colors hover:border-brand/40 hover:bg-brand/10"
+      >
+        Paste
+      </button>
+    </div>
+  );
+}
+
 function subscribeToNothing() {
   return () => {};
 }
