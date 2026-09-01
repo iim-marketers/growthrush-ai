@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Link from "next/link";
 import { Download } from "lucide-react";
 import type { Block, LegalDoc, Section } from "@/lib/legal/types";
