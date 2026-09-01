@@ -42,7 +42,7 @@ export function Features() {
           return (
             <StaggerItem key={feature.title}>
               <div className="group h-full overflow-hidden rounded-2xl border border-white/10 bg-card/60 backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-brand/30">
-                <div className="relative aspect-[16/9] overflow-hidden">
+                <div className="relative aspect-video overflow-hidden">
                   <Image
                     src={feature.image}
                     alt=""
@@ -50,7 +50,7 @@ export function Features() {
                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     className="object-cover opacity-45 transition-all duration-700 group-hover:scale-105 group-hover:opacity-60"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-t from-card via-card/60 to-transparent" />
                   <span className="absolute bottom-4 left-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-background/80 text-brand backdrop-blur-sm">
                     <Icon size={20} />
                   </span>
