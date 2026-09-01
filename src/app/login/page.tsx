@@ -1,24 +1,27 @@
 "use client";
 
+import { useState } from "react";
 import { Check } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { CtaButton } from "@/components/cta-button";
+import { ConsentCheckbox } from "@/components/consent-checkbox";
 import { account, brand, pitch } from "@/lib/data";
 
 export default function LoginPage() {
+  const [agreed, setAgreed] = useState(false);
+
   return (
     <div className="relative min-h-dvh w-full bg-background">
-      {/* Decorative only — clipped to the viewport so it never drives scroll. */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div
-          className="glow -top-[15%] -right-[10%]"
+          className="glow top-[-15%] right-[-10%]"
           style={{
             background:
               "radial-gradient(circle, rgba(91,127,255,0.15) 0%, transparent 70%)",
           }}
         />
         <div
-          className="glow -bottom-[15%] -left-[10%]"
+          className="glow bottom-[-15%] left-[-10%]"
           style={{
             background:
               "radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%)",
@@ -26,15 +29,10 @@ export default function LoginPage() {
         />
       </div>
 
-      {/*
-        Phones/tablets get a single centred column; from lg the pitch moves
-        alongside the form so wide screens are not mostly empty.
-      */}
-      <div className="relative z-[1] mx-auto flex min-h-dvh w-full max-w-6xl flex-col items-center justify-center screen-pad-y gap-10 px-4 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:gap-16 lg:px-10 xl:gap-24">
+      <div className="relative z-1 mx-auto flex min-h-dvh w-full max-w-6xl flex-col items-center justify-center screen-pad-y gap-10 px-4 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:gap-16 lg:px-10 xl:gap-24">
         <PitchPanel />
 
-        <div className="glass-panel glass-panel-roomy animate-slide-up w-full max-w-[26rem] shrink-0 sm:max-w-[27rem] lg:mx-0">
-          {/* On lg the pitch panel carries the logo, so hide this one. */}
+        <div className="glass-panel glass-panel-roomy animate-slide-up w-full max-w-104 shrink-0 sm:max-w-108 lg:mx-0">
           <Logo
             size="md"
             glow
@@ -48,7 +46,7 @@ export default function LoginPage() {
             Enter your mobile number to continue
           </p>
 
-          <div className="rhythm-md flex items-center rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 transition-all focus-within:border-brand focus-within:bg-white/[0.06] focus-within:ring-[3px] focus-within:ring-brand/15 sm:px-4">
+          <div className="rhythm-md flex items-center rounded-xl border border-white/10 bg-white/3 px-3 py-2 transition-all focus-within:border-brand focus-within:bg-white/6 focus-within:ring-[3px] focus-within:ring-brand/15 sm:px-4">
             <div className="mr-3 shrink-0 border-r border-white/10 pr-3 font-semibold text-subtle sm:mr-4 sm:pr-4">
               {account.countryCode} {account.dialCode}
             </div>
@@ -59,7 +57,15 @@ export default function LoginPage() {
             />
           </div>
 
-          <CtaButton className="rhythm-lg">Continue</CtaButton>
+          <ConsentCheckbox
+            checked={agreed}
+            onChange={setAgreed}
+            className="rhythm-md"
+          />
+
+          <CtaButton className="rhythm-lg" disabled={!agreed}>
+            Continue
+          </CtaButton>
 
           <div className="rhythm-md flex items-center text-[0.85rem] text-faint before:flex-1 before:border-b before:border-white/10 after:flex-1 after:border-b after:border-white/10">
             <span className="px-4">or continue with</span>
@@ -141,7 +147,7 @@ function SocialButton({
   return (
     <button
       type="button"
-      className={`flex w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 py-3.5 text-base font-semibold text-ink transition-all hover:border-white/20 hover:bg-white/[0.08] ${
+      className={`flex w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 py-3.5 text-base font-semibold text-ink transition-all hover:border-white/20 hover:bg-white/8 ${
         disabled ? "cursor-not-allowed opacity-50" : ""
       }`}
       disabled={disabled}

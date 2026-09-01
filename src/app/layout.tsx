@@ -24,7 +24,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} — More customers, zero ad agencies`,
+    default: `${SITE_NAME}`,
     template: `%s · ${SITE_NAME}`,
   },
   description: DESCRIPTION,

@@ -7,6 +7,7 @@ import { CaseStudies } from "@/components/landing/case-studies";
 import { Results } from "@/components/landing/results";
 import { Faq } from "@/components/landing/faq";
 import { Closing } from "@/components/landing/closing";
+import { SiteFooter } from "@/components/landing/site-footer";
 
 export const metadata: Metadata = {
   description:
@@ -27,6 +28,7 @@ export default function LandingPage() {
         <Faq />
         <Closing />
       </main>
+      <SiteFooter />
     </>
   );
 }
