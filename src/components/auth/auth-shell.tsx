@@ -10,22 +10,10 @@ import { pitch } from "@/lib/data";
  */
 export function AuthShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative min-h-dvh w-full bg-background">
+    <div className="theme-light relative min-h-dvh w-full bg-background">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div
-          className="glow top-[-15%] right-[-10%]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(91,127,255,0.15) 0%, transparent 70%)",
-          }}
-        />
-        <div
-          className="glow bottom-[-15%] left-[-10%]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%)",
-          }}
-        />
+        <div className="glow glow-brand top-[-15%] right-[-10%]" />
+        <div className="glow glow-warm bottom-[-15%] left-[-10%]" />
       </div>
 
       <div className="relative z-1 mx-auto flex min-h-dvh w-full max-w-6xl flex-col items-center justify-center screen-pad-y gap-10 px-4 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:gap-16 lg:px-10 xl:gap-24">
@@ -42,7 +30,7 @@ export function AuthCard({ children }: { children: React.ReactNode }) {
     <div className="glass-panel glass-panel-roomy animate-slide-up w-full max-w-104 shrink-0 sm:max-w-108 lg:mx-0">
       <Logo
         size="md"
-        glow
+        tone="dark"
         className="hide-on-short rhythm-lg justify-center lg:hidden"
       />
       {children}
@@ -54,7 +42,7 @@ export function AuthCard({ children }: { children: React.ReactNode }) {
 function PitchPanel() {
   return (
     <section className="hidden max-w-xl flex-col lg:flex">
-      <Logo size="lg" glow />
+      <Logo size="lg" tone="dark" />
 
       <h2 className="mt-8 text-[clamp(2rem,1.4rem+1.8vw,3rem)] leading-[1.1]">
         {pitch.headline}{" "}

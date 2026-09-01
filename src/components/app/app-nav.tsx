@@ -22,9 +22,9 @@ export function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-20 hidden w-60 flex-col border-r border-white/10 bg-white/2 px-4 py-6 lg:flex">
+    <aside className="fixed inset-y-0 left-0 z-20 hidden w-60 flex-col border-r border-hairline bg-surface-subtle px-4 py-6 lg:flex">
       <Link href="/" aria-label="growthrush.ai home" className="px-2">
-        <Logo size="sm" />
+        <Logo size="sm" tone="dark" />
       </Link>
 
       <nav aria-label="Main" className="mt-8 flex flex-1 flex-col gap-1">
@@ -40,7 +40,7 @@ export function AppSidebar() {
                 "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors",
                 active
                   ? "bg-brand/12 text-brand"
-                  : "text-subtle hover:bg-white/5 hover:text-ink",
+                  : "text-subtle hover:bg-surface-hover hover:text-ink",
               )}
             >
               <Icon size={18} aria-hidden />
@@ -50,7 +50,7 @@ export function AppSidebar() {
         })}
       </nav>
 
-      <div className="border-t border-white/10 pt-4">
+      <div className="border-t border-hairline pt-4">
         <div className="flex items-center gap-3 px-2">
           <Avatar />
           <span className="min-w-0">
@@ -64,7 +64,7 @@ export function AppSidebar() {
         </div>
         <Link
           href="/login"
-          className="mt-3 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-subtle transition-colors hover:bg-white/5 hover:text-ink"
+          className="mt-3 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-subtle transition-colors hover:bg-surface-hover hover:text-ink"
         >
           <LogOut size={18} aria-hidden />
           Sign out
@@ -77,9 +77,9 @@ export function AppSidebar() {
 /** Phone chrome: the brand up top, the tabs within thumb reach at the bottom. */
 export function AppTopBar() {
   return (
-    <header className="sticky top-0 z-20 flex items-center justify-between border-b border-white/10 bg-background/85 px-4 py-3 backdrop-blur-md lg:hidden">
+    <header className="sticky top-0 z-20 flex items-center justify-between border-b border-hairline bg-background/85 px-4 py-3 backdrop-blur-md lg:hidden">
       <Link href="/" aria-label="growthrush.ai home">
-        <Logo size="sm" />
+        <Logo size="sm" tone="dark" />
       </Link>
       <Avatar />
     </header>
@@ -92,7 +92,7 @@ export function AppTabBar() {
   return (
     <nav
       aria-label="Main"
-      className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-3 border-t border-white/10 bg-background/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-3 border-t border-hairline bg-background/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
     >
       {appNav.map((item) => {
         const Icon = icons[item.icon];

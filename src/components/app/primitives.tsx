@@ -52,7 +52,7 @@ export function StatTile({
   const Arrow = up ? TrendingUp : TrendingDown;
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-card/60 p-5 backdrop-blur-sm">
+    <div className="rounded-2xl border border-hairline bg-card p-5 backdrop-blur-sm">
       <p className="text-sm text-faint">{label}</p>
       <p className="mt-2 font-display text-3xl font-extrabold text-ink">
         {value}
@@ -75,9 +75,9 @@ export function StatTile({
    with its label, so it is legible without colour vision. */
 const tones = {
   brand: "bg-brand/15 text-brand",
-  amber: "bg-amber-400/15 text-amber-400",
+  amber: "bg-warn/15 text-warn",
   success: "bg-success/15 text-success",
-  muted: "bg-white/8 text-faint",
+  muted: "bg-surface-mute text-faint",
 } as const;
 
 export function StatusBadge({ status }: { status: LeadStatus }) {
@@ -111,11 +111,11 @@ export function Panel({
   return (
     <section
       className={cn(
-        "rounded-2xl border border-white/10 bg-card/60 backdrop-blur-sm",
+        "rounded-2xl border border-hairline bg-card backdrop-blur-sm",
         className,
       )}
     >
-      <div className="flex items-center justify-between gap-4 border-b border-white/8 px-5 py-4">
+      <div className="flex items-center justify-between gap-4 border-b border-hairline px-5 py-4">
         <h2 className="font-display text-base font-bold text-ink">{title}</h2>
         {action}
       </div>

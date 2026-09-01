@@ -46,7 +46,7 @@ export function LeadsBoard() {
       />
 
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/3 px-3 py-2.5 transition-all focus-within:border-brand focus-within:bg-white/6 sm:w-64">
+        <div className="flex items-center gap-2 rounded-xl border border-hairline bg-surface-subtle px-3 py-2.5 transition-all focus-within:border-brand focus-within:bg-surface-hover sm:w-64">
           <Search size={16} aria-hidden className="shrink-0 text-faint" />
           <input
             type="search"
@@ -73,7 +73,7 @@ export function LeadsBoard() {
                 "shrink-0 rounded-full border px-3.5 py-2 text-sm font-semibold transition-colors",
                 filter === option.id
                   ? "border-brand bg-brand/15 text-ink"
-                  : "border-white/10 bg-white/3 text-subtle hover:border-white/20 hover:text-ink",
+                  : "border-hairline bg-surface-subtle text-subtle hover:border-line-strong hover:text-ink",
               )}
             >
               {option.label}
@@ -87,7 +87,7 @@ export function LeadsBoard() {
 
       <Panel title={`${visible.length} of ${leads.length} leads`}>
         {visible.length > 0 ? (
-          <ul className="divide-y divide-white/8">
+          <ul className="divide-y divide-hairline">
             {visible.map((lead) => (
               <LeadRow key={lead.id} lead={lead as Lead} />
             ))}

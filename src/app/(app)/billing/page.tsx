@@ -51,7 +51,7 @@ export default function BillingPage() {
               Renews on {billing.renewsOn}
             </p>
 
-            <ul className="mt-5 flex flex-col gap-2.5 border-t border-white/8 pt-5">
+            <ul className="mt-5 flex flex-col gap-2.5 border-t border-hairline pt-5">
               {current.features.map((feature) => (
                 <li
                   key={feature}
@@ -80,11 +80,11 @@ export default function BillingPage() {
                 ₹{campaign.spent.toLocaleString("en-IN")} spent this month
               </p>
 
-              <div className="mt-5 flex items-start gap-3 rounded-xl border border-amber-500/25 bg-amber-500/[0.07] p-4">
+              <div className="mt-5 flex items-start gap-3 rounded-xl border border-warn/30 bg-warn/[0.07] p-4">
                 <Info
                   size={18}
                   aria-hidden
-                  className="mt-0.5 shrink-0 text-amber-400"
+                  className="mt-0.5 shrink-0 text-warn"
                 />
                 <p className="text-sm leading-relaxed text-subtle">
                   <strong className="text-ink">We never charge this.</strong>{" "}
@@ -99,7 +99,7 @@ export default function BillingPage() {
             <div className="flex items-center gap-3 px-5 py-5">
               <span
                 aria-hidden
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/6 text-subtle"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-surface-hover text-subtle"
               >
                 <CreditCard size={18} />
               </span>
@@ -113,7 +113,7 @@ export default function BillingPage() {
               </span>
               <button
                 type="button"
-                className="shrink-0 rounded-lg border border-white/12 px-3 py-2 text-sm font-semibold text-subtle transition-colors hover:border-white/25 hover:text-ink"
+                className="shrink-0 rounded-lg border border-hairline px-3 py-2 text-sm font-semibold text-subtle transition-colors hover:border-line-strong hover:text-ink"
               >
                 Change
               </button>
@@ -147,7 +147,7 @@ export default function BillingPage() {
       )}
 
       <Panel title="Invoices" className="mt-4">
-        <ul className="divide-y divide-white/8">
+        <ul className="divide-y divide-hairline">
           {invoices.map((invoice) => (
             <li
               key={invoice.id}
@@ -168,7 +168,7 @@ export default function BillingPage() {
               <button
                 type="button"
                 aria-label={`Download the ${invoice.period} invoice`}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-subtle transition-colors hover:bg-white/6 hover:text-ink"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-subtle transition-colors hover:bg-surface-hover hover:text-ink"
               >
                 <Download size={16} aria-hidden />
               </button>

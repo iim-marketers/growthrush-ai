@@ -123,10 +123,10 @@ export function VerifyForm() {
               onFocus={(event) => event.target.select()}
               aria-invalid={wrong}
               className={cn(
-                "h-14 w-full min-w-0 rounded-xl border bg-white/3 text-center font-display text-xl font-bold text-ink transition-all outline-none focus:bg-white/6 focus:ring-[3px]",
+                "h-14 w-full min-w-0 rounded-xl border bg-surface-subtle text-center font-display text-xl font-bold text-ink transition-all outline-none focus:bg-surface-hover focus:ring-[3px]",
                 wrong
                   ? "border-danger focus:border-danger focus:ring-danger/20"
-                  : "border-white/10 focus:border-brand focus:ring-brand/15",
+                  : "border-hairline focus:border-brand focus:ring-brand/15",
               )}
             />
           ))}
@@ -167,7 +167,7 @@ export function VerifyForm() {
 
 function DemoSms({ onPaste }: { onPaste: () => void }) {
   return (
-    <div className="rhythm-md mt-4 flex items-center gap-3 rounded-xl border border-white/10 bg-white/3 p-3">
+    <div className="rhythm-md mt-4 flex items-center gap-3 rounded-xl border border-hairline bg-surface-subtle p-3">
       <span
         aria-hidden
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand/15 text-brand"
@@ -185,7 +185,7 @@ function DemoSms({ onPaste }: { onPaste: () => void }) {
       <button
         type="button"
         onClick={onPaste}
-        className="shrink-0 rounded-lg border border-white/12 px-3 py-1.5 text-[0.8rem] font-semibold text-brand transition-colors hover:border-brand/40 hover:bg-brand/10"
+        className="shrink-0 rounded-lg border border-hairline px-3 py-1.5 text-[0.8rem] font-semibold text-brand transition-colors hover:border-brand/40 hover:bg-brand/10"
       >
         Paste
       </button>

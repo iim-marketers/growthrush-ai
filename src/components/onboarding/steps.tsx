@@ -82,7 +82,7 @@ export function LocationStep({ answers, set }: StepProps) {
         placeholder={locationStep.placeholder}
       />
 
-      <div className="mt-6 rounded-xl border border-white/10 bg-white/3 p-4 sm:p-5">
+      <div className="mt-6 rounded-xl border border-hairline bg-surface-subtle p-4 sm:p-5">
         <p className="text-sm font-bold text-ink">{locationStep.noteTitle}</p>
         <p className="mt-1.5 text-sm leading-relaxed text-subtle">
           {locationStep.noteBody}
@@ -146,14 +146,14 @@ function ListingCard({
         "flex items-start gap-3 rounded-xl border p-4 text-left transition-colors",
         selected
           ? "border-brand bg-brand/[0.09]"
-          : "border-white/10 bg-white/3 hover:border-white/20",
+          : "border-hairline bg-surface-subtle hover:border-line-strong",
       )}
     >
       <span
         aria-hidden
         className={cn(
           "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors",
-          selected ? "border-brand bg-brand text-white" : "border-white/20",
+          selected ? "border-brand bg-brand text-white" : "border-line-strong",
         )}
       >
         {selected && <Check size={12} strokeWidth={3} />}
@@ -173,8 +173,8 @@ function Rating({ rating, reviews }: { rating: number; reviews: number }) {
             size={11}
             className={
               i < Math.round(rating)
-                ? "fill-amber-400 text-amber-400"
-                : "text-white/20"
+                ? "fill-warn text-warn"
+                : "text-line-strong"
             }
           />
         ))}
@@ -213,14 +213,14 @@ export function GoalStep({ answers, set }: StepProps) {
                 "flex flex-col items-start rounded-xl border p-4 text-left transition-colors",
                 selected
                   ? "border-brand bg-brand/[0.09]"
-                  : "border-white/10 bg-white/3 hover:border-white/20",
+                  : "border-hairline bg-surface-subtle hover:border-line-strong",
               )}
             >
               <span
                 aria-hidden
                 className={cn(
                   "flex h-10 w-10 items-center justify-center rounded-xl transition-colors",
-                  selected ? "bg-brand/20 text-brand" : "bg-white/6 text-subtle",
+                  selected ? "bg-brand/20 text-brand" : "bg-surface-hover text-subtle",
                 )}
               >
                 <Icon size={18} />
@@ -277,7 +277,7 @@ export function AudienceStep() {
           {audience.networks.map((network) => (
             <span
               key={network}
-              className="rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-xs font-semibold text-subtle"
+              className="rounded-full border border-hairline bg-surface-hover px-3 py-1.5 text-xs font-semibold text-subtle"
             >
               {network}
             </span>
@@ -285,7 +285,7 @@ export function AudienceStep() {
         </div>
       </div>
 
-      <div className="mt-4 rounded-2xl border border-white/10 bg-white/3 p-5 sm:p-6">
+      <div className="mt-4 rounded-2xl border border-hairline bg-surface-subtle p-5 sm:p-6">
         <p className="text-sm font-bold text-ink">Who&rsquo;s searching near you</p>
         <dl className="mt-4 flex flex-col gap-3.5">
           {audience.breakdown.map((row) => (
@@ -320,7 +320,7 @@ export function AudienceStep() {
 export function ReadinessStep() {
   return (
     <>
-      <div className="rounded-2xl border border-white/10 bg-white/3 p-6 text-center">
+      <div className="rounded-2xl border border-hairline bg-surface-subtle p-6 text-center">
         <p className="text-sm leading-relaxed text-subtle">
           {readiness.benchmark}
         </p>
@@ -387,7 +387,7 @@ function Gauge({ score, grade }: { score: number; grade: string }) {
           style={{ maskImage: ring, WebkitMaskImage: ring }}
         >
           {/* Track, then the filled portion on top of it. */}
-          <div className="absolute inset-0 rounded-full bg-white/8" />
+          <div className="absolute inset-0 rounded-full bg-surface-mute" />
           <div
             className="absolute inset-0 rounded-full"
             style={{
@@ -428,13 +428,13 @@ function GrowthCard({
     <div
       className={cn(
         "flex-1 rounded-xl border p-4 text-center",
-        good ? "border-success/35 bg-success/[0.08]" : "border-white/10 bg-white/3",
+        good ? "border-success/35 bg-success/[0.08]" : "border-hairline bg-surface-subtle",
       )}
     >
       <span
         className={cn(
           "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[0.7rem] font-bold",
-          good ? "bg-success/15 text-success" : "bg-white/8 text-faint",
+          good ? "bg-success/15 text-success" : "bg-surface-mute text-faint",
         )}
       >
         {good ? "✓" : "✕"} {label}
@@ -458,7 +458,7 @@ function GrowthCard({
 
 export function AdStep() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-card/60">
+    <div className="overflow-hidden rounded-2xl border border-hairline bg-card">
       <div className="flex items-center gap-3 px-4 py-3">
         <span
           aria-hidden
@@ -534,15 +534,15 @@ export function PlanStep({ answers, set }: StepProps) {
         ))}
       </div>
 
-      <div className="mt-4 flex items-start gap-3 rounded-xl border border-amber-500/25 bg-amber-500/[0.07] p-4">
-        <Info size={18} aria-hidden className="mt-0.5 shrink-0 text-amber-400" />
+      <div className="mt-4 flex items-start gap-3 rounded-xl border border-warn/30 bg-warn/[0.07] p-4">
+        <Info size={18} aria-hidden className="mt-0.5 shrink-0 text-warn" />
         <p className="text-sm leading-relaxed text-subtle">
           <strong className="text-ink">{planStep.budgetNote.strong}</strong>{" "}
           {planStep.budgetNote.body}
         </p>
       </div>
 
-      <p className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-white/4 px-4 py-3.5 text-sm text-subtle">
+      <p className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-surface-subtle px-4 py-3.5 text-sm text-subtle">
         <Shield size={15} aria-hidden className="shrink-0 text-brand" />
         <strong className="text-success">{planStep.guarantee}</strong>·{" "}
         {planStep.guaranteeNote}
@@ -576,7 +576,7 @@ function PlanCard({
         "relative flex flex-col rounded-2xl border p-5 text-left transition-colors sm:p-6",
         selected
           ? "border-brand bg-brand/[0.09]"
-          : "border-white/10 bg-white/3 hover:border-white/20",
+          : "border-hairline bg-surface-subtle hover:border-line-strong",
       )}
     >
       <span
@@ -599,7 +599,7 @@ function PlanCard({
           aria-hidden
           className={cn(
             "mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors",
-            selected ? "border-brand bg-brand text-white" : "border-white/20",
+            selected ? "border-brand bg-brand text-white" : "border-line-strong",
           )}
         >
           {selected && <Check size={12} strokeWidth={3} />}
@@ -617,7 +617,7 @@ function PlanCard({
         </span>
       </span>
 
-      <span className="mt-5 flex flex-col gap-2.5 border-t border-white/8 pt-5">
+      <span className="mt-5 flex flex-col gap-2.5 border-t border-hairline pt-5">
         {plan.features.map((feature) => (
           <span key={feature} className="flex items-start gap-2.5 text-sm text-subtle">
             <span className="mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full bg-brand/20 text-brand">
