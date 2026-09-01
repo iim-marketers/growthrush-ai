@@ -5,11 +5,6 @@ import { refundPolicy } from "./refunds";
 
 export type { LegalDoc, Section, Block } from "./types";
 
-/**
- * The version users are agreeing to when they tick the consent box at login.
- * Bump this whenever any of the three documents changes materially — a stored
- * consent is only meaningful if it records *which* text was accepted.
- */
 export const POLICY_VERSION = "2026-08-11";
 
 export const legalDocs = {
@@ -20,7 +15,6 @@ export const legalDocs = {
 
 export type LegalSlug = keyof typeof legalDocs;
 
-/** Ordered for the nav strip and the /legal index — most-read first. */
 export const legalNav: { slug: LegalSlug; label: string; blurb: string }[] = [
   {
     slug: "terms",

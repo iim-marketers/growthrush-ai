@@ -24,7 +24,7 @@ export default function LegalLayout({ children }: LayoutProps<"/legal">) {
 
       {children}
 
-      <footer className="border-t border-white/10 bg-white/[0.02]">
+      <footer className="border-t border-white/10 bg-white/2">
         <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
           <nav className="flex flex-wrap gap-x-8 gap-y-3">
             {legalNav.map((entry) => (

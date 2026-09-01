@@ -29,7 +29,7 @@ export default function LegalIndexPage() {
             <li key={entry.slug}>
               <Link
                 href={`/legal/${entry.slug}`}
-                className="group flex h-full flex-col rounded-xl border border-white/10 bg-white/[0.02] p-6 transition-colors hover:border-brand/40 hover:bg-white/[0.04]"
+                className="group flex h-full flex-col rounded-xl border border-white/10 bg-white/2 p-6 transition-colors hover:border-brand/40 hover:bg-white/[0.04]"
               >
                 <h2 className="font-display text-lg font-bold text-ink">
                   {entry.label}

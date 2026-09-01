@@ -9,7 +9,7 @@ import { footer } from "@/lib/landing-data";
  */
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/10 bg-white/[0.02]">
+    <footer className="border-t border-white/10 bg-white/2">
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between sm:gap-10">
           <div>
