@@ -33,8 +33,8 @@ export function SiteFooter() {
 
         <div className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-6 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
           <p className="text-sm text-faint">
-            © {new Date().getFullYear()} growthrush.ai — Estrellingent
-            Technology Private Limited
+            © Estrellingent Technology Private {new Date().getFullYear()}
+            Limited
           </p>
           <Link
             href="/login"
