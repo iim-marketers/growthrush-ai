@@ -37,7 +37,7 @@ export default async function LegalDocPage(props: PageProps<"/legal/[slug]">) {
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 ">
-      <nav aria-label="Legal documents" className="mb-10 flex flex-wrap gap-2">
+      <nav aria-label="Legal documents" className="mb-6 flex flex-wrap gap-2">
         {legalNav.map((entry) => {
           const current = entry.slug === slug;
           return (
