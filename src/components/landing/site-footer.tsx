@@ -33,8 +33,8 @@ export function SiteFooter() {
 
         <div className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-6 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
           <p className="text-sm text-faint">
-            © Estrellingent Technology Private {new Date().getFullYear()}
-            Limited
+            © Estrellingent Technology Private Limited{" "}
+            {new Date().getFullYear()}
           </p>
           <Link
             href="/login"
