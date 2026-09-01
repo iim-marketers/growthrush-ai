@@ -246,9 +246,9 @@ export const appNav = [
 ] as const;
 
 export const profile = {
-  business: "Adyant Ayurveda",
+  business: "Sharma Teaching Classes",
   city: "Bengaluru",
-  category: "Clinic / Dental",
+  category: "Coaching / Classes",
   initial: "A",
   phone: "+91 98••• ••210",
 } as const;
