@@ -3,11 +3,9 @@ import { cn } from "@/lib/utils";
 
 type FrameProps = {
   id?: string;
-  locked?: boolean;
   className?: string;
   innerClassName?: string;
   backdrop?: ReactNode;
-  overlay?: ReactNode;
   children: ReactNode;
 };
 
@@ -18,21 +16,16 @@ export const cardRailItem = "w-[82%] shrink-0 snap-center md:w-auto md:shrink";
 
 export function Frame({
   id,
-  locked = false,
   className,
   innerClassName,
   backdrop,
-  overlay,
   children,
 }: FrameProps) {
   return (
     <section
       id={id}
       className={cn(
-        "relative w-full outline-none",
-        locked
-          ? "py-16 md:flex md:min-h-dvh md:flex-col md:py-12 md:justify-center-safe"
-          : "py-16 md:py-24",
+        "relative w-full py-16 outline-none md:py-10 lg:py-12",
         className,
       )}
     >
@@ -46,7 +39,6 @@ export function Frame({
       >
         {children}
       </div>
-      {overlay}
     </section>
   );
 }
