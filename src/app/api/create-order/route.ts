@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     await getDb().insert(orders).values({
       razorpayOrderId: order.id,
       planId: plan.id,
-      amount: plan.amount,
+      amountPaise: plan.amount,
       currency: order.currency,
       receipt,
     });

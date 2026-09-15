@@ -18,7 +18,7 @@ export const orders = pgTable("orders", {
   razorpayOrderId: text("razorpay_order_id").notNull().unique(),
   razorpayPaymentId: text("razorpay_payment_id").unique(),
   planId: text("plan_id").notNull(),
-  amount: integer("amount").notNull(),
+  amountPaise: integer("amount_paise").notNull(),
   currency: text("currency").notNull(),
   receipt: text("receipt").notNull(),
   status: orderStatus("status").notNull().default("created"),
