@@ -7,8 +7,8 @@ import { hero, heroStats } from "@/lib/landing-data";
 export function Hero() {
   return (
     <Frame
-      className="overflow-hidden md:pt-5 md:pb-4 lg:pt-5 lg:pb-6 desktop-short:pt-4 desktop-short:pb-4"
-      innerClassName="text-center md:max-w-none md:px-5 lg:px-5"
+      className="overflow-hidden md:pt-5 md:pb-4 lg:flex lg:min-h-dvh lg:flex-col lg:pt-5 lg:pb-6 desktop-short:pt-4 desktop-short:pb-4"
+      innerClassName="text-center md:max-w-none md:px-5 lg:flex lg:flex-1 lg:flex-col lg:px-5"
       backdrop={
         <div
           className="pointer-events-none absolute inset-0 overflow-hidden"
@@ -34,84 +34,87 @@ export function Hero() {
         </div>
       }
     >
-      {/* Tablet and up: one wide panel across the top, as on the reference. */}
-      <div className="animate-slide-up relative mx-auto w-full max-w-3xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-linear-to-b from-white/9 via-brand/10 to-brand/22 px-4 py-8 shadow-[0_40px_120px_-40px_rgba(0,0,0,0.9)] backdrop-blur-sm sm:rounded-[2.5rem] sm:px-10 sm:py-10 md:max-w-none md:rounded-[1.25rem] md:py-12 lg:py-16 desktop-short:py-12">
-        {/* Logo, sitting on the dashed rule that runs across the card. */}
-        <div className="relative flex items-center justify-center">
-          <span
-            aria-hidden
-            className="absolute -inset-x-4 top-1/2 border-t border-dashed border-white/15 sm:-inset-x-10"
-          />
-          <div className="relative rounded-full bg-white px-5 py-3 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.6)] sm:px-7 sm:py-3.5 desktop-short:py-3">
-            <Logo tone="dark" size="md" eager />
-          </div>
-        </div>
-
-        <ScrollLink
-          targetId="how-it-works"
-          style={{ animationDelay: "0.04s" }}
-          className="animate-slide-up mt-7 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold text-subtle backdrop-blur-sm transition-colors hover:border-white/20 hover:text-ink sm:mt-9 sm:text-sm md:mt-7 desktop-short:mt-5"
-        >
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
-          </span>
-          {hero.eyebrow}
-        </ScrollLink>
-
-        <h1
-          style={{ animationDelay: "0.06s" }}
-          className="animate-slide-up mx-auto mt-4 max-w-2xl text-[clamp(1.75rem,1.1rem+3.2vw,3.25rem)] leading-[1.12] tracking-tight sm:mt-5 md:mt-5 md:text-[clamp(1.65rem,1rem+2.8vw,2.75rem)] lg:mt-6 lg:text-[3.5rem] desktop-short:mt-4 desktop-short:text-[3.125rem]"
-        >
-          {hero.title}
-          <br />
-          <span className="bg-linear-to-r from-brand to-brand-soft bg-clip-text text-transparent">
-            {hero.titleAccent}
-          </span>
-        </h1>
-
-        <p
-          style={{ animationDelay: "0.14s" }}
-          className="animate-slide-up mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-subtle sm:text-base md:mt-5 lg:mt-6 lg:max-w-3xl lg:text-lg desktop-short:mt-4 desktop-short:text-base"
-        >
-          {hero.subtitle}
-        </p>
-
-        {/* The numbers, in the pill the reference hangs its credibility on. */}
-        <div
-          style={{ animationDelay: "0.22s" }}
-          className="animate-slide-up relative mx-auto mt-6 grid max-w-xl grid-cols-3 divide-x divide-white/10 overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/6 px-2 py-4 backdrop-blur-md sm:mt-8 sm:rounded-[2.25rem] sm:px-6 sm:py-5 md:mt-8 md:max-w-2xl md:py-6 lg:mt-10 lg:max-w-4xl lg:py-7 desktop-short:mt-7 desktop-short:max-w-3xl desktop-short:py-5"
-        >
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-40"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(-45deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 8px)",
-            }}
-          />
-          {heroStats.map((stat) => (
-            <div key={stat.label} className="relative px-1.5 sm:px-3">
-              <div className="font-display text-xl leading-none font-extrabold text-ink sm:text-3xl lg:text-4xl desktop-short:text-[2rem]">
-                {stat.value}
-              </div>
-              <div className="mt-1.5 text-[0.68rem] leading-snug text-subtle sm:text-sm lg:mt-2.5 lg:text-base desktop-short:mt-2 desktop-short:text-[0.9rem]">
-                {stat.label}
-              </div>
+      {/* Tablet and up: one wide panel across the top, as on the reference.
+          On desktop it stretches to fill the screen, content centred. */}
+      <div className="animate-slide-up relative mx-auto w-full max-w-3xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-linear-to-b from-white/9 via-brand/10 to-brand/22 px-4 py-8 shadow-[0_40px_120px_-40px_rgba(0,0,0,0.9)] backdrop-blur-sm sm:rounded-[2.5rem] sm:px-10 sm:py-10 md:max-w-none md:rounded-[1.25rem] md:py-12 lg:flex lg:flex-1 lg:flex-col lg:justify-center lg:py-16 desktop-short:py-12">
+        <div className="w-full">
+          {/* Logo, sitting on the dashed rule that runs across the card. */}
+          <div className="relative flex items-center justify-center">
+            <span
+              aria-hidden
+              className="absolute -inset-x-4 top-1/2 border-t border-dashed border-white/15 sm:-inset-x-10"
+            />
+            <div className="relative rounded-full bg-white px-5 py-3 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.6)] sm:px-7 sm:py-3.5 desktop-short:py-3">
+              <Logo tone="dark" size="md" eager />
             </div>
-          ))}
-        </div>
+          </div>
 
-        <div
-          style={{ animationDelay: "0.3s" }}
-          className="animate-slide-up mt-7 flex flex-col items-center gap-4 sm:mt-9 lg:mt-12 desktop-short:mt-8"
-        >
-          <Link
-            href="/login"
-            className="btn-glow inline-flex w-full max-w-sm items-center justify-center rounded-full bg-brand px-8 py-4 font-display md:py-3.5 lg:py-4.5 desktop-short:py-4 text-sm font-extrabold tracking-[0.14em] text-white uppercase transition-transform hover:-translate-y-0.5 sm:text-base"
+          <ScrollLink
+            targetId="how-it-works"
+            style={{ animationDelay: "0.04s" }}
+            className="animate-slide-up mt-7 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold text-subtle backdrop-blur-sm transition-colors hover:border-white/20 hover:text-ink sm:mt-9 sm:text-sm md:mt-7 desktop-short:mt-5"
           >
-            {hero.primaryCta}
-          </Link>
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
+            </span>
+            {hero.eyebrow}
+          </ScrollLink>
+
+          <h1
+            style={{ animationDelay: "0.06s" }}
+            className="animate-slide-up mx-auto mt-4 max-w-2xl text-[clamp(1.75rem,1.1rem+3.2vw,3.25rem)] leading-[1.12] tracking-tight sm:mt-5 md:mt-5 md:text-[clamp(1.65rem,1rem+2.8vw,2.75rem)] lg:mt-6 lg:text-[3.5rem] desktop-short:mt-4 desktop-short:text-[3.125rem]"
+          >
+            {hero.title}
+            <br />
+            <span className="bg-linear-to-r from-brand to-brand-soft bg-clip-text text-transparent">
+              {hero.titleAccent}
+            </span>
+          </h1>
+
+          <p
+            style={{ animationDelay: "0.14s" }}
+            className="animate-slide-up mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-subtle sm:text-base md:mt-5 lg:mt-6 lg:max-w-3xl lg:text-lg desktop-short:mt-4 desktop-short:text-base"
+          >
+            {hero.subtitle}
+          </p>
+
+          {/* The numbers, in the pill the reference hangs its credibility on. */}
+          <div
+            style={{ animationDelay: "0.22s" }}
+            className="animate-slide-up relative mx-auto mt-6 grid max-w-xl grid-cols-3 divide-x divide-white/10 overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/6 px-2 py-4 backdrop-blur-md sm:mt-8 sm:rounded-[2.25rem] sm:px-6 sm:py-5 md:mt-8 md:max-w-2xl md:py-6 lg:mt-10 lg:max-w-4xl lg:py-7 desktop-short:mt-7 desktop-short:max-w-3xl desktop-short:py-5"
+          >
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-0 opacity-40"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(-45deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 8px)",
+              }}
+            />
+            {heroStats.map((stat) => (
+              <div key={stat.label} className="relative px-1.5 sm:px-3">
+                <div className="font-display text-xl leading-none font-extrabold text-ink sm:text-3xl lg:text-4xl desktop-short:text-[2rem]">
+                  {stat.value}
+                </div>
+                <div className="mt-1.5 text-[0.68rem] leading-snug text-subtle sm:text-sm lg:mt-2.5 lg:text-base desktop-short:mt-2 desktop-short:text-[0.9rem]">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div
+            style={{ animationDelay: "0.3s" }}
+            className="animate-slide-up mt-7 flex flex-col items-center gap-4 sm:mt-9 lg:mt-12 desktop-short:mt-8"
+          >
+            <Link
+              href="/login"
+              className="btn-glow inline-flex w-full max-w-sm items-center justify-center rounded-full bg-brand px-8 py-4 font-display md:py-3.5 lg:py-4.5 desktop-short:py-4 text-sm font-extrabold tracking-[0.14em] text-white uppercase transition-transform hover:-translate-y-0.5 sm:text-base"
+            >
+              {hero.primaryCta}
+            </Link>
+          </div>
         </div>
       </div>
     </Frame>
