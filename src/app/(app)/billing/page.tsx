@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { ArrowUpRight, Check, CreditCard, Download, Info } from "lucide-react";
 import { PageHeader, Panel } from "@/components/app/primitives";
+import { CheckoutButton } from "@/components/checkout-button";
 import { billing, campaign, invoices } from "@/lib/app-data";
 import { plans } from "@/lib/landing-data";
-import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Billing",
@@ -133,16 +133,10 @@ export default function BillingPage() {
               retargeting funnels and weekly strategy calls.
             </p>
           </div>
-          <button
-            type="button"
-            className={cn(
-              "btn-glow inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3",
-              "font-display text-sm font-bold text-white transition-transform hover:-translate-y-0.5",
-            )}
-          >
+          <CheckoutButton planId={other.id} planName={other.name}>
             Upgrade
             <ArrowUpRight size={16} aria-hidden />
-          </button>
+          </CheckoutButton>
         </div>
       )}
 
