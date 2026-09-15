@@ -3,6 +3,7 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant desktop-short (@media (min-width: 64rem) and (max-height: 820px));
 
 /* ------------------------------------------------------------------
    growthrush.ai design tokens
@@ -24,12 +25,6 @@
   --warn: #facc15;
   --cyan: #5bc5f8;
 
-  /*
-   * Surfaces and lines, as tokens rather than `bg-white/5` literals. The app
-   * side of the product (see `.theme-light` below) sits on a white ground,
-   * where a translucent white would vanish — so every panel, input and hairline
-   * inside it reads its shade from here instead of hard-coding one.
-   */
   --surface-subtle: rgba(255, 255, 255, 0.03);
   --surface-hover: rgba(255, 255, 255, 0.06);
   --surface-mute: rgba(255, 255, 255, 0.08);
@@ -65,23 +60,8 @@
   --chart-5: #ef4444;
 }
 
-/* ------------------------------------------------------------------
-   Light theme.
-
-   Everything past the landing page — sign-in, onboarding and the signed-in
-   app — runs on a white ground. It is a scoped override rather than a second
-   palette: `.theme-light` restates the same token names, so every component
-   underneath switches without knowing a theme exists. The marketing site keeps
-   the dark `:root` values.
-
-   The accent hues are deepened rather than reused. #5b7fff clears 3.5:1 on
-   white, which is under the 4.5:1 that text needs, so brand, success, danger
-   and amber each get a darker cut here.
-   ------------------------------------------------------------------ */
 .theme-light {
   color-scheme: light;
-  /* `body` sets its colour from the dark `:root`, and headings inherit it —
-     so the scope has to restate the text colour, not only the tokens. */
   color: var(--text-primary);
 
   --bg-color: #ffffff;
