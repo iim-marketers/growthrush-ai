@@ -9,7 +9,7 @@ import { caseStudies } from "@/lib/landing-data";
 /** Frame 5 — proof in numbers: three businesses, three results. */
 export function CaseStudies() {
   return (
-    <Frame locked id="results">
+    <Frame id="results">
       <Reveal className="mx-auto max-w-2xl text-center">
         <SectionLabel>Results</SectionLabel>
         <h2 className="mt-3 text-[clamp(1.75rem,1.2rem+2.2vw,2.75rem)] leading-tight sm:mt-4">

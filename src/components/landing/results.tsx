@@ -7,7 +7,7 @@ import { testimonials } from "@/lib/landing-data";
 
 export function Results() {
   return (
-    <Frame locked>
+    <Frame>
       <Reveal className="mx-auto max-w-2xl text-center">
         <SectionLabel>In their words</SectionLabel>
         <h2 className="mt-4 text-[clamp(1.75rem,1.2rem+2.2vw,2.75rem)] leading-tight">

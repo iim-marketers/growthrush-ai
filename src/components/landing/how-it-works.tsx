@@ -7,7 +7,7 @@ import { steps } from "@/lib/landing-data";
 /** Frame 3 — the mechanism, in three steps. */
 export function HowItWorks() {
   return (
-    <Frame locked id="how-it-works">
+    <Frame id="how-it-works">
       <Reveal className="mx-auto max-w-2xl text-center">
         <SectionLabel>How it works</SectionLabel>
         <h2 className="mt-4 text-[clamp(1.75rem,1.2rem+2.2vw,2.75rem)] leading-tight">
@@ -18,7 +18,7 @@ export function HowItWorks() {
         </p>
       </Reveal>
 
-      <Stagger className={`relative mt-14 gap-6 md:grid-cols-3 ${cardRail}`}>
+      <Stagger className={`relative mt-14 gap-6 md:mt-10 md:grid-cols-3 ${cardRail}`}>
         {/* Connecting rule behind the cards on wide screens. */}
         <div
           className="pointer-events-none absolute top-13 right-[16%] left-[16%] hidden h-px bg-linear-to-r from-transparent via-white/15 to-transparent md:block"

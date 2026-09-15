@@ -24,7 +24,7 @@ export function Faq() {
         </h2>
       </Reveal>
 
-      <div className="mt-12 flex flex-col gap-3">
+      <div className="mt-12 flex flex-col gap-3 md:mt-8">
         {faqs.map((faq, i) => {
           const isOpen = open === i;
           return (

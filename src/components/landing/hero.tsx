@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ScrollLink } from "@/components/scroll-link";
 import { Frame } from "./frame";
@@ -8,21 +7,8 @@ import { hero, heroStats } from "@/lib/landing-data";
 export function Hero() {
   return (
     <Frame
-      locked
-      className="overflow-hidden md:pb-20"
-      innerClassName="text-center"
-      overlay={
-        <ScrollLink
-          targetId="proof"
-          aria-label="Scroll to the next section"
-          className="absolute bottom-5 left-1/2 md:bottom-6 hidden -translate-x-1/2 flex-col items-center gap-1.5 text-faint transition-colors hover:text-subtle sm:flex"
-        >
-          <span className="text-[11px] font-semibold tracking-[0.18em] uppercase">
-            Scroll
-          </span>
-          <ChevronDown size={16} className="animate-bounce" />
-        </ScrollLink>
-      }
+      className="overflow-hidden md:pt-5 md:pb-4 lg:pt-5 lg:pb-6"
+      innerClassName="text-center md:max-w-none md:px-5 lg:px-5"
       backdrop={
         <div
           className="pointer-events-none absolute inset-0 overflow-hidden"
@@ -48,7 +34,8 @@ export function Hero() {
         </div>
       }
     >
-      <div className="animate-slide-up relative mx-auto w-full max-w-3xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-linear-to-b from-white/9 via-brand/10 to-brand/22 px-4 py-8 shadow-[0_40px_120px_-40px_rgba(0,0,0,0.9)] backdrop-blur-sm sm:rounded-[2.5rem] sm:px-10 sm:py-10 md:py-8">
+      {/* Tablet and up: one wide panel across the top, as on the reference. */}
+      <div className="animate-slide-up relative mx-auto w-full max-w-3xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-linear-to-b from-white/9 via-brand/10 to-brand/22 px-4 py-8 shadow-[0_40px_120px_-40px_rgba(0,0,0,0.9)] backdrop-blur-sm sm:rounded-[2.5rem] sm:px-10 sm:py-10 md:max-w-none md:rounded-[1.25rem] md:py-12 lg:py-16">
         {/* Logo, sitting on the dashed rule that runs across the card. */}
         <div className="relative flex items-center justify-center">
           <span
@@ -74,7 +61,7 @@ export function Hero() {
 
         <h1
           style={{ animationDelay: "0.06s" }}
-          className="animate-slide-up mx-auto mt-4 max-w-2xl text-[clamp(1.75rem,1.1rem+3.2vw,3.25rem)] leading-[1.12] tracking-tight sm:mt-5 md:mt-4 md:text-[clamp(1.65rem,1rem+2.8vw,2.75rem)]"
+          className="animate-slide-up mx-auto mt-4 max-w-2xl text-[clamp(1.75rem,1.1rem+3.2vw,3.25rem)] leading-[1.12] tracking-tight sm:mt-5 md:mt-5 md:text-[clamp(1.65rem,1rem+2.8vw,2.75rem)] lg:mt-6 lg:text-[3.5rem]"
         >
           {hero.title}
           <br />
@@ -85,7 +72,7 @@ export function Hero() {
 
         <p
           style={{ animationDelay: "0.14s" }}
-          className="animate-slide-up mx-auto mt-5 max-w-2xl text-sm leading-relaxed md:mt-4 text-subtle sm:text-base"
+          className="animate-slide-up mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-subtle sm:text-base md:mt-5 lg:mt-6 lg:max-w-3xl lg:text-lg"
         >
           {hero.subtitle}
         </p>
@@ -93,7 +80,7 @@ export function Hero() {
         {/* The numbers, in the pill the reference hangs its credibility on. */}
         <div
           style={{ animationDelay: "0.22s" }}
-          className="animate-slide-up relative mx-auto mt-6 grid max-w-xl grid-cols-3 divide-x divide-white/10 overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/6 px-2 py-4 backdrop-blur-md sm:mt-8 sm:rounded-[2.25rem] sm:px-6 sm:py-5 md:mt-5 md:py-4"
+          className="animate-slide-up relative mx-auto mt-6 grid max-w-xl grid-cols-3 divide-x divide-white/10 overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/6 px-2 py-4 backdrop-blur-md sm:mt-8 sm:rounded-[2.25rem] sm:px-6 sm:py-5 md:mt-8 md:max-w-2xl md:py-6 lg:mt-10 lg:max-w-4xl lg:py-7"
         >
           <span
             aria-hidden
@@ -105,10 +92,10 @@ export function Hero() {
           />
           {heroStats.map((stat) => (
             <div key={stat.label} className="relative px-1.5 sm:px-3">
-              <div className="font-display text-xl leading-none font-extrabold text-ink sm:text-3xl md:text-2xl">
+              <div className="font-display text-xl leading-none font-extrabold text-ink sm:text-3xl lg:text-4xl">
                 {stat.value}
               </div>
-              <div className="mt-1.5 text-[0.68rem] leading-snug text-subtle sm:text-sm">
+              <div className="mt-1.5 text-[0.68rem] leading-snug text-subtle sm:text-sm lg:mt-2.5 lg:text-base">
                 {stat.label}
               </div>
             </div>
@@ -117,26 +104,16 @@ export function Hero() {
 
         <div
           style={{ animationDelay: "0.3s" }}
-          className="animate-slide-up mt-7 flex flex-col items-center gap-4 sm:mt-9 md:mt-7"
+          className="animate-slide-up mt-7 flex flex-col items-center gap-4 sm:mt-9 lg:mt-12"
         >
           <Link
             href="/login"
-            className="btn-glow inline-flex w-full max-w-sm items-center justify-center rounded-full bg-brand px-8 py-4 font-display md:py-3.5 text-sm font-extrabold tracking-[0.14em] text-white uppercase transition-transform hover:-translate-y-0.5 sm:text-base"
+            className="btn-glow inline-flex w-full max-w-sm items-center justify-center rounded-full bg-brand px-8 py-4 font-display md:py-3.5 lg:py-4.5 text-sm font-extrabold tracking-[0.14em] text-white uppercase transition-transform hover:-translate-y-0.5 sm:text-base"
           >
             {hero.primaryCta}
           </Link>
-          {/* <ScrollLink
-            targetId="how-it-works"
-            className="text-xs font-semibold text-subtle transition-colors hover:text-ink sm:text-sm"
-          >
-            {hero.secondaryCta}
-          </ScrollLink> */}
         </div>
       </div>
-
-      {/* <p className="animate-slide-up mt-4 text-xs text-faint sm:text-sm">
-        {hero.note}
-      </p> */}
     </Frame>
   );
 }

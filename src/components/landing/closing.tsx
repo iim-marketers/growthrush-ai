@@ -15,8 +15,7 @@ const reassurances = [
 export function Closing() {
   return (
     <Frame
-      locked
-      className="overflow-hidden border-t border-white/10"
+      className="overflow-hidden border-t border-white/10 md:py-14 lg:py-16"
       innerClassName="text-center"
       backdrop={
         <div

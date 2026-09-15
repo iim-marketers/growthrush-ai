@@ -36,7 +36,7 @@ export function Features() {
         </p>
       </Reveal>
 
-      <Stagger className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <Stagger className="mt-14 grid gap-4 sm:grid-cols-2 md:mt-10 lg:grid-cols-3">
         {features.map((feature) => {
           const Icon = icons[feature.icon as keyof typeof icons];
           return (
