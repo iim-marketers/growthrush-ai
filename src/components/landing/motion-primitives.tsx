@@ -3,10 +3,8 @@
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import type { ReactNode } from "react";
 
-/**
- * Scroll-triggered reveal. Respects prefers-reduced-motion by collapsing the
- * transform and fading in place.
- */
+const revealViewport = { once: true, margin: "0px 0px 48px 0px" } as const;
+
 export function Reveal({
   children,
   delay = 0,
@@ -28,7 +26,7 @@ export function Reveal({
       className={className}
       initial={reduced ? false : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={revealViewport}
       transition={{ duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
@@ -52,7 +50,7 @@ export function Stagger({
       className={className}
       initial={reduced ? false : "hidden"}
       whileInView="show"
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={revealViewport}
       variants={{ show: { transition: { staggerChildren: gap } } }}
     >
       {children}

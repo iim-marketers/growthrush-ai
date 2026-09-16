@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { Loader2, RotateCw, X, type LucideIcon } from "lucide-react";
 import { Logo } from "@/components/logo";
 import {
@@ -49,10 +50,27 @@ export type PaymentNotice = {
   stamp?: string;
   charge?: Charge;
   paymentId?: string;
-  /* "retry" only where paying again can't charge twice; "none" while the
-     outcome is still unknown, so the modal can't be closed. */
   action: "retry" | "done" | "none";
 };
+
+/** Brand, success and warm accents, so the burst reads as ours. */
+const confettiColors = ["#4059e8", "#5b7fff", "#10b981", "#f97316", "#facc15"];
+
+/* A burst from each side of the screen, angled in over the modal. Loaded on
+   demand: only a successful payment ever needs it. */
+async function celebrate() {
+  const { default: confetti } = await import("canvas-confetti");
+  const shared = {
+    particleCount: 90,
+    spread: 70,
+    startVelocity: 55,
+    ticks: 220,
+    colors: confettiColors,
+    disableForReducedMotion: true,
+  };
+  confetti({ ...shared, angle: 60, origin: { x: 0, y: 0.75 } });
+  confetti({ ...shared, angle: 120, origin: { x: 1, y: 0.75 } });
+}
 
 function formatCharge({ amount, currency }: Charge) {
   return new Intl.NumberFormat("en-IN", {
@@ -112,6 +130,14 @@ function ModalContent({
 }) {
   const tone = tones[notice.tone];
   const Icon = notice.icon;
+
+  // Once per payment, as the modal lands on success.
+  const celebrationKey =
+    notice.tone === "success" ? (notice.paymentId ?? "success") : null;
+  useEffect(() => {
+    if (celebrationKey) void celebrate();
+  }, [celebrationKey]);
+
   const rows = [
     { label: "Plan", value: planName },
     notice.charge && { label: "Amount", value: formatCharge(notice.charge) },

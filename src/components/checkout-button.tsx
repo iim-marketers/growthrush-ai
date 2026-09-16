@@ -2,7 +2,7 @@
 
 import Script from "next/script";
 import { useState } from "react";
-import { Loader2, TrendingUp, TriangleAlert, Undo2, X } from "lucide-react";
+import { Check, Loader2, TriangleAlert, Undo2, X } from "lucide-react";
 import {
   PaymentStatusModal,
   type Charge,
@@ -92,7 +92,7 @@ function noticeFor(status: Status, planName: string): PaymentNotice | null {
     case "paid":
       return {
         tone: "success",
-        icon: TrendingUp,
+        icon: Check,
         title: "You're all set",
         stamp: "Paid",
         body: `Payment received. Welcome to ${planName}!`,
@@ -237,7 +237,9 @@ export function CheckoutButton({
         type="button"
         onClick={pay}
         // Paying again while a payment is unconfirmed could charge twice.
-        disabled={busy || status.kind === "paid" || status.kind === "unconfirmed"}
+        disabled={
+          busy || status.kind === "paid" || status.kind === "unconfirmed"
+        }
         className={cn(
           "btn-glow inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3",
           "font-display text-sm font-bold text-white transition-transform hover:-translate-y-0.5",
