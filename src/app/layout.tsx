@@ -74,7 +74,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} ${outfit.variable} h-full`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${outfit.variable} h-full`}
+      suppressHydrationWarning
+    >
       <body className="min-h-full">
         <div className="app-shell">{children}</div>
       </body>

@@ -156,6 +156,8 @@ export const plans = [
     desc: "AI runs your Meta ads — hands-free.",
     oldPrice: "₹2,999",
     price: "₹2,399",
+    /* What Razorpay charges, in paise. Keep in step with `price`. */
+    amount: 239900,
     features: [
       "AI writes copy & designs creatives",
       "Auto-targets your local audience",
@@ -171,6 +173,7 @@ export const plans = [
     desc: "A dedicated expert plus the AI.",
     oldPrice: "₹9,999",
     price: "₹7,999",
+    amount: 799900,
     features: [
       "Everything in AI, plus a human ads expert",
       "Hand-designed creatives & offers",
