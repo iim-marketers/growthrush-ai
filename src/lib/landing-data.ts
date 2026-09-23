@@ -1,7 +1,7 @@
 export const hero = {
-  eyebrow: "AI-run Meta ads for local businesses",
+  eyebrow: "Created by AI Scientists from IIT-Bombay",
   title: "More customers.",
-  titleAccent: "Zero ad agencies.",
+  titleAccent: "With the Power of AI.",
   subtitle:
     "growthrush.ai writes the copy, designs the creatives and runs your Facebook ads — then delivers ready-to-buy leads straight to your WhatsApp.",
   primaryCta: "Get Started",
@@ -11,8 +11,8 @@ export const hero = {
 
 /** The headline numbers, shown in the pill inside the hero card. */
 export const heroStats = [
-  { value: "48,000+", label: "Local buyers reached per city" },
-  { value: "12x", label: "Average lead lift in 90 days" },
+  { value: "400+", label: "Happy Clients" },
+  { value: "1000+", label: "Guaranteed Leads of Quality" },
   { value: "₹300", label: "Minimum daily ad budget" },
 ] as const;
 
@@ -31,39 +31,46 @@ export const showcaseBrands = [
 ] as const;
 
 /**
- * Case studies. Images live in `public/images/` and are stock placeholders —
- * swap them, and the figures, for real ones.
+ * Case studies — real clients, illustrative figures.
+ *
+ * The names, categories and logos are real; the headline/body/metric on each
+ * card are stand-in numbers so the section reads properly. Swap them for the
+ * confirmed figures before launch.
+ *
+ * `logo` is a full-colour mark sitting on a white plate in the card, so it
+ * works in both themes. Note this is haldiram-color.jpeg, not the white
+ * knockout haldiram.png the logo strip uses.
  */
 export const caseStudies = [
   {
-    business: "Sharma Coaching Classes",
+    business: "Haldiram's",
     city: "Kolkata",
-    category: "Coaching",
-    headline: "6 to 120 leads a month in one quarter",
-    body: "Batch enquiries went from word-of-mouth only to a steady WhatsApp queue, at ₹128 per lead.",
-    metric: "20x",
-    metricLabel: "more enquiries",
-    image: "/images/case-coaching.jpg",
-  },
-  {
-    business: "Glow & Co.",
-    city: "Pune",
-    category: "Salon",
-    headline: "Fully booked inside two weeks",
-    body: "Local targeting filled the chair on weekdays, not just weekends — and paid for a second stylist.",
-    metric: "₹142",
-    metricLabel: "per booked appointment",
-    image: "/images/case-salon.jpg",
-  },
-  {
-    business: "Spice Route",
-    city: "Bengaluru",
-    category: "Restaurant",
-    headline: "3.1x return on ad spend",
-    body: "Weekend covers up 40% after AI shifted budget to the creatives that actually drove bookings.",
-    metric: "3.1x",
+    category: "FMCG",
+    headline: "Diwali budget moved to what was selling",
+    body: "Sweet-box promotions targeted neighbourhood by neighbourhood through Diwali, with budget pushed daily towards the stores actually converting.",
+    metric: "4.2x",
     metricLabel: "return on ad spend",
-    image: "/images/case-restaurant.jpg",
+    logo: "/logos/haldiram-color.jpeg",
+  },
+  {
+    business: "Mudit Ridh",
+    city: "Kolkata",
+    category: "Electric Vehicles",
+    headline: "1,800 test-ride enquiries in 90 days",
+    body: "Scooty buyers within delivery distance of the showroom, filtered before they reached the sales team and delivered straight to WhatsApp.",
+    metric: "\u20b994",
+    metricLabel: "per test-ride enquiry",
+    logo: "/logos/mudit-ridh.png",
+  },
+  {
+    business: "Manaksia Steels",
+    city: "Kolkata",
+    category: "Manufacturing",
+    headline: "Reached contractors, not interest lists",
+    body: "Coated sheet and coil enquiries from contractors and distributors, targeted by industrial belt rather than broad B2B interest lists.",
+    metric: "3x",
+    metricLabel: "more dealer enquiries",
+    logo: "/logos/manaksia-steel.png",
   },
 ] as const;
 

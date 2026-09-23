@@ -14,7 +14,7 @@ export function LogoGrid() {
     >
       <Reveal>
         <h2 className="mx-auto max-w-xl text-[clamp(1.35rem,1rem+1.3vw,2rem)] leading-tight">
-          Join the brands already growing with us
+          Created by The team which has worked with
         </h2>
         <div className="mx-auto mt-5 h-1 w-14 rounded-full bg-brand" />
         <p className="mx-auto mt-5 max-w-lg text-sm text-subtle sm:text-base">

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { ScrollLink } from "@/components/scroll-link";
+import { FlipNumber } from "@/components/flip-number";
 import { Frame } from "./frame";
 import { hero, heroStats } from "@/lib/landing-data";
 
@@ -79,7 +80,6 @@ export function Hero() {
             {hero.subtitle}
           </p>
 
-          {/* The numbers, in the pill the reference hangs its credibility on. */}
           <div
             style={{ animationDelay: "0.22s" }}
             className="animate-slide-up relative mx-auto mt-6 grid max-w-xl grid-cols-3 divide-x divide-white/10 overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/6 px-2 py-4 backdrop-blur-md sm:mt-8 sm:rounded-[2.25rem] sm:px-6 sm:py-5 md:mt-8 md:max-w-2xl md:py-6 lg:mt-10 lg:max-w-4xl lg:py-7 desktop-short:mt-7 desktop-short:max-w-3xl desktop-short:py-5"
@@ -95,7 +95,7 @@ export function Hero() {
             {heroStats.map((stat) => (
               <div key={stat.label} className="relative px-1.5 sm:px-3">
                 <div className="font-display text-xl leading-none font-extrabold text-ink sm:text-3xl lg:text-4xl desktop-short:text-[2rem]">
-                  {stat.value}
+                  <FlipNumber value={stat.value} delay={0.32} />
                 </div>
                 <div className="mt-1.5 text-[0.68rem] leading-snug text-subtle sm:text-sm lg:mt-2.5 lg:text-base desktop-short:mt-2 desktop-short:text-[0.9rem]">
                   {stat.label}
