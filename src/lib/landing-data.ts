@@ -44,33 +44,111 @@ export const showcaseBrands = [
 export const caseStudies = [
   {
     business: "Haldiram's",
-    city: "Kolkata",
+    market: "Exports to 80+ countries",
     category: "FMCG",
-    headline: "Diwali budget moved to what was selling",
-    body: "Sweet-box promotions targeted neighbourhood by neighbourhood through Diwali, with budget pushed daily towards the stores actually converting.",
-    metric: "4.2x",
-    metricLabel: "return on ad spend",
+    headline: "An eight-decade legacy, rebuilt for online orders",
+    summary:
+      "A unified D2C storefront with live store inventory, turning a fragmented digital presence into a growth channel.",
+    metric: "+45%",
+    metricLabel: "online revenue",
     logo: "/logos/haldiram-color.jpeg",
+    overview:
+      "Haldiram's is a premier Indian sweets, snacks and restaurant company headquartered in Nagpur. Over eight decades it has become synonymous with traditional Indian taste, running a vast retail network and exporting to more than 80 countries.",
+    challenge:
+      "Despite a dominant physical presence, the digital transition was full of friction: an online identity fragmented across regional entities, an outdated storefront that undersold the brand's premium positioning, and supply-chain silos that blocked real-time inventory tracking for international orders.",
+    solution: [
+      {
+        title: "Unified digital architecture",
+        body: "A centralised D2C platform that brings every regional product catalogue into one seamless shopping experience.",
+      },
+      {
+        title: "Omnichannel integration",
+        body: "Physical retail inventory synced with the online storefront to enable hyper-local delivery.",
+      },
+      {
+        title: "Brand rejuvenation",
+        body: "A modern visual language for digital touchpoints that balances traditional heritage with contemporary aesthetics.",
+      },
+    ],
+    results: [
+      { value: "+45%", label: "Online revenue" },
+      { value: "+22%", label: "Average order value" },
+      { value: "+30%", label: "Customer retention" },
+    ],
+    outcome:
+      "The overhaul drove a significant uptick in international sales and a far more streamlined fulfilment process.",
+  },
+  {
+    business: "Mercstone",
+    market: "Middle East & Europe",
+    category: "Natural Stone",
+    headline: "A digital stone library that architects actually use",
+    summary:
+      "A 4K virtual showroom and B2B lead engine that took a trade-show sales cycle global.",
+    metric: "+150%",
+    metricLabel: "monthly architect enquiries",
+    logo: "/logos/mercstone.svg",
+    overview:
+      "Mercstone is a global leader in natural stone, sourcing, processing and distributing high-quality marble, granite and engineered stone for large commercial developments and luxury residential projects.",
+    challenge:
+      "The sales cycle leaned heavily on physical inspections and trade shows. Without a high-fidelity digital showroom able to show the intricate textures and colour variations of each slab, Mercstone's reach among international architects and interior designers was limited.",
+    solution: [
+      {
+        title: "High-resolution virtual showroom",
+        body: "An immersive web experience with 4K texture mapping, letting designers view stone slabs under different lighting conditions.",
+      },
+      {
+        title: "B2B lead management system",
+        body: "A custom CRM that tracks every sample sent to architectural firms around the world.",
+      },
+      {
+        title: "SEO & content strategy",
+        body: "High-intent keywords across architecture and construction, driving organic B2B enquiries.",
+      },
+    ],
+    results: [
+      { value: "+150%", label: "Monthly enquiries from verified architects" },
+      { value: "40%", label: "Faster sample-to-order cycle" },
+      { value: "2", label: "New regions: Middle East & Europe" },
+    ],
+    outcome:
+      "Digital pre-selection now does the work trade shows used to, and the project pipeline has expanded into new international markets.",
   },
   {
     business: "Mudit Ridh",
-    city: "Kolkata",
-    category: "Electric Vehicles",
-    headline: "1,800 test-ride enquiries in 90 days",
-    body: "Scooty buyers within delivery distance of the showroom, filtered before they reached the sales team and delivered straight to WhatsApp.",
-    metric: "\u20b994",
-    metricLabel: "per test-ride enquiry",
+    market: "North America & UK",
+    category: "Luxury Couture",
+    headline: "The atelier experience, delivered over video",
+    summary:
+      "Virtual bridal consultations and craft-led storytelling that won a global NRI clientele without losing exclusivity.",
+    metric: "60%",
+    metricLabel: "consultations to orders",
     logo: "/logos/mudit-ridh.png",
-  },
-  {
-    business: "Manaksia Steels",
-    city: "Kolkata",
-    category: "Manufacturing",
-    headline: "Reached contractors, not interest lists",
-    body: "Coated sheet and coil enquiries from contractors and distributors, targeted by industrial belt rather than broad B2B interest lists.",
-    metric: "3x",
-    metricLabel: "more dealer enquiries",
-    logo: "/logos/manaksia-steel.png",
+    overview:
+      "Mudit Ridh (Mudit & Ridhi) is a high-end couture label known for intricate craftsmanship and contemporary bridal silhouettes. It represents the pinnacle of artisanal Indian fashion for a discerning global clientele.",
+    challenge:
+      "Luxury bridal is fiercely competitive and built on personal connection. Mudit Ridh needed to translate the atelier experience into a digital format without diluting its exclusivity, while managing bespoke consultations for a fast-growing NRI customer base.",
+    solution: [
+      {
+        title: "Virtual concierge service",
+        body: "A seamless booking and video-consultation interface for remote bridal appointments.",
+      },
+      {
+        title: "Social-first storytelling",
+        body: "A high-production social campaign showing the behind-the-scenes craftsmanship of each collection.",
+      },
+      {
+        title: "Curated e-commerce",
+        body: "An invite-only, enquiry-based portal for high-value bridal pieces that protects brand prestige.",
+      },
+    ],
+    results: [
+      { value: "60%", label: "Virtual consultations to confirmed orders" },
+      { value: "+200%", label: "Organic Instagram engagement" },
+      { value: "2", label: "New markets: North America & UK" },
+    ],
+    outcome:
+      "\u201cCouture Stories\u201d drove the social growth, and overseas markets now deliver a consistent revenue stream.",
   },
 ] as const;
 

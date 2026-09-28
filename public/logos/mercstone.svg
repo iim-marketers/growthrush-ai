@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 140" role="img" aria-label="Mercstone">
+  <!-- Typeset stand-in wordmark; replace with the official Mercstone logo file. -->
+  <g fill="#1c1c1c">
+    <path d="M40 34 L70 34 L84 58 L70 82 L40 82 L26 58 Z" fill="none" stroke="#1c1c1c" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M40 58 L55 44 L70 58 L55 72 Z"/>
+    <text x="104" y="74" font-family="Georgia, 'Times New Roman', serif" font-size="46" letter-spacing="7">MERCSTONE</text>
+    <text x="106" y="106" font-family="Helvetica, Arial, sans-serif" font-size="14" letter-spacing="8.4" fill="#6b6b6b">NATURAL STONE · GLOBAL</text>
+  </g>
+</svg>
