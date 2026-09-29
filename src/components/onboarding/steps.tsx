@@ -17,6 +17,7 @@ import {
 import {
   adPreview,
   audience,
+  copyFor,
   businessStep,
   categories,
   googleListings,
@@ -267,7 +268,8 @@ export function GoalStep({ answers, set }: StepProps) {
  * 5 · Live audience
  * ---------------------------------------------------------------- */
 
-export function AudienceStep() {
+export function AudienceStep({ answers }: { answers: Answers }) {
+  const { interest } = copyFor(answers.category);
   /* Bars are scaled against the largest share, so length encodes the number
      rather than being picked to look tidy. */
   const widest = Math.max(...audience.breakdown.map((row) => row.pct));
@@ -281,7 +283,7 @@ export function AudienceStep() {
         </p>
         <p className="mt-3 text-sm leading-relaxed text-subtle">
           interested in{" "}
-          <strong className="text-ink">{audience.interest}</strong> on Facebook
+          <strong className="text-ink">{interest}</strong> on Facebook
         </p>
         <div className="mt-5 flex justify-center gap-2">
           {audience.networks.map((network) => (
@@ -471,11 +473,12 @@ function GrowthCard({
  * ---------------------------------------------------------------- */
 
 export function AdStep({ answers }: { answers: Answers }) {
+  const copy = copyFor(answers.category);
   const ad = {
     author: personalise(adPreview.author, answers),
     meta: personalise(adPreview.meta, answers),
-    eyebrow: personalise(adPreview.eyebrow, answers),
-    headline: personalise(adPreview.headline, answers),
+    eyebrow: personalise(copy.eyebrow, answers),
+    headline: personalise(copy.headline, answers),
   };
 
   return (
@@ -517,7 +520,7 @@ export function AdStep({ answers }: { answers: Answers }) {
           {ad.headline}
         </p>
         <span className="relative mt-5 inline-block rounded-lg bg-white px-4 py-2 text-sm font-bold text-[#111827]">
-          {adPreview.cta} ›
+          {copy.cta} ›
         </span>
       </div>
 

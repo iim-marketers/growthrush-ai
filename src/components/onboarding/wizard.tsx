@@ -165,7 +165,7 @@ export function OnboardingWizard({
             {step.id === "location" && <LocationStep {...props} />}
             {step.id === "confirm" && <ConfirmStep {...props} />}
             {step.id === "goal" && <GoalStep {...props} />}
-            {step.id === "audience" && <AudienceStep />}
+            {step.id === "audience" && <AudienceStep answers={answers} />}
             {step.id === "readiness" && <ReadinessStep />}
             {step.id === "ad" && <AdStep answers={answers} />}
             {step.id === "plan" && <PlanStep {...props} />}

@@ -1,8 +1,3 @@
-/**
- * Static content for the screens that exist today (splash + login).
- * No backend yet.
- */
-
 export const brand = {
   name: "growthrush",
   suffix: ".ai",
