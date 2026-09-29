@@ -123,7 +123,7 @@ export async function resendOtp(): Promise<ResendState> {
 
 export async function signOut() {
   await deleteSession();
-  redirect("/login");
+  redirect("/");
 }
 
 /* ------------------------------------------------------------------ */

@@ -115,7 +115,7 @@ export function AppSidebar({
               asChild
               className="h-10 hover:bg-transparent active:bg-transparent group-data-[collapsible=icon]:justify-center"
             >
-              <Link href="/" aria-label="growthrush.ai home">
+              <Link href="/dashboard" aria-label="growthrush.ai home">
                 <Logo
                   size="sm"
                   tone="dark"
