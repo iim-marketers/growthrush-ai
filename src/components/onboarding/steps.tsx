@@ -28,9 +28,9 @@ import {
   readiness,
 } from "@/lib/app-data";
 import { plans } from "@/lib/landing-data";
+import { personalise, type Answers } from "@/lib/onboarding";
 import { cn } from "@/lib/utils";
 import { Chip, Field, TextInput } from "./controls";
-import type { Answers } from "./wizard";
 
 type StepProps = {
   answers: Answers;
@@ -208,14 +208,22 @@ export function GoalStep({ answers, set }: StepProps) {
               key={goal.id}
               type="button"
               onClick={() => set("goal", goal.id)}
+              disabled={goal.comingSoon}
               aria-pressed={selected}
               className={cn(
-                "flex flex-col items-start rounded-xl border p-4 text-left transition-colors",
-                selected
-                  ? "border-brand bg-brand/[0.09]"
-                  : "border-hairline bg-surface-subtle hover:border-line-strong",
+                "relative flex flex-col items-start rounded-xl border p-4 text-left transition-colors",
+                goal.comingSoon
+                  ? "cursor-not-allowed border-hairline bg-surface-subtle opacity-60"
+                  : selected
+                    ? "border-brand bg-brand/[0.09]"
+                    : "border-hairline bg-surface-subtle hover:border-line-strong",
               )}
             >
+              {goal.comingSoon && (
+                <span className="absolute top-3 right-3 rounded-full bg-brand/12 px-2 py-0.5 text-[0.65rem] font-bold tracking-wide text-brand uppercase">
+                  Coming soon
+                </span>
+              )}
               <span
                 aria-hidden
                 className={cn(
@@ -462,7 +470,14 @@ function GrowthCard({
  * 7 · The generated ad
  * ---------------------------------------------------------------- */
 
-export function AdStep() {
+export function AdStep({ answers }: { answers: Answers }) {
+  const ad = {
+    author: personalise(adPreview.author, answers),
+    meta: personalise(adPreview.meta, answers),
+    eyebrow: personalise(adPreview.eyebrow, answers),
+    headline: personalise(adPreview.headline, answers),
+  };
+
   return (
     <div className="overflow-hidden rounded-2xl border border-hairline bg-card">
       <div className="flex items-center gap-3 px-4 py-3">
@@ -470,13 +485,13 @@ export function AdStep() {
           aria-hidden
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand/15 font-display font-extrabold text-brand"
         >
-          {adPreview.author.charAt(0)}
+          {ad.author.charAt(0)}
         </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate text-sm font-bold text-ink">
-            {adPreview.author}
+            {ad.author}
           </span>
-          <span className="block text-xs text-faint">{adPreview.meta}</span>
+          <span className="block text-xs text-faint">{ad.meta}</span>
         </span>
         <MoreHorizontal size={18} aria-hidden className="shrink-0 text-faint" />
       </div>
@@ -496,10 +511,10 @@ export function AdStep() {
           className="absolute -bottom-12 -left-8 h-40 w-40 rounded-full bg-white/8"
         />
         <p className="relative font-display text-[0.65rem] font-bold tracking-[0.16em] text-white/80 uppercase">
-          {adPreview.eyebrow}
+          {ad.eyebrow}
         </p>
         <p className="relative mt-3 font-display text-xl leading-snug font-extrabold text-white">
-          {adPreview.headline}
+          {ad.headline}
         </p>
         <span className="relative mt-5 inline-block rounded-lg bg-white px-4 py-2 text-sm font-bold text-[#111827]">
           {adPreview.cta} ›
@@ -507,6 +522,7 @@ export function AdStep() {
       </div>
 
       <div className="px-4 py-4">
+        {/* Hidden until leads can be sent to WhatsApp.
         <button
           type="button"
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-success/12 py-3 text-sm font-bold text-success transition-colors hover:bg-success/20"
@@ -514,9 +530,8 @@ export function AdStep() {
           <MessageCircle size={16} aria-hidden />
           {adPreview.leadCta}
         </button>
-        <p className="mt-3 text-center text-xs text-faint">
-          {adPreview.footer}
-        </p>
+        */}
+        <p className="text-center text-xs text-faint">{adPreview.footer}</p>
       </div>
     </div>
   );
@@ -527,32 +542,82 @@ export function AdStep() {
  * ---------------------------------------------------------------- */
 
 export function PlanStep({ answers, set }: StepProps) {
+  const chosen = plans.find((plan) => plan.id === answers.plan) ?? plans[0];
+  const base = plans[0];
+  /* The bigger plan lists "Everything in AI, plus …" first; show only what it
+     adds, under a line that says so. */
+  const extras = chosen.id === base.id ? null : chosen.features.slice(1);
+  /* Hidden until leads can be sent to WhatsApp; the landing page shares
+     these lists, so they are filtered here rather than edited at source. */
+  const features = (extras ?? chosen.features).filter(
+    (feature) => !/whatsapp/i.test(feature),
+  );
+
   return (
     <>
-      <div className="flex flex-col gap-4">
+      <div
+        role="radiogroup"
+        aria-label="Plan"
+        className="grid gap-3 sm:grid-cols-2"
+      >
         {plans.map((plan) => (
           <PlanCard
             key={plan.id}
             plan={plan}
-            selected={answers.plan === plan.id}
+            selected={chosen.id === plan.id}
             onSelect={() => set("plan", plan.id)}
           />
         ))}
       </div>
 
-      <div className="mt-4 flex items-start gap-3 rounded-xl border border-warn/30 bg-warn/[0.07] p-4">
-        <Info size={18} aria-hidden className="mt-0.5 shrink-0 text-warn" />
-        <p className="text-sm leading-relaxed text-subtle">
-          <strong className="text-ink">{planStep.budgetNote.strong}</strong>{" "}
-          {planStep.budgetNote.body}
+      <div className="mt-4 rounded-2xl border border-hairline bg-surface-subtle p-5">
+        <p className="text-xs font-bold tracking-[0.12em] text-faint uppercase">
+          What you get
         </p>
+        {extras && (
+          <p className="mt-2 text-sm font-semibold text-ink">
+            Everything in {base.name}, plus:
+          </p>
+        )}
+        <ul className="mt-3 grid gap-2.5">
+          {features.map((feature) => (
+            <li
+              key={feature}
+              className="flex items-start gap-2.5 text-sm text-subtle"
+            >
+              <span className="mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand">
+                <Check size={11} strokeWidth={3} aria-hidden />
+              </span>
+              {feature}
+            </li>
+          ))}
+        </ul>
       </div>
 
-      <p className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-surface-subtle px-4 py-3.5 text-sm text-subtle">
-        <Shield size={15} aria-hidden className="shrink-0 text-brand" />
-        <strong className="text-success">{planStep.guarantee}</strong>·{" "}
-        {planStep.guaranteeNote}
-      </p>
+      <div className="mt-4 flex flex-col gap-3 px-1 text-[0.8rem] leading-relaxed text-subtle">
+        <p className="flex items-start gap-2.5">
+          <Info size={15} aria-hidden className="mt-0.5 shrink-0 text-faint" />
+          <span>
+            <strong className="font-semibold text-ink">
+              {planStep.budgetNote.strong}
+            </strong>{" "}
+            {planStep.budgetNote.body}
+          </span>
+        </p>
+        <p className="flex items-start gap-2.5">
+          <Shield
+            size={15}
+            aria-hidden
+            className="mt-0.5 shrink-0 text-success"
+          />
+          <span>
+            <strong className="font-semibold text-success">
+              {planStep.guarantee}
+            </strong>{" "}
+            · {planStep.guaranteeNote}
+          </span>
+        </p>
+      </div>
     </>
   );
 }
@@ -576,67 +641,56 @@ function PlanCard({
   return (
     <button
       type="button"
+      role="radio"
+      aria-checked={selected}
       onClick={onSelect}
-      aria-pressed={selected}
       className={cn(
-        "relative flex flex-col rounded-2xl border p-5 text-left transition-colors sm:p-6",
+        "flex flex-col rounded-2xl border p-4 text-left transition-all sm:p-5",
         selected
-          ? "border-brand bg-brand/[0.09]"
+          ? "border-brand bg-brand/[0.07] ring-4 ring-brand/10"
           : "border-hairline bg-surface-subtle hover:border-line-strong",
       )}
     >
-      <span
-        className={cn(
-          "absolute -top-2.5 left-5 rounded-full px-2.5 py-1 text-[0.65rem] font-extrabold tracking-wide text-white uppercase",
-          plan.highlighted ? "bg-success" : "bg-orange",
-        )}
-      >
-        {plan.highlighted ? "Recommended for you" : plan.badge}
-      </span>
-
-      <span className="flex items-start justify-between gap-4">
-        <span className="min-w-0">
-          <span className="block font-display text-lg font-extrabold text-ink">
-            {plan.name}
-          </span>
-          <span className="mt-0.5 block text-sm text-subtle">{plan.desc}</span>
-        </span>
+      <span className="flex items-center justify-between gap-3">
         <span
           aria-hidden
           className={cn(
-            "mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors",
+            "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors",
             selected
               ? "border-brand bg-brand text-white"
-              : "border-line-strong",
+              : "border-line-strong bg-background",
           )}
         >
           {selected && <Check size={12} strokeWidth={3} />}
         </span>
+        <span
+          className={cn(
+            "rounded-full px-2 py-0.5 text-[0.65rem] font-bold tracking-wide uppercase",
+            plan.highlighted
+              ? "bg-success/12 text-success"
+              : "bg-orange/10 text-orange",
+          )}
+        >
+          {plan.highlighted ? "Recommended" : plan.badge}
+        </span>
       </span>
 
-      <span className="mt-4 flex items-baseline gap-2">
-        <span className="text-sm text-faint line-through">{plan.oldPrice}</span>
-        <span className="font-display text-3xl font-extrabold text-ink">
+      <span className="mt-4 block font-display text-base font-extrabold text-ink">
+        {plan.name}
+      </span>
+      <span className="mt-0.5 block text-[0.8rem] leading-snug text-subtle">
+        {plan.desc}
+      </span>
+
+      <span className="mt-auto flex flex-wrap items-baseline gap-x-1.5 pt-4">
+        <span className="font-display text-2xl font-extrabold text-ink">
           {plan.price}
         </span>
         <span className="text-sm text-subtle">/mo</span>
-        <span className="ml-auto rounded-full bg-success/15 px-2 py-0.5 text-xs font-bold text-success">
-          −{off}%
-        </span>
       </span>
-
-      <span className="mt-5 flex flex-col gap-2.5 border-t border-hairline pt-5">
-        {plan.features.map((feature) => (
-          <span
-            key={feature}
-            className="flex items-start gap-2.5 text-sm text-subtle"
-          >
-            <span className="mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full bg-brand/20 text-brand">
-              <Check size={11} strokeWidth={3} aria-hidden />
-            </span>
-            {feature}
-          </span>
-        ))}
+      <span className="mt-1 flex items-center gap-2 text-xs">
+        <span className="text-faint line-through">{plan.oldPrice}</span>
+        <span className="font-bold text-success">Save {off}%</span>
       </span>
     </button>
   );

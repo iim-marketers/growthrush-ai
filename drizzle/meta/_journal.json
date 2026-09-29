@@ -15,6 +15,13 @@
       "when": 1789473212046,
       "tag": "0001_rename_amount_to_amount_paise",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790664801902,
+      "tag": "0002_add_auth_onboarding_leads",
+      "breakpoints": true
     }
   ]
 }

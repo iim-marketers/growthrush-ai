@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { OnboardingWizard } from "@/components/onboarding/wizard";
+import { getBusiness, requireUser } from "@/lib/auth/dal";
+import { cleanAnswers, emptyAnswers, type Answers } from "@/lib/onboarding";
 
 export const metadata: Metadata = {
   title: "Set up your campaign",
@@ -15,6 +17,21 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
-export default function OnboardingPage() {
-  return <OnboardingWizard />;
+export default async function OnboardingPage() {
+  const user = await requireUser();
+  const business = await getBusiness(user.id);
+
+  const saved: Answers = cleanAnswers({
+    business: business?.name ?? emptyAnswers.business,
+    category: business?.category ?? emptyAnswers.category,
+    city: business?.city ?? emptyAnswers.city,
+    listing: business?.listingId ?? emptyAnswers.listing,
+    goal: business?.goal ?? emptyAnswers.goal,
+    budget: business?.budgetBand ?? emptyAnswers.budget,
+    plan: business?.planId ?? emptyAnswers.plan,
+  } satisfies Answers);
+
+  return (
+    <OnboardingWizard saved={saved} onboarded={Boolean(user.onboardedAt)} />
+  );
 }

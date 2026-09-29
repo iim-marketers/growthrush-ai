@@ -143,6 +143,15 @@ body:has(.theme-light),
   background-color: #ffffff;
 }
 
+/*
+ * Screens that pin their header and footer and scroll only the middle. Stop
+ * the page itself rubber-banding on a trackpad, which drags the pinned bars.
+ */
+html:has([data-fixed-frame]),
+body:has([data-fixed-frame]) {
+  overscroll-behavior: none;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

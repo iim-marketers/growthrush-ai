@@ -1,29 +1,49 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { MessageSquare, Pencil } from "lucide-react";
 import { CtaButton } from "@/components/cta-button";
+import { resendOtp, verifyOtp } from "@/app/login/actions";
 import { verify } from "@/lib/app-data";
-import { PENDING_NUMBER_KEY, maskNumber } from "@/lib/session";
 import { cn } from "@/lib/utils";
 
-export function VerifyForm() {
-  const router = useRouter();
+export function VerifyForm({
+  masked,
+  initialWait,
+  demoCode,
+}: {
+  /** The number the code went to, already masked by the server. */
+  masked: string;
+  /** Seconds left before another code may be sent. */
+  initialWait: number;
+  /** Set only while no SMS gateway is wired up — see lib/auth/sms.ts. */
+  demoCode: string | null;
+}) {
+  const [state, action, pending] = useActionState(verifyOtp, undefined);
   const [digits, setDigits] = useState(() =>
     Array.from({ length: verify.length }, () => ""),
   );
-  const [secondsLeft, setSecondsLeft] = useState<number>(verify.resendSeconds);
-  const [wrong, setWrong] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(initialWait);
+  /* Editing the code hides the last error; a new submit brings a new one. */
+  const [dismissed, setDismissed] = useState<typeof state>(undefined);
+  const [resendError, setResendError] = useState<string | null>(null);
+  const [resending, startResend] = useTransition();
   const boxes = useRef<(HTMLInputElement | null)[]>([]);
 
-  const number = useSyncExternalStore(
-    subscribeToNothing,
-    () => sessionStorage.getItem(PENDING_NUMBER_KEY) ?? "",
-    () => "",
-  );
-  const masked = maskNumber(number);
+  const error = state !== dismissed ? state?.error : undefined;
+  const wrong = Boolean(error);
+
+  /* Put the caret back in the first box after a failed attempt. */
+  useEffect(() => {
+    if (state?.error) boxes.current[0]?.focus();
+  }, [state]);
 
   useEffect(() => {
     if (secondsLeft <= 0) return;
@@ -38,7 +58,7 @@ export function VerifyForm() {
     const clean = value.replace(/\D/g, "");
     if (!clean) return;
 
-    setWrong(false);
+    setDismissed(state);
     setDigits((current) => {
       const next = [...current];
       for (let i = 0; i < clean.length && index + i < next.length; i++) {
@@ -51,16 +71,16 @@ export function VerifyForm() {
     boxes.current[landed]?.focus();
   };
 
-  const paste = () => {
-    setWrong(false);
-    setDigits(verify.demoCode.split(""));
+  const paste = (code: string) => {
+    setDismissed(state);
+    setDigits(code.split(""));
     boxes.current[verify.length - 1]?.focus();
   };
 
   const onKeyDown = (index: number, event: React.KeyboardEvent) => {
     if (event.key === "Backspace") {
       event.preventDefault();
-      setWrong(false);
+      setDismissed(state);
       setDigits((current) => {
         const next = [...current];
         if (next[index]) next[index] = "";
@@ -76,17 +96,12 @@ export function VerifyForm() {
     }
   };
 
-  const submit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!complete) return;
-    if (code !== verify.demoCode) {
-      setWrong(true);
-      boxes.current[0]?.focus();
-      return;
-    }
-    sessionStorage.removeItem(PENDING_NUMBER_KEY);
-    router.push("/onboarding");
-  };
+  const resend = () =>
+    startResend(async () => {
+      const result = await resendOtp();
+      setResendError(result.ok ? null : result.error);
+      if (result.waitSeconds) setSecondsLeft(result.waitSeconds);
+    });
 
   return (
     <>
@@ -104,7 +119,8 @@ export function VerifyForm() {
         Change number
       </Link>
 
-      <form onSubmit={submit}>
+      <form action={action}>
+        <input type="hidden" name="code" value={code} />
         <div className="rhythm-md flex justify-between gap-2">
           {digits.map((digit, index) => (
             <input
@@ -137,14 +153,18 @@ export function VerifyForm() {
             role="alert"
             className="mt-2 text-[0.8rem] font-semibold text-danger"
           >
-            {verify.wrongCode}
+            {error}
           </p>
         )}
 
-        <DemoSms onPaste={paste} />
+        {demoCode && <DemoSms code={demoCode} onPaste={() => paste(demoCode)} />}
 
-        <CtaButton type="submit" className="rhythm-md" disabled={!complete}>
-          {verify.cta}
+        <CtaButton
+          type="submit"
+          className={demoCode ? "rhythm-md" : "rhythm-md mt-6"}
+          disabled={!complete || pending}
+        >
+          {pending ? "Verifying…" : verify.cta}
         </CtaButton>
       </form>
 
@@ -154,18 +174,29 @@ export function VerifyForm() {
         ) : (
           <button
             type="button"
-            onClick={() => setSecondsLeft(verify.resendSeconds)}
-            className="font-semibold text-brand transition-colors hover:text-brand-soft"
+            onClick={resend}
+            disabled={resending}
+            className="font-semibold text-brand transition-colors hover:text-brand-soft disabled:opacity-60"
           >
-            Resend code
+            {resending ? "Sending…" : "Resend code"}
           </button>
         )}
       </p>
+      {resendError && (
+        <p
+          role="alert"
+          className="mt-2 text-center text-[0.8rem] font-semibold text-danger"
+        >
+          {resendError}
+        </p>
+      )}
     </>
   );
 }
 
-function DemoSms({ onPaste }: { onPaste: () => void }) {
+/* Stands in for the real SMS while there is no gateway, so the flow is not a
+   locked door in development. */
+function DemoSms({ code, onPaste }: { code: string; onPaste: () => void }) {
   return (
     <div className="rhythm-md mt-4 flex items-center gap-3 rounded-xl border border-hairline bg-surface-subtle p-3">
       <span
@@ -179,7 +210,7 @@ function DemoSms({ onPaste }: { onPaste: () => void }) {
           {verify.sender} · now
         </span>
         <span className="block truncate text-[0.85rem] text-ink">
-          {verify.smsBody.replace("%s", verify.demoCode)}
+          {verify.smsBody.replace("%s", code)}
         </span>
       </span>
       <button
@@ -191,8 +222,4 @@ function DemoSms({ onPaste }: { onPaste: () => void }) {
       </button>
     </div>
   );
-}
-
-function subscribeToNothing() {
-  return () => {};
 }

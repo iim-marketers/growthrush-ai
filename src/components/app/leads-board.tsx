@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { LeadRow, type Lead } from "@/components/app/lead-row";
 import { PageHeader, Panel } from "@/components/app/primitives";
-import { leadStatuses, leads } from "@/lib/app-data";
+import { leadStatuses } from "@/lib/app-data";
 import { cn } from "@/lib/utils";
 
 type Filter = "all" | (typeof leadStatuses)[number]["id"];
@@ -15,15 +15,16 @@ const filters: { id: Filter; label: string }[] = [
   ...leadStatuses.map((s) => ({ id: s.id as Filter, label: s.label })),
 ];
 
-export function LeadsBoard() {
+export function LeadsBoard({ leads }: { leads: Lead[] }) {
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
 
   const counts = useMemo(() => {
     const tally: Record<string, number> = { all: leads.length };
-    for (const lead of leads) tally[lead.status] = (tally[lead.status] ?? 0) + 1;
+    for (const lead of leads)
+      tally[lead.status] = (tally[lead.status] ?? 0) + 1;
     return tally;
-  }, []);
+  }, [leads]);
 
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -36,14 +37,11 @@ export function LeadsBoard() {
         lead.phone.includes(needle)
       );
     });
-  }, [filter, query]);
+  }, [leads, filter, query]);
 
   return (
     <>
-      <PageHeader
-        title="Leads"
-        subtitle="Every enquiry your ads produced. Tap the WhatsApp icon to reply."
-      />
+      <PageHeader title="Leads" subtitle="Every enquiry your ads produced." />
 
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="flex items-center gap-2 rounded-xl border border-hairline bg-surface-subtle px-3 py-2.5 transition-all focus-within:border-brand focus-within:bg-surface-hover sm:w-64">
@@ -89,12 +87,14 @@ export function LeadsBoard() {
         {visible.length > 0 ? (
           <ul className="divide-y divide-hairline">
             {visible.map((lead) => (
-              <LeadRow key={lead.id} lead={lead as Lead} />
+              <LeadRow key={lead.id} lead={lead} />
             ))}
           </ul>
         ) : (
           <p className="px-5 py-12 text-center text-sm text-faint">
-            No leads match that filter yet.
+            {leads.length === 0
+              ? "No leads yet. They'll appear here as soon as your ads bring them in."
+              : "No leads match that filter yet."}
           </p>
         )}
       </Panel>

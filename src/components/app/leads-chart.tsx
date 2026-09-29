@@ -1,5 +1,3 @@
-import { leadsByDay } from "@/lib/app-data";
-
 /**
  * Leads per day over the last fortnight.
  *
@@ -8,10 +6,15 @@ import { leadsByDay } from "@/lib/app-data";
  * tooltips carry the rest, and an off-screen table carries all fourteen values
  * for anyone not using a pointer.
  */
-export function LeadsChart() {
+export function LeadsChart({
+  leadsByDay,
+}: {
+  leadsByDay: { day: string; leads: number }[];
+}) {
   const peak = Math.max(...leadsByDay.map((d) => d.leads));
-  /* Round the top of the scale up to an even number so the ticks divide cleanly. */
-  const ceiling = Math.ceil(peak / 2) * 2;
+  /* Round the top of the scale up to an even number so the ticks divide
+     cleanly — and never below 2, so an empty fortnight still has a scale. */
+  const ceiling = Math.max(2, Math.ceil(peak / 2) * 2);
   const ticks = [ceiling, ceiling / 2, 0];
 
   const first = leadsByDay[0];
@@ -61,7 +64,7 @@ export function LeadsChart() {
                   style={{ height: `${(day.leads / ceiling) * 100}%` }}
                 />
 
-                {day.leads === peak && (
+                {day.leads === peak && peak > 0 && (
                   <span
                     className="pointer-events-none absolute left-1/2 mb-1 -translate-x-1/2 text-[0.7rem] font-bold tabular-nums text-ink"
                     style={{ bottom: `${(day.leads / ceiling) * 100}%` }}

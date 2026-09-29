@@ -1,4 +1,4 @@
-import { MessageCircle } from "lucide-react";
+// import { MessageCircle } from "lucide-react";
 import { StatusBadge } from "@/components/app/primitives";
 import { type LeadStatus } from "@/lib/app-data";
 
@@ -14,8 +14,10 @@ export type Lead = {
 
 /** One enquiry. Shared by the dashboard's recent list and the leads screen. */
 export function LeadRow({ lead }: { lead: Lead }) {
-  /* wa.me wants digits only — no plus, no spaces. */
+  /* Hidden until leads can be answered on WhatsApp.
+  // wa.me wants digits only — no plus, no spaces.
   const wa = lead.phone.replace(/\D/g, "");
+  */
 
   return (
     <li className="flex items-start gap-3 px-5 py-4">
@@ -41,6 +43,7 @@ export function LeadRow({ lead }: { lead: Lead }) {
         </p>
       </div>
 
+      {/* Hidden until leads can be answered on WhatsApp.
       <a
         href={`https://wa.me/${wa}`}
         target="_blank"
@@ -50,6 +53,7 @@ export function LeadRow({ lead }: { lead: Lead }) {
       >
         <MessageCircle size={17} aria-hidden />
       </a>
+      */}
     </li>
   );
 }

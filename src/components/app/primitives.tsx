@@ -34,19 +34,24 @@ export function PageHeader({
  * and `upIsGood` says how to read it — a falling cost per lead is good news,
  * so direction alone cannot pick the colour. The arrow carries the direction
  * too, so it never rests on colour alone.
+ *
+ * With no delta to compare against (no history yet, or no ad data), `note`
+ * says why instead.
  */
 export function StatTile({
   label,
   value,
   delta,
-  up,
-  upIsGood,
+  up = true,
+  upIsGood = true,
+  note,
 }: {
   label: string;
   value: string;
-  delta: string;
-  up: boolean;
-  upIsGood: boolean;
+  delta?: string;
+  up?: boolean;
+  upIsGood?: boolean;
+  note?: string;
 }) {
   const good = up === upIsGood;
   const Arrow = up ? TrendingUp : TrendingDown;
@@ -57,16 +62,20 @@ export function StatTile({
       <p className="mt-2 font-display text-3xl font-extrabold text-ink">
         {value}
       </p>
-      <p
-        className={cn(
-          "mt-2 flex items-center gap-1.5 text-sm font-semibold",
-          good ? "text-success" : "text-danger",
-        )}
-      >
-        <Arrow size={15} aria-hidden />
-        {delta}
-        <span className="font-normal text-faint">vs last month</span>
-      </p>
+      {delta === undefined ? (
+        <p className="mt-2 text-sm text-faint">{note}</p>
+      ) : (
+        <p
+          className={cn(
+            "mt-2 flex items-center gap-1.5 text-sm font-semibold",
+            good ? "text-success" : "text-danger",
+          )}
+        >
+          <Arrow size={15} aria-hidden />
+          {delta}
+          <span className="font-normal text-faint">vs last month</span>
+        </p>
+      )}
     </div>
   );
 }

@@ -1,0 +1,1 @@
+ALTER TABLE "orders" RENAME COLUMN "amount" TO "amount_paise";

@@ -4,8 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CreditCard, Inbox, LayoutDashboard, LogOut } from "lucide-react";
 import { Logo } from "@/components/logo";
-import { appNav, profile } from "@/lib/app-data";
+import { signOut } from "@/app/login/actions";
+import { appNav } from "@/lib/app-data";
 import { cn } from "@/lib/utils";
+
+/** Just what the chrome shows — not the whole user record. */
+export type Profile = { business: string; city: string; initial: string };
 
 const icons = {
   home: LayoutDashboard,
@@ -18,7 +22,7 @@ const icons = {
  * Both read the same `appNav`, so a new section appears in both by adding one
  * entry to the data.
  */
-export function AppSidebar() {
+export function AppSidebar({ profile }: { profile: Profile }) {
   const pathname = usePathname();
 
   return (
@@ -52,7 +56,7 @@ export function AppSidebar() {
 
       <div className="border-t border-hairline pt-4">
         <div className="flex items-center gap-3 px-2">
-          <Avatar />
+          <Avatar initial={profile.initial} />
           <span className="min-w-0">
             <span className="block truncate text-sm font-bold text-ink">
               {profile.business}
@@ -62,26 +66,40 @@ export function AppSidebar() {
             </span>
           </span>
         </div>
-        <Link
-          href="/login"
-          className="mt-3 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-subtle transition-colors hover:bg-surface-hover hover:text-ink"
-        >
-          <LogOut size={18} aria-hidden />
-          Sign out
-        </Link>
+        <form action={signOut}>
+          <button
+            type="submit"
+            className="mt-3 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-subtle transition-colors hover:bg-surface-hover hover:text-ink"
+          >
+            <LogOut size={18} aria-hidden />
+            Sign out
+          </button>
+        </form>
       </div>
     </aside>
   );
 }
 
 /** Phone chrome: the brand up top, the tabs within thumb reach at the bottom. */
-export function AppTopBar() {
+export function AppTopBar({ profile }: { profile: Profile }) {
   return (
     <header className="sticky top-0 z-20 flex items-center justify-between border-b border-hairline bg-background/85 px-4 py-3 backdrop-blur-md lg:hidden">
       <Link href="/" aria-label="growthrush.ai home">
         <Logo size="sm" tone="dark" />
       </Link>
-      <Avatar />
+      {/* The sidebar's sign-out is hidden on phones, so it lives here. */}
+      <div className="flex items-center gap-2">
+        <Avatar initial={profile.initial} />
+        <form action={signOut}>
+          <button
+            type="submit"
+            aria-label="Sign out"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-subtle transition-colors hover:bg-surface-hover hover:text-ink"
+          >
+            <LogOut size={18} aria-hidden />
+          </button>
+        </form>
+      </div>
     </header>
   );
 }
@@ -116,13 +134,13 @@ export function AppTabBar() {
   );
 }
 
-function Avatar() {
+function Avatar({ initial }: { initial: string }) {
   return (
     <span
       aria-hidden
       className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand/15 font-display font-extrabold text-brand"
     >
-      {profile.initial}
+      {initial}
     </span>
   );
 }
