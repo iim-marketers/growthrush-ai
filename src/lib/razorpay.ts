@@ -35,6 +35,19 @@ export function isValidPaymentSignature({
     .update(`${orderId}|${paymentId}`)
     .digest("hex");
 
+  return sameHex(expected, signature);
+}
+
+export function isValidWebhookSignature(body: string, signature: string) {
+  const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
+  if (!secret) {
+    throw new Error("RAZORPAY_WEBHOOK_SECRET must be set.");
+  }
+  const expected = createHmac("sha256", secret).update(body).digest("hex");
+  return sameHex(expected, signature);
+}
+
+function sameHex(expected: string, signature: string) {
   const a = Buffer.from(expected);
   const b = Buffer.from(signature);
   return a.length === b.length && timingSafeEqual(a, b);
