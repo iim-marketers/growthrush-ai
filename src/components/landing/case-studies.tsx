@@ -21,6 +21,9 @@ type CaseStudy = (typeof caseStudies)[number];
 
 const pad = (n: number) => String(n + 1).padStart(2, "0");
 
+const logoTile = (study: CaseStudy) =>
+  "logoOnDark" in study && study.logoOnDark ? "bg-black" : "bg-white";
+
 const railScroller =
   "-mx-4 snap-x snap-mandatory overflow-x-auto scroll-px-4 px-4 pt-2 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:overflow-visible lg:px-0 lg:pt-0 lg:pb-0";
 const railTrack =
@@ -141,7 +144,12 @@ function CaseCard({
       className="group relative flex h-full cursor-pointer w-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-card/60 text-left backdrop-blur-sm outline-none transition-all duration-300 hover:-translate-y-1 hover:border-brand/40 hover:shadow-[0_24px_60px_-28px_rgba(91,127,255,0.55)] focus-visible:ring-3 focus-visible:ring-brand/40"
     >
       <div className="relative bg-linear-to-br from-brand/25 via-card to-card p-4">
-        <div className="flex aspect-16/7 items-center justify-center rounded-xl bg-white px-6 py-4">
+        <div
+          className={cn(
+            "flex aspect-16/7 items-center justify-center rounded-xl px-6 py-4",
+            logoTile(study),
+          )}
+        >
           <Image
             src={study.logo}
             alt={study.business}
@@ -253,7 +261,12 @@ function CaseStudyDialog({
 
               <header className="relative lg:col-start-1 lg:row-start-1">
                 <div className="flex min-w-0 items-center gap-3 pr-12 sm:gap-4 lg:pr-0">
-                  <div className="flex h-14 w-24 shrink-0 items-center justify-center rounded-xl bg-white p-2 sm:h-16 sm:w-32">
+                  <div
+                    className={cn(
+                      "flex h-14 w-24 shrink-0 items-center justify-center rounded-xl p-2 sm:h-16 sm:w-32",
+                      logoTile(study),
+                    )}
+                  >
                     <Image
                       src={study.logo}
                       alt=""

@@ -30,17 +30,6 @@ export const showcaseBrands = [
   { name: "Century Ply", src: "/logos/centuryply.png" },
 ] as const;
 
-/**
- * Case studies — real clients, illustrative figures.
- *
- * The names, categories and logos are real; the headline/body/metric on each
- * card are stand-in numbers so the section reads properly. Swap them for the
- * confirmed figures before launch.
- *
- * `logo` is a full-colour mark sitting on a white plate in the card, so it
- * works in both themes. Note this is haldiram-color.jpeg, not the white
- * knockout haldiram.png the logo strip uses.
- */
 export const caseStudies = [
   {
     business: "Haldiram's",
@@ -49,8 +38,8 @@ export const caseStudies = [
     headline: "An eight-decade legacy, rebuilt for online orders",
     summary:
       "A unified D2C storefront with live store inventory, turning a fragmented digital presence into a growth channel.",
-    metric: "+45%",
-    metricLabel: "online revenue",
+    metric: "4000+",
+    metricLabel: "Distributor leads generated",
     logo: "/logos/haldiram-color.jpeg",
     overview:
       "Haldiram's is a premier Indian sweets, snacks and restaurant company headquartered in Nagpur. Over eight decades it has become synonymous with traditional Indian taste, running a vast retail network and exporting to more than 80 countries.",
@@ -73,82 +62,83 @@ export const caseStudies = [
     results: [
       { value: "+45%", label: "Online revenue" },
       { value: "+22%", label: "Average order value" },
-      { value: "+30%", label: "Customer retention" },
+      { value: "4000+", label: "Distributor leads generated" },
     ],
     outcome:
       "The overhaul drove a significant uptick in international sales and a far more streamlined fulfilment process.",
   },
   {
     business: "Mercstone",
-    market: "Middle East & Europe",
-    category: "Natural Stone",
-    headline: "A digital stone library that architects actually use",
+    market: "Kolkata & West Bengal",
+    category: "Electric Scooters",
+    headline: "Test rides booked on WhatsApp, not walk-ins left to chance",
     summary:
-      "A 4K virtual showroom and B2B lead engine that took a trade-show sales cycle global.",
+      "Hyper-local Meta campaigns around every dealership that turned EV curiosity into booked test rides.",
     metric: "+150%",
-    metricLabel: "monthly architect enquiries",
-    logo: "/logos/mercstone.svg",
+    metricLabel: "monthly test-ride bookings",
+    logo: "/logos/mercstone.png",
+    logoOnDark: true,
     overview:
-      "Mercstone is a global leader in natural stone, sourcing, processing and distributing high-quality marble, granite and engineered stone for large commercial developments and luxury residential projects.",
+      "Mercstone EV is a Kolkata-based maker of smart, connected electric scooters, built with LFP batteries, IoT anti-theft and app integration, and manufactured near Barrackpore through an Indo-Thai partnership with Assara Electric.",
     challenge:
-      "The sales cycle leaned heavily on physical inspections and trade shows. Without a high-fidelity digital showroom able to show the intricate textures and colour variations of each slab, Mercstone's reach among international architects and interior designers was limited.",
+      "Buyers were curious about EVs but hesitant: range anxiety, charging doubts and unfamiliar brand names kept them from visiting a showroom. Dealers relied on footfall and had no way to reach nearby buyers who were actively comparing petrol and electric options.",
     solution: [
       {
-        title: "High-resolution virtual showroom",
-        body: "An immersive web experience with 4K texture mapping, letting designers view stone slabs under different lighting conditions.",
+        title: "Dealer-level local targeting",
+        body: "Separate campaigns for each dealership, reaching commuters and delivery riders within a few kilometres of the showroom.",
       },
       {
-        title: "B2B lead management system",
-        body: "A custom CRM that tracks every sample sent to architectural firms around the world.",
+        title: "Myth-busting creatives",
+        body: "Ads built around running cost per km, real-world range and home charging, answering objections before the first call.",
       },
       {
-        title: "SEO & content strategy",
-        body: "High-intent keywords across architecture and construction, driving organic B2B enquiries.",
+        title: "Test rides to WhatsApp",
+        body: "Every enquiry routed straight to the nearest dealer on WhatsApp, with a one-tap test-ride booking.",
       },
     ],
     results: [
-      { value: "+150%", label: "Monthly enquiries from verified architects" },
-      { value: "40%", label: "Faster sample-to-order cycle" },
-      { value: "2", label: "New regions: Middle East & Europe" },
+      { value: "+150%", label: "Monthly test-ride bookings" },
+      { value: "40%", label: "Lower cost per lead" },
+      { value: "3x", label: "Dealer enquiries per week" },
     ],
     outcome:
-      "Digital pre-selection now does the work trade shows used to, and the project pipeline has expanded into new international markets.",
+      "Dealers now start each week with a queue of qualified test rides, and ad budget moves automatically to the showrooms converting best.",
   },
   {
     business: "Mudit Ridh",
-    market: "North America & UK",
-    category: "Luxury Couture",
-    headline: "The atelier experience, delivered over video",
+    market: "Tier-2 & Tier-3 India",
+    category: "Electric Vehicles",
+    headline: "Electric scooters that sell themselves on running cost",
     summary:
-      "Virtual bridal consultations and craft-led storytelling that won a global NRI clientele without losing exclusivity.",
-    metric: "60%",
-    metricLabel: "consultations to orders",
+      "Always-on lead generation for electric two-wheelers that reached first-time EV buyers in smaller cities.",
+    metric: "500+",
+    metricLabel: "Distributor leads generated",
     logo: "/logos/mudit-ridh.png",
     overview:
-      "Mudit Ridh (Mudit & Ridhi) is a high-end couture label known for intricate craftsmanship and contemporary bridal silhouettes. It represents the pinnacle of artisanal Indian fashion for a discerning global clientele.",
+      "Mudit Ridh Electric Vehicles makes electric scooters and utility two-wheelers for daily commuters, students and small traders, with a focus on smaller cities where fuel costs hit hardest.",
     challenge:
-      "Luxury bridal is fiercely competitive and built on personal connection. Mudit Ridh needed to translate the atelier experience into a digital format without diluting its exclusivity, while managing bespoke consultations for a fast-growing NRI customer base.",
+      "In tier-2 and tier-3 markets, buyers trust brands they can see and touch. Mudit Ridh competed against well-funded national EV players for attention, with limited marketing budget and no in-house digital team.",
     solution: [
       {
-        title: "Virtual concierge service",
-        body: "A seamless booking and video-consultation interface for remote bridal appointments.",
+        title: "Savings-first messaging",
+        body: "Creatives that compared monthly petrol spend against charging cost, in local languages, for the buyer's own commute.",
       },
       {
-        title: "Social-first storytelling",
-        body: "A high-production social campaign showing the behind-the-scenes craftsmanship of each collection.",
+        title: "Festive & subsidy campaigns",
+        body: "Time-bound offers around festivals and EV subsidies that gave fence-sitters a reason to act now.",
       },
       {
-        title: "Curated e-commerce",
-        body: "An invite-only, enquiry-based portal for high-value bridal pieces that protects brand prestige.",
+        title: "Daily budget optimisation",
+        body: "Spend shifted every day toward the cities and audiences producing the cheapest qualified leads.",
       },
     ],
     results: [
-      { value: "60%", label: "Virtual consultations to confirmed orders" },
-      { value: "+200%", label: "Organic Instagram engagement" },
-      { value: "2", label: "New markets: North America & UK" },
+      { value: "60%", label: "Leads converted to showroom visits" },
+      { value: "+200%", label: "Monthly enquiries" },
+      { value: "500+", label: "Distributor leads generated" },
     ],
     outcome:
-      "\u201cCouture Stories\u201d drove the social growth, and overseas markets now deliver a consistent revenue stream.",
+      "Mudit Ridh now competes with national EV brands in its home markets on a fraction of their budget, with a steady pipeline of ready-to-buy riders.",
   },
 ] as const;
 
