@@ -1,4 +1,4 @@
-import { caseStudies, heroStats } from "@/lib/landing-data";
+import { heroStats } from "@/lib/landing-data";
 
 /* ------------------------------------------------------------------ *
  * Auth — the step between /login and onboarding
@@ -23,7 +23,14 @@ export const verify = {
  * Onboarding — the guided walk from "who are you?" to a live campaign
  * ------------------------------------------------------------------ */
 
-const demo = caseStudies[0];
+/* The onboarding walkthrough is a scripted demo, so it needs a business that
+   stays put. It used to borrow caseStudies[0]; that list now holds real
+   clients, whose copy will change independently of this flow. */
+const demo = {
+  business: "Sharma Coaching Classes",
+  city: "Kolkata",
+  headline: "6 to 120 leads a month in one quarter",
+} as const;
 
 export type StepId =
   | "business"

@@ -1,7 +1,7 @@
 export const hero = {
-  eyebrow: "AI-run Meta ads for local businesses",
+  eyebrow: "Created by AI Scientists from IIT-Bombay",
   title: "More customers.",
-  titleAccent: "Zero ad agencies.",
+  titleAccent: "With the Power of AI.",
   subtitle:
     "growthrush.ai writes the copy, designs the creatives and runs your Facebook ads — then delivers ready-to-buy leads straight to your WhatsApp.",
   primaryCta: "Get Started",
@@ -11,8 +11,8 @@ export const hero = {
 
 /** The headline numbers, shown in the pill inside the hero card. */
 export const heroStats = [
-  { value: "48,000+", label: "Local buyers reached per city" },
-  { value: "12x", label: "Average lead lift in 90 days" },
+  { value: "400+", label: "Happy Clients" },
+  { value: "1000+", label: "Guaranteed Leads of Quality" },
   { value: "₹300", label: "Minimum daily ad budget" },
 ] as const;
 
@@ -30,40 +30,115 @@ export const showcaseBrands = [
   { name: "Century Ply", src: "/logos/centuryply.png" },
 ] as const;
 
-/**
- * Case studies. Images live in `public/images/` and are stock placeholders —
- * swap them, and the figures, for real ones.
- */
 export const caseStudies = [
   {
-    business: "Sharma Coaching Classes",
-    city: "Kolkata",
-    category: "Coaching",
-    headline: "6 to 120 leads a month in one quarter",
-    body: "Batch enquiries went from word-of-mouth only to a steady WhatsApp queue, at ₹128 per lead.",
-    metric: "20x",
-    metricLabel: "more enquiries",
-    image: "/images/case-coaching.jpg",
+    business: "Haldiram's",
+    market: "Exports to 80+ countries",
+    category: "FMCG",
+    headline: "An eight-decade legacy, rebuilt for online orders",
+    summary:
+      "A unified D2C storefront with live store inventory, turning a fragmented digital presence into a growth channel.",
+    metric: "4000+",
+    metricLabel: "Distributor leads generated",
+    logo: "/logos/haldiram-color.jpeg",
+    overview:
+      "Haldiram's is a premier Indian sweets, snacks and restaurant company headquartered in Nagpur. Over eight decades it has become synonymous with traditional Indian taste, running a vast retail network and exporting to more than 80 countries.",
+    challenge:
+      "Despite a dominant physical presence, the digital transition was full of friction: an online identity fragmented across regional entities, an outdated storefront that undersold the brand's premium positioning, and supply-chain silos that blocked real-time inventory tracking for international orders.",
+    solution: [
+      {
+        title: "Unified digital architecture",
+        body: "A centralised D2C platform that brings every regional product catalogue into one seamless shopping experience.",
+      },
+      {
+        title: "Omnichannel integration",
+        body: "Physical retail inventory synced with the online storefront to enable hyper-local delivery.",
+      },
+      {
+        title: "Brand rejuvenation",
+        body: "A modern visual language for digital touchpoints that balances traditional heritage with contemporary aesthetics.",
+      },
+    ],
+    results: [
+      { value: "+45%", label: "Online revenue" },
+      { value: "+22%", label: "Average order value" },
+      { value: "4000+", label: "Distributor leads generated" },
+    ],
+    outcome:
+      "The overhaul drove a significant uptick in international sales and a far more streamlined fulfilment process.",
   },
   {
-    business: "Glow & Co.",
-    city: "Pune",
-    category: "Salon",
-    headline: "Fully booked inside two weeks",
-    body: "Local targeting filled the chair on weekdays, not just weekends — and paid for a second stylist.",
-    metric: "₹142",
-    metricLabel: "per booked appointment",
-    image: "/images/case-salon.jpg",
+    business: "Mercstone",
+    market: "Kolkata & West Bengal",
+    category: "Electric Scooters",
+    headline: "Test rides booked on WhatsApp, not walk-ins left to chance",
+    summary:
+      "Hyper-local Meta campaigns around every dealership that turned EV curiosity into booked test rides.",
+    metric: "+150%",
+    metricLabel: "monthly test-ride bookings",
+    logo: "/logos/mercstone.png",
+    logoOnDark: true,
+    overview:
+      "Mercstone EV is a Kolkata-based maker of smart, connected electric scooters, built with LFP batteries, IoT anti-theft and app integration, and manufactured near Barrackpore through an Indo-Thai partnership with Assara Electric.",
+    challenge:
+      "Buyers were curious about EVs but hesitant: range anxiety, charging doubts and unfamiliar brand names kept them from visiting a showroom. Dealers relied on footfall and had no way to reach nearby buyers who were actively comparing petrol and electric options.",
+    solution: [
+      {
+        title: "Dealer-level local targeting",
+        body: "Separate campaigns for each dealership, reaching commuters and delivery riders within a few kilometres of the showroom.",
+      },
+      {
+        title: "Myth-busting creatives",
+        body: "Ads built around running cost per km, real-world range and home charging, answering objections before the first call.",
+      },
+      {
+        title: "Test rides to WhatsApp",
+        body: "Every enquiry routed straight to the nearest dealer on WhatsApp, with a one-tap test-ride booking.",
+      },
+    ],
+    results: [
+      { value: "+150%", label: "Monthly test-ride bookings" },
+      { value: "40%", label: "Lower cost per lead" },
+      { value: "3x", label: "Dealer enquiries per week" },
+    ],
+    outcome:
+      "Dealers now start each week with a queue of qualified test rides, and ad budget moves automatically to the showrooms converting best.",
   },
   {
-    business: "Spice Route",
-    city: "Bengaluru",
-    category: "Restaurant",
-    headline: "3.1x return on ad spend",
-    body: "Weekend covers up 40% after AI shifted budget to the creatives that actually drove bookings.",
-    metric: "3.1x",
-    metricLabel: "return on ad spend",
-    image: "/images/case-restaurant.jpg",
+    business: "Mudit Ridh",
+    market: "Tier-2 & Tier-3 India",
+    category: "Electric Vehicles",
+    headline: "Electric scooters that sell themselves on running cost",
+    summary:
+      "Always-on lead generation for electric two-wheelers that reached first-time EV buyers in smaller cities.",
+    metric: "500+",
+    metricLabel: "Distributor leads generated",
+    logo: "/logos/mudit-ridh.png",
+    overview:
+      "Mudit Ridh Electric Vehicles makes electric scooters and utility two-wheelers for daily commuters, students and small traders, with a focus on smaller cities where fuel costs hit hardest.",
+    challenge:
+      "In tier-2 and tier-3 markets, buyers trust brands they can see and touch. Mudit Ridh competed against well-funded national EV players for attention, with limited marketing budget and no in-house digital team.",
+    solution: [
+      {
+        title: "Savings-first messaging",
+        body: "Creatives that compared monthly petrol spend against charging cost, in local languages, for the buyer's own commute.",
+      },
+      {
+        title: "Festive & subsidy campaigns",
+        body: "Time-bound offers around festivals and EV subsidies that gave fence-sitters a reason to act now.",
+      },
+      {
+        title: "Daily budget optimisation",
+        body: "Spend shifted every day toward the cities and audiences producing the cheapest qualified leads.",
+      },
+    ],
+    results: [
+      { value: "60%", label: "Leads converted to showroom visits" },
+      { value: "+200%", label: "Monthly enquiries" },
+      { value: "500+", label: "Distributor leads generated" },
+    ],
+    outcome:
+      "Mudit Ridh now competes with national EV brands in its home markets on a fraction of their budget, with a steady pipeline of ready-to-buy riders.",
   },
 ] as const;
 
