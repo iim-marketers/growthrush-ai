@@ -29,6 +29,7 @@ type RazorpayOptions = {
   name: string;
   description: string;
   theme: { color: string };
+  prefill: { contact: string };
   handler: (response: PaymentSuccess) => void;
   modal: { ondismiss: () => void };
 };
@@ -209,6 +210,7 @@ export function CheckoutButton({
       name: "growthrush.ai",
       description: planName,
       theme: { color: "#4059e8" },
+      prefill: { contact: data.contact },
       handler: (response) => void confirm(charge, response),
       modal: {
         // Closing after a success must not overwrite "confirming" or "paid".

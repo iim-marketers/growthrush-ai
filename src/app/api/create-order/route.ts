@@ -73,5 +73,6 @@ export async function POST(request: Request) {
     order_id: order.id,
     amount: order.amount,
     currency: order.currency,
+    contact: user.phone,
   });
 }
