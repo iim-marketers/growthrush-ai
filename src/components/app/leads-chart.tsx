@@ -1,116 +1,133 @@
-/**
- * Leads per day over the last fortnight.
- *
- * One series, so it wears one hue and needs no legend — the caption says what
- * is plotted. Only the peak is directly labelled; the axis and the hover
- * tooltips carry the rest, and an off-screen table carries all fourteen values
- * for anyone not using a pointer.
- */
+"use client";
+
+import { useState } from "react";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const ranges = [
+  { days: 7, label: "7D" },
+  { days: 14, label: "14D" },
+  { days: 30, label: "30D" },
+] as const;
+
+const config = {
+  leads: { label: "Leads", color: "var(--chart-1)" },
+} satisfies ChartConfig;
+
 export function LeadsChart({
   leadsByDay,
 }: {
   leadsByDay: { day: string; leads: number }[];
 }) {
-  const peak = Math.max(...leadsByDay.map((d) => d.leads));
-  /* Round the top of the scale up to an even number so the ticks divide
-     cleanly — and never below 2, so an empty fortnight still has a scale. */
-  const ceiling = Math.max(2, Math.ceil(peak / 2) * 2);
-  const ticks = [ceiling, ceiling / 2, 0];
-
-  const first = leadsByDay[0];
-  const last = leadsByDay[leadsByDay.length - 1];
-  const total = leadsByDay.reduce((sum, d) => sum + d.leads, 0);
+  const [days, setDays] = useState<number>(14);
+  const data = leadsByDay.slice(-days);
+  const total = data.reduce((sum, d) => sum + d.leads, 0);
+  const best = data.reduce((top, d) => (d.leads > top.leads ? d : top), data[0]);
 
   return (
-    <figure className="rounded-2xl border border-hairline bg-card p-5 backdrop-blur-sm sm:p-6">
-      <figcaption className="mb-6 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <span>
-          <span className="block font-display text-base font-bold text-ink">
-            Leads per day
-          </span>
-          <span className="block text-sm text-faint">
-            Last 14 days · {total} leads
-          </span>
-        </span>
-      </figcaption>
-
-      <div className="flex gap-3">
-        {/* Y ticks, sitting outside the plot so nothing overlaps the marks. */}
-        <div className="flex h-40 flex-col justify-between text-right text-[0.7rem] tabular-nums text-faint sm:h-48">
-          {ticks.map((tick) => (
-            <span key={tick} className="leading-none">
-              {tick}
+    <Card className="gap-2 rounded-2xl py-5">
+      <CardHeader className="px-5">
+        <CardTitle className="font-display text-base font-bold text-ink">
+          Leads per day
+        </CardTitle>
+        <CardDescription>
+          <span className="font-semibold text-ink tabular-nums">{total}</span>{" "}
+          leads in the last {days} days
+          {best?.leads > 0 && (
+            <span className="hidden sm:inline">
+              {" "}
+              · best day {best.day} ({best.leads})
             </span>
-          ))}
-        </div>
-
-        <div className="relative h-40 flex-1 sm:h-48">
-          {/* Hairline gridlines, one step off the surface and behind the bars. */}
-          <div aria-hidden className="absolute inset-0 flex flex-col justify-between">
-            {ticks.map((tick) => (
-              <span key={tick} className="block h-px w-full bg-surface-mute" />
-            ))}
-          </div>
-
-          <div className="relative flex h-full items-end gap-0.5">
-            {leadsByDay.map((day) => (
-              <div
-                key={day.day}
-                className="group relative flex h-full flex-1 items-end justify-center"
-              >
-                {/* The whole column is the hover target, not just the bar. */}
-                <span
-                  className="w-full max-w-6 rounded-t bg-brand/80 transition-colors group-hover:bg-brand"
-                  style={{ height: `${(day.leads / ceiling) * 100}%` }}
-                />
-
-                {day.leads === peak && peak > 0 && (
-                  <span
-                    className="pointer-events-none absolute left-1/2 mb-1 -translate-x-1/2 text-[0.7rem] font-bold tabular-nums text-ink"
-                    style={{ bottom: `${(day.leads / ceiling) * 100}%` }}
-                  >
-                    {day.leads}
-                  </span>
-                )}
-
-                <span
-                  role="tooltip"
-                  className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 rounded-lg border border-hairline bg-popover px-2.5 py-1.5 text-center whitespace-nowrap opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
+          )}
+        </CardDescription>
+        <CardAction>
+          <Tabs value={String(days)} onValueChange={(v) => setDays(Number(v))}>
+            <TabsList aria-label="Date range">
+              {ranges.map((range) => (
+                <TabsTrigger
+                  key={range.days}
+                  value={String(range.days)}
+                  className="px-2.5 text-xs"
                 >
-                  <span className="block text-[0.7rem] text-faint">{day.day}</span>
-                  <span className="block text-sm font-bold tabular-nums text-ink">
-                    {day.leads} leads
-                  </span>
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+                  {range.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        </CardAction>
+      </CardHeader>
 
-      <div className="mt-3 flex justify-between pl-8 text-[0.7rem] text-faint">
-        <span>{first.day}</span>
-        <span>{last.day}</span>
-      </div>
+      <CardContent className="px-2 sm:px-4">
+        <ChartContainer config={config} className="aspect-auto h-56 w-full sm:h-64">
+          <AreaChart data={data} margin={{ left: 0, right: 8, top: 12 }}>
+            <defs>
+              <linearGradient id="leads-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="var(--color-leads)" stopOpacity={0.28} />
+                <stop offset="100%" stopColor="var(--color-leads)" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid vertical={false} strokeDasharray="3 4" />
+            <XAxis
+              dataKey="day"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={10}
+              minTickGap={28}
+            />
+            <YAxis
+              allowDecimals={false}
+              tickLine={false}
+              axisLine={false}
+              width={32}
+              domain={[0, (max: number) => Math.max(2, max)]}
+            />
+            <ChartTooltip
+              cursor={{ strokeDasharray: "3 3" }}
+              content={<ChartTooltipContent indicator="line" />}
+            />
+            <Area
+              dataKey="leads"
+              type="monotone"
+              stroke="var(--color-leads)"
+              strokeWidth={2.25}
+              fill="url(#leads-fill)"
+              activeDot={{ r: 4.5, strokeWidth: 2, stroke: "#fff" }}
+            />
+          </AreaChart>
+        </ChartContainer>
 
-      {/* The same numbers, reachable without a pointer. */}
-      <table className="sr-only">
-        <caption>Leads per day, last 14 days</caption>
-        <thead>
-          <tr>
-            <th scope="col">Day</th>
-            <th scope="col">Leads</th>
-          </tr>
-        </thead>
-        <tbody>
-          {leadsByDay.map((day) => (
-            <tr key={day.day}>
-              <th scope="row">{day.day}</th>
-              <td>{day.leads}</td>
+        <table className="sr-only">
+          <caption>Leads per day, last {days} days</caption>
+          <thead>
+            <tr>
+              <th scope="col">Day</th>
+              <th scope="col">Leads</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </figure>
+          </thead>
+          <tbody>
+            {data.map((day) => (
+              <tr key={day.day}>
+                <th scope="row">{day.day}</th>
+                <td>{day.leads}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,25 +1,31 @@
-import { TrendingDown, TrendingUp } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { leadStatuses, type LeadStatus } from "@/lib/app-data";
 import { cn } from "@/lib/utils";
 
-/** Title block at the top of every signed-in screen. */
 export function PageHeader({
+  eyebrow,
   title,
   subtitle,
   action,
 }: {
+  eyebrow?: string;
   title: string;
   subtitle?: string;
   action?: React.ReactNode;
 }) {
   return (
-    <div className="mb-6 flex flex-wrap items-start justify-between gap-4 sm:mb-8">
-      <div>
-        <h1 className="text-[clamp(1.5rem,1.3rem+1vw,2rem)] leading-tight">
+    <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
+      <div className="min-w-0">
+        {eyebrow && (
+          <p className="mb-2 text-xs font-semibold tracking-[0.14em] text-brand uppercase">
+            {eyebrow}
+          </p>
+        )}
+        <h1 className="text-[clamp(1.6rem,1.35rem+1vw,2.1rem)] leading-tight text-ink">
           {title}
         </h1>
         {subtitle && (
-          <p className="mt-2 text-sm leading-relaxed text-subtle sm:text-[0.95rem]">
+          <p className="mt-2 max-w-[60ch] text-sm leading-relaxed text-subtle sm:text-[0.95rem]">
             {subtitle}
           </p>
         )}
@@ -29,106 +35,61 @@ export function PageHeader({
   );
 }
 
-/**
- * A headline number, not a one-bar chart. `up` is the direction of the delta
- * and `upIsGood` says how to read it — a falling cost per lead is good news,
- * so direction alone cannot pick the colour. The arrow carries the direction
- * too, so it never rests on colour alone.
- *
- * With no delta to compare against (no history yet, or no ad data), `note`
- * says why instead.
- */
-export function StatTile({
-  label,
-  value,
-  delta,
-  up = true,
-  upIsGood = true,
-  note,
-}: {
-  label: string;
-  value: string;
-  delta?: string;
-  up?: boolean;
-  upIsGood?: boolean;
-  note?: string;
-}) {
-  const good = up === upIsGood;
-  const Arrow = up ? TrendingUp : TrendingDown;
+export const statusTones = {
+  brand: { badge: "bg-brand/10 text-brand", dot: "bg-brand" },
+  amber: { badge: "bg-warn/12 text-warn", dot: "bg-warn" },
+  success: { badge: "bg-success/12 text-success", dot: "bg-success" },
+  muted: { badge: "bg-surface-mute text-faint", dot: "bg-line-strong" },
+} as const;
+
+export function statusMeta(status: LeadStatus) {
+  return leadStatuses.find((s) => s.id === status) ?? leadStatuses[0];
+}
+
+export function StatusBadge({ status }: { status: LeadStatus }) {
+  const meta = statusMeta(status);
 
   return (
-    <div className="rounded-2xl border border-hairline bg-card p-5 backdrop-blur-sm">
-      <p className="text-sm text-faint">{label}</p>
-      <p className="mt-2 font-display text-3xl font-extrabold text-ink">
-        {value}
-      </p>
-      {delta === undefined ? (
-        <p className="mt-2 text-sm text-faint">{note}</p>
-      ) : (
-        <p
-          className={cn(
-            "mt-2 flex items-center gap-1.5 text-sm font-semibold",
-            good ? "text-success" : "text-danger",
-          )}
-        >
-          <Arrow size={15} aria-hidden />
-          {delta}
-          <span className="font-normal text-faint">vs last month</span>
-        </p>
+    <Badge
+      className={cn(
+        "h-6 gap-1.5 px-2.5 font-semibold",
+        statusTones[meta.tone].badge,
       )}
-    </div>
+    >
+      <span aria-hidden className="size-1.5 rounded-full bg-current" />
+      {meta.label}
+    </Badge>
   );
 }
 
-/* Status is reserved colour — never reused for a series — and always paired
-   with its label, so it is legible without colour vision. */
-const tones = {
-  brand: "bg-brand/15 text-brand",
-  amber: "bg-warn/15 text-warn",
-  success: "bg-success/15 text-success",
-  muted: "bg-surface-mute text-faint",
-} as const;
+const avatarTints = [
+  "bg-brand/12 text-brand",
+  "bg-grape/12 text-grape",
+  "bg-orange/12 text-orange",
+  "bg-success/12 text-success",
+  "bg-cyan-glow/20 text-[#0e7490]",
+] as const;
 
-export function StatusBadge({ status }: { status: LeadStatus }) {
-  const meta = leadStatuses.find((s) => s.id === status) ?? leadStatuses[0];
+export function LeadAvatar({
+  name,
+  className,
+}: {
+  name: string;
+  className?: string;
+}) {
+  let hash = 0;
+  for (const char of name) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
 
   return (
     <span
+      aria-hidden
       className={cn(
-        "inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold",
-        tones[meta.tone],
-      )}
-    >
-      <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-current" />
-      {meta.label}
-    </span>
-  );
-}
-
-/** A titled panel — the unit the dashboard and billing screens are built from. */
-export function Panel({
-  title,
-  action,
-  className,
-  children,
-}: {
-  title: string;
-  action?: React.ReactNode;
-  className?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section
-      className={cn(
-        "rounded-2xl border border-hairline bg-card backdrop-blur-sm",
+        "flex size-9 shrink-0 items-center justify-center rounded-full font-display text-sm font-bold",
+        avatarTints[hash % avatarTints.length],
         className,
       )}
     >
-      <div className="flex items-center justify-between gap-4 border-b border-hairline px-5 py-4">
-        <h2 className="font-display text-base font-bold text-ink">{title}</h2>
-        {action}
-      </div>
-      {children}
-    </section>
+      {name.trim().charAt(0).toUpperCase() || "?"}
+    </span>
   );
 }

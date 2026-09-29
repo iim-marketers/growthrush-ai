@@ -1,48 +1,64 @@
 import type { Viewport } from "next";
-import {
-  AppSidebar,
-  AppTabBar,
-  AppTopBar,
-  type Profile,
-} from "@/components/app/app-nav";
+import { cookies } from "next/headers";
+import { AppHeader, AppSidebar, type Profile } from "@/components/app/app-nav";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { getBusiness, requireOnboardedUser } from "@/lib/auth/dal";
+import {
+  billingCycle,
+  formatDate,
+  getActivePlan,
+  getLeads,
+} from "@/lib/queries";
 
-/* The light screens want white browser chrome, not the landing page's navy. */
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#f3f5fa",
   colorScheme: "light",
 };
 
-/**
- * Chrome shared by every signed-in screen. A route group, so the nav wraps
- * /dashboard, /leads and /billing without adding a segment to their URLs.
- */
 export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const user = await requireOnboardedUser();
-  const business = await getBusiness(user.id);
+  const [business, leads, active, jar] = await Promise.all([
+    getBusiness(user.id),
+    getLeads(user.id),
+    getActivePlan(user.id),
+    cookies(),
+  ]);
 
   const name = business?.name ?? "Your business";
   const profile: Profile = {
     business: name,
     city: business?.city ?? "",
     initial: name.charAt(0).toUpperCase(),
+    plan: active && {
+      name: active.plan.name,
+      renews: formatDate(active.renewsOn),
+      used: billingCycle(active.renewsOn).percent,
+    },
+    newLeads: leads.filter((lead) => lead.status === "new").length,
   };
 
+  const sidebarOpen = jar.get("sidebar_state")?.value !== "false";
+
   return (
-    <div className="theme-light min-h-dvh bg-background">
-      <AppSidebar profile={profile} />
-      <AppTopBar profile={profile} />
-      {/* Left gutter clears the sidebar; bottom gutter clears the tab bar. */}
-      <main className="pb-24 lg:pb-0 lg:pl-60">
-        <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
-          {children}
-        </div>
-      </main>
-      <AppTabBar />
-    </div>
+    <TooltipProvider delayDuration={200}>
+      <SidebarProvider
+        defaultOpen={sidebarOpen}
+        data-light-portals
+        className="theme-light"
+      >
+        <AppSidebar profile={profile} variant="inset" />
+        <SidebarInset className="min-w-0">
+          <AppHeader activePlan={profile.plan?.name ?? null} />
+          <div className="mx-auto w-full max-w-full px-4 py-6 sm:px-8 ">
+            {children}
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
+    </TooltipProvider>
   );
 }

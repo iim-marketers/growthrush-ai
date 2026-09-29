@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { redirect } from "next/navigation";
 import { OnboardingWizard } from "@/components/onboarding/wizard";
 import { getBusiness, requireUser } from "@/lib/auth/dal";
 import { cleanAnswers, emptyAnswers, type Answers } from "@/lib/onboarding";
@@ -19,6 +20,7 @@ export const viewport: Viewport = {
 
 export default async function OnboardingPage() {
   const user = await requireUser();
+  if (user.onboardedAt) redirect("/dashboard");
   const business = await getBusiness(user.id);
 
   const saved: Answers = cleanAnswers({

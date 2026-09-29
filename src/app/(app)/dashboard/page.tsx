@@ -1,13 +1,34 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Pencil, Radio, Rocket } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  Eye,
+  IndianRupee,
+  MapPin,
+  Tag,
+  Target,
+  Users,
+  Wallet,
+} from "lucide-react";
+import {
+  DashboardHero,
+  KpiCard,
+  LeadPipeline,
+  RecentLeads,
+  SetupCard,
+} from "@/components/app/dashboard-widgets";
 import { LeadsChart } from "@/components/app/leads-chart";
-import { LeadRow } from "@/components/app/lead-row";
-import { PageHeader, Panel, StatTile } from "@/components/app/primitives";
+import { Button } from "@/components/ui/button";
 import { goals, monthlyBudgets } from "@/lib/app-data";
 import { getBusiness, requireOnboardedUser } from "@/lib/auth/dal";
 import { plans } from "@/lib/landing-data";
-import { getActivePlan, getLeadStats, getLeads } from "@/lib/queries";
+import {
+  formatDate,
+  getActivePlan,
+  getLeadStats,
+  getLeads,
+} from "@/lib/queries";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -17,7 +38,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-/* Spend, cost per lead and reach come from Meta, which isn't connected yet. */
 const AWAITING_ADS = "Shows once your ads are live";
 
 export default async function DashboardPage() {
@@ -29,136 +49,122 @@ export default async function DashboardPage() {
     getActivePlan(user.id),
   ]);
 
-  const recent = leads.slice(0, 3);
   const chosenPlan =
     plans.find((plan) => plan.id === business?.planId) ?? plans[0];
+  const now = new Date();
 
   return (
-    <>
-      <PageHeader
-        title={`Hello, ${business?.name ?? "there"}`}
-        subtitle="Here is what your ads did this month."
-        action={
-          active && (
-            <span className="inline-flex items-center gap-2 rounded-full bg-success/12 px-3 py-1.5 text-xs font-bold text-success">
-              <Radio size={13} aria-hidden />
-              {active.plan.name} · active
-            </span>
-          )
-        }
-      />
-
-      {!active && (
-        <div className="mb-4 flex flex-col gap-4 rounded-2xl border border-brand/30 bg-brand/[0.07] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
-          <div className="flex items-start gap-3">
-            <Rocket size={20} aria-hidden className="mt-0.5 shrink-0 text-brand" />
-            <div>
-              <p className="font-display text-base font-bold text-ink">
-                Your ads aren&rsquo;t live yet
-              </p>
-              <p className="mt-1.5 text-sm leading-relaxed text-subtle">
-                Start {chosenPlan.name} ({chosenPlan.price}/month) and we&rsquo;ll
-                put your first campaign live.
-              </p>
-            </div>
-          </div>
-          <Link
-            href="/billing"
-            className="btn-glow inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3 font-display text-sm font-bold text-white transition-transform hover:-translate-y-0.5"
-          >
-            Go live
-            <ArrowRight size={16} aria-hidden />
-          </Link>
-        </div>
-      )}
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile
-          label="Leads this month"
-          value={stats.thisMonth.toLocaleString("en-IN")}
-          {...leadDelta(stats.thisMonth, stats.lastMonth)}
-        />
-        <StatTile label="Cost per lead" value="—" note={AWAITING_ADS} />
-        <StatTile label="Ad spend" value="—" note={AWAITING_ADS} />
-        <StatTile label="People reached" value="—" note={AWAITING_ADS} />
-      </div>
-
-      <div className="mt-4 grid gap-4 lg:grid-cols-[1.6fr_1fr]">
-        <LeadsChart leadsByDay={stats.byDay} />
-
-        <Panel
-          title="Your setup"
-          action={
-            <Link
-              href="/onboarding"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand transition-colors hover:text-brand-soft"
-            >
-              <Pencil size={14} aria-hidden />
-              Edit
-            </Link>
+    <div className="flex flex-col gap-4 sm:gap-5">
+      <DashboardHero
+        greeting={greetingFor(now)}
+        date={new Intl.DateTimeFormat("en-IN", {
+          timeZone: "Asia/Kolkata",
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+        }).format(now)}
+        business={business?.name ?? "there"}
+        plan={
+          active && {
+            name: active.plan.name,
+            renews: formatDate(active.renewsOn),
           }
-        >
-          <dl className="flex flex-col gap-4 px-5 py-5">
-            <SetupRow label="Business" value={business?.name} />
-            <SetupRow label="Category" value={business?.category} />
-            <SetupRow label="Location" value={business?.city} />
-            <SetupRow
-              label="Goal"
-              value={goals.find((g) => g.id === business?.goal)?.title}
-            />
-            <SetupRow
-              label="Monthly ad budget"
-              value={
-                monthlyBudgets.find((b) => b.id === business?.budgetBand)
-                  ?.label
-              }
-            />
-          </dl>
-        </Panel>
-      </div>
-
-      <Panel
-        title="Latest leads"
-        className="mt-4"
-        action={
-          <Link
-            href="/leads"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand transition-colors hover:text-brand-soft"
-          >
-            See all
-            <ArrowRight size={15} aria-hidden />
-          </Link>
         }
       >
-        {recent.length > 0 ? (
-          <ul className="divide-y divide-hairline">
-            {recent.map((lead) => (
-              <LeadRow key={lead.id} lead={lead} />
-            ))}
-          </ul>
-        ) : (
-          <p className="px-5 py-12 text-center text-sm text-faint">
-            No leads yet. They&rsquo;ll appear here as soon as your ads bring
-            them in.
+        <div className="flex shrink-0 flex-col gap-2 sm:items-end">
+          <Button
+            asChild
+            size="lg"
+            className="h-11 rounded-xl bg-white px-5 font-display font-bold text-[#0b1220] shadow-[0_8px_30px_rgba(64,89,232,0.45)] hover:bg-white/90"
+          >
+            <Link href="/billing">
+              Go live
+              <ArrowRight data-icon="inline-end" />
+            </Link>
+          </Button>
+          <p className="text-xs text-white/60">
+            {chosenPlan.name} · {chosenPlan.price}/month
           </p>
-        )}
-      </Panel>
-    </>
-  );
-}
+        </div>
+      </DashboardHero>
 
-function SetupRow({ label, value }: { label: string; value?: string | null }) {
-  return (
-    <div className="flex items-baseline justify-between gap-4">
-      <dt className="shrink-0 text-sm text-faint">{label}</dt>
-      <dd className="min-w-0 truncate text-right text-sm font-semibold text-ink">
-        {value || "—"}
-      </dd>
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+        <KpiCard
+          label="Leads this month"
+          value={stats.thisMonth.toLocaleString("en-IN")}
+          icon={Users}
+          {...leadDelta(stats.thisMonth, stats.lastMonth)}
+        />
+        <KpiCard
+          label="Cost per lead"
+          value="—"
+          icon={IndianRupee}
+          note={AWAITING_ADS}
+          pending
+        />
+        <KpiCard
+          label="Ad spend"
+          value="—"
+          icon={Wallet}
+          note={AWAITING_ADS}
+          pending
+        />
+        <KpiCard
+          label="People reached"
+          value="—"
+          icon={Eye}
+          note={AWAITING_ADS}
+          pending
+        />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="min-w-0 lg:col-span-2">
+          <LeadsChart leadsByDay={stats.byDay} />
+        </div>
+        <LeadPipeline leads={leads} />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="min-w-0 lg:col-span-2">
+          <RecentLeads leads={leads.slice(0, 5)} />
+        </div>
+        <SetupCard
+          rows={[
+            { label: "Business", value: business?.name, icon: Building2 },
+            { label: "Category", value: business?.category, icon: Tag },
+            { label: "Location", value: business?.city, icon: MapPin },
+            {
+              label: "Goal",
+              value: goals.find((g) => g.id === business?.goal)?.title,
+              icon: Target,
+            },
+            {
+              label: "Monthly ad budget",
+              value: monthlyBudgets.find((b) => b.id === business?.budgetBand)
+                ?.label,
+              icon: Wallet,
+            },
+          ]}
+        />
+      </div>
     </div>
   );
 }
 
-/** Month-on-month change, or a note when there is nothing to compare with. */
+function greetingFor(now: Date) {
+  const hour = Number(
+    new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Kolkata",
+      hour: "numeric",
+      hourCycle: "h23",
+    }).format(now),
+  );
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  return "Good evening";
+}
+
 function leadDelta(now: number, before: number) {
   if (before === 0) {
     return { note: now > 0 ? "Your first month of leads" : "No leads yet" };

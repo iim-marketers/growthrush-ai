@@ -15,6 +15,10 @@ export async function saveOnboarding(
 ): Promise<SaveResult> {
   const user = await getSessionUser();
   if (!user) redirect("/login");
+  // Also enforced here: server actions can be called without the page.
+  if (user.onboardedAt) {
+    return { error: "Your setup is locked now that your campaign is built." };
+  }
 
   const answers = cleanAnswers(input);
   if (complete && !isComplete(answers)) {

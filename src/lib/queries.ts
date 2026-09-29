@@ -44,15 +44,15 @@ export type LeadStats = {
   byDay: { day: string; leads: number }[];
 };
 
-/** This month vs last, and a count per day for the last fortnight. */
+/** This month vs last, and a count per day for the last 30 days. */
 export async function getLeadStats(userId: string): Promise<LeadStats> {
   const now = new Date();
   const monthStart = istMonthStart(now, 0);
   const lastMonthStart = istMonthStart(now, -1);
-  const fortnightStart = new Date(now.getTime() - 13 * DAY_MS);
+  const windowStart = new Date(now.getTime() - (CHART_DAYS - 1) * DAY_MS);
 
   const since = new Date(
-    Math.min(lastMonthStart.getTime(), fortnightStart.getTime()),
+    Math.min(lastMonthStart.getTime(), windowStart.getTime()),
   );
   const rows = await getDb()
     .select({ receivedAt: leads.receivedAt })
@@ -67,7 +67,7 @@ export async function getLeadStats(userId: string): Promise<LeadStats> {
   });
 
   const byDay = new Map<string, { day: string; leads: number }>();
-  for (let i = 13; i >= 0; i--) {
+  for (let i = CHART_DAYS - 1; i >= 0; i--) {
     const date = new Date(now.getTime() - i * DAY_MS);
     byDay.set(dayKey.format(date), { day: dayLabel.format(date), leads: 0 });
   }
@@ -119,11 +119,23 @@ export async function getActivePlan(userId: string) {
   return plan ? { plan, renewsOn } : null;
 }
 
+export function billingCycle(renewsOn: Date) {
+  const start = new Date(renewsOn);
+  start.setMonth(start.getMonth() - 1);
+  const now = Date.now();
+  const length = renewsOn.getTime() - start.getTime();
+  return {
+    percent: Math.min(100, Math.max(0, ((now - start.getTime()) / length) * 100)),
+    daysLeft: Math.max(0, Math.ceil((renewsOn.getTime() - now) / DAY_MS)),
+  };
+}
+
 /* ------------------------------------------------------------------ *
  * Formatting
  * ------------------------------------------------------------------ */
 
 const DAY_MS = 24 * 60 * 60 * 1000;
+const CHART_DAYS = 30;
 
 export function formatDate(date: Date) {
   return new Intl.DateTimeFormat("en-IN", {

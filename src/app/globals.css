@@ -58,9 +58,14 @@
   --chart-3: #f97316;
   --chart-4: #10b981;
   --chart-5: #ef4444;
+  --sidebar: #070c1c;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-accent: rgba(91, 127, 255, 0.12);
 }
 
-.theme-light {
+/* Radix portals mount on `body`, outside `.theme-light`. */
+.theme-light,
+body:has([data-light-portals]) {
   color-scheme: light;
   color: var(--text-primary);
 
@@ -102,6 +107,9 @@
   --chart-3: #c2410c;
   --chart-4: #047857;
   --chart-5: #dc2626;
+  --sidebar: #f3f5fa;
+  --sidebar-border: #e4e8f0;
+  --sidebar-accent: #ffffff;
 }
 
 /*
@@ -113,7 +121,8 @@
  * `.theme-light` already resolved to the dark value.
  */
 :root,
-.theme-light {
+.theme-light,
+body:has([data-light-portals]) {
   --radius: 0.75rem;
   --background: var(--bg-color);
   --foreground: var(--text-primary);
@@ -127,6 +136,11 @@
   --accent-foreground: var(--brand);
   --destructive: var(--danger);
   --ring: var(--brand);
+  --sidebar-foreground: var(--text-secondary);
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-ring: var(--brand);
 }
 
 /*
@@ -176,6 +190,14 @@ body:has([data-fixed-frame]) {
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 
   /* brand-named utilities: bg-brand, text-brand, border-brand … */
   --color-brand: var(--brand);
@@ -289,6 +311,16 @@ body:has([data-fixed-frame]) {
   }
   .glow-warm {
     background: radial-gradient(circle, var(--glow-warm) 0%, transparent 70%);
+  }
+
+  .dot-grid {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(255, 255, 255, 0.22) 1px,
+      transparent 0
+    );
+    background-size: 18px 18px;
+    mask-image: linear-gradient(to left, black, transparent 75%);
   }
 
   .btn-glow {

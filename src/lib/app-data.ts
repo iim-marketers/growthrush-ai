@@ -262,6 +262,11 @@ export const appNav = [
   { href: "/billing", label: "Billing", icon: "card" },
 ] as const;
 
+export const appSupport = [
+  { href: "mailto:Hello@growthrush.ai", label: "Help & support", icon: "help" },
+  { href: "/legal", label: "Terms & policies", icon: "legal" },
+] as const;
+
 /* ------------------------------------------------------------------ *
  * Leads
  * ------------------------------------------------------------------ */
