@@ -121,6 +121,9 @@ export const categories = [
   "Real estate",
   "Salon / Spa",
   "Clinic / Health",
+  "Aesthetic Clinic",
+  "Astrology",
+  "FMCG",
   "Restaurant",
   "Retail store",
   "Gym / Fitness",
@@ -212,7 +215,6 @@ export const monthlyBudgets = [
 export const audience = {
   reach: heroStats[0].value,
   caption: "People near you who match your ideal customer",
-  interest: "coaching & classes",
   networks: ["Facebook"],
   breakdown: [
     { label: "Age 25–34", pct: 41 },
@@ -236,12 +238,92 @@ export const adPreview = {
   badge: "Generated for you",
   author: "{business}",
   meta: "Sponsored · {city}",
-  eyebrow: "Now enrolling · {city}",
-  headline: "Looking for the best coaching in {city}?",
-  cta: "Book a free demo",
   leadCta: "Send WhatsApp",
   footer: "AI writes fresh copy & creatives every week",
 } as const;
+
+type CategoryCopy = {
+  interest: string;
+  eyebrow: string;
+  headline: string;
+  cta: string;
+};
+
+export const categoryCopy: Record<(typeof categories)[number], CategoryCopy> = {
+  "Coaching / Classes": {
+    interest: "coaching & classes",
+    eyebrow: "Now enrolling · {city}",
+    headline: "Looking for the best coaching in {city}?",
+    cta: "Book a free demo",
+  },
+  "Real estate": {
+    interest: "buying & renting homes",
+    eyebrow: "New listings · {city}",
+    headline: "Find your dream home in {city}",
+    cta: "Book a site visit",
+  },
+  "Salon / Spa": {
+    interest: "beauty & wellness",
+    eyebrow: "Now booking · {city}",
+    headline: "Treat yourself at {city}'s favourite salon",
+    cta: "Book an appointment",
+  },
+  "Clinic / Health": {
+    interest: "health & wellness",
+    eyebrow: "Appointments open · {city}",
+    headline: "Trusted care, close to home in {city}",
+    cta: "Book a consultation",
+  },
+  "Aesthetic Clinic": {
+    interest: "skincare & aesthetic treatments",
+    eyebrow: "Now booking · {city}",
+    headline: "Glowing skin starts here in {city}",
+    cta: "Book a consultation",
+  },
+  Astrology: {
+    interest: "astrology & spirituality",
+    eyebrow: "Consultations open · {city}",
+    headline: "Get clarity on your future in {city}",
+    cta: "Book a reading",
+  },
+  FMCG: {
+    interest: "everyday products & deals",
+    eyebrow: "Now available · {city}",
+    headline: "Your new everyday favourite, now in {city}",
+    cta: "Shop now",
+  },
+  Restaurant: {
+    interest: "dining & food delivery",
+    eyebrow: "Now serving · {city}",
+    headline: "{city}'s new favourite place to eat",
+    cta: "Reserve a table",
+  },
+  "Retail store": {
+    interest: "shopping & deals",
+    eyebrow: "New arrivals · {city}",
+    headline: "The best deals in {city}, just for you",
+    cta: "Visit the store",
+  },
+  "Gym / Fitness": {
+    interest: "fitness & workouts",
+    eyebrow: "Now enrolling · {city}",
+    headline: "Get fit at the best gym in {city}",
+    cta: "Book a free trial",
+  },
+  Services: {
+    interest: "local services",
+    eyebrow: "Now booking · {city}",
+    headline: "Trusted local experts in {city}",
+    cta: "Get a free quote",
+  },
+};
+
+export function copyFor(category: string): CategoryCopy {
+  return (
+    categoryCopy[category as keyof typeof categoryCopy] ??
+    categoryCopy["Coaching / Classes"]
+  );
+}
 
 export const planStep = {
   budgetNote: {
