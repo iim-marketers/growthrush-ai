@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { orders } from "@/db/schema";
+import { getSessionUser } from "@/lib/auth/session";
 import { isValidPaymentSignature } from "@/lib/razorpay";
 
 function isFilled(value: unknown): value is string {
@@ -8,6 +9,11 @@ function isFilled(value: unknown): value is string {
 }
 
 export async function POST(request: Request) {
+  const user = await getSessionUser();
+  if (!user) {
+    return Response.json({ error: "Please sign in again." }, { status: 401 });
+  }
+
   const body = await request.json().catch(() => null);
   const orderId = body?.razorpay_order_id;
   const paymentId = body?.razorpay_payment_id;
@@ -45,7 +51,8 @@ export async function POST(request: Request) {
       .where(eq(orders.razorpayOrderId, orderId))
       .limit(1);
 
-    if (!order) {
+    /* Someone else's order looks the same as a missing one. */
+    if (!order || order.userId !== user.id) {
       console.error("Verified payment for an unknown order", orderId, paymentId);
       return Response.json({ error: "Unknown order." }, { status: 400 });
     }

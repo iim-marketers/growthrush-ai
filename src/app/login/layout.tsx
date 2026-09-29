@@ -1,4 +1,7 @@
 import type { Metadata, Viewport } from "next";
+import { redirect } from "next/navigation";
+import { homeFor } from "@/lib/auth/dal";
+import { getSessionUser } from "@/lib/auth/session";
 
 export const metadata: Metadata = {
   title: "Log in",
@@ -14,6 +17,12 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
-export default function LoginLayout({ children }: LayoutProps<"/login">) {
+export default async function LoginLayout({
+  children,
+}: LayoutProps<"/login">) {
+  /* Already signed in? Skip the form. */
+  const user = await getSessionUser();
+  if (user) redirect(homeFor(user));
+
   return children;
 }

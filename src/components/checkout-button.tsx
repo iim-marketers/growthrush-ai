@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Script from "next/script";
 import { useState } from "react";
 import { Check, Loader2, TriangleAlert, Undo2, X } from "lucide-react";
@@ -161,6 +162,7 @@ export function CheckoutButton({
   children: React.ReactNode;
   className?: string;
 }) {
+  const router = useRouter();
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   // Every status is a fresh object, so a new outcome reopens the modal.
   const [closedStatus, setClosedStatus] = useState<Status | null>(null);
@@ -170,6 +172,8 @@ export function CheckoutButton({
     setStatus({ kind: "confirming", charge, paymentId });
     const { ok } = await post("/api/verify-payment", response);
     setStatus({ kind: ok ? "paid" : "unconfirmed", charge, paymentId });
+    /* The plan and payments on screen are read on the server. */
+    if (ok) router.refresh();
   };
 
   const pay = async () => {

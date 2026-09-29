@@ -10,25 +10,23 @@ export const verify = {
   title: "Enter the code",
   subtitle: "We sent a 6-digit code to %s",
   cta: "Verify & continue",
-  /* No SMS gateway yet, so the prototype has one fixed code and shows it in a
-     mock notification — otherwise the flow is a locked door. Delete this and
-     the mock message together once real OTPs are sent. */
-  demoCode: "000000",
+  /* The mock SMS shown while lib/auth/sms.ts is stubbed. */
   sender: "GRWTHR",
   smsBody: "%s is your growthrush.ai code",
-  wrongCode: "That code is not right — use the one in the message above.",
+  wrongCode: "That code is not right. Check the message and try again.",
 } as const;
 
 /* ------------------------------------------------------------------ *
  * Onboarding — the guided walk from "who are you?" to a live campaign
  * ------------------------------------------------------------------ */
 
-/* The onboarding walkthrough is a scripted demo, so it needs a business that
-   stays put. It used to borrow caseStudies[0]; that list now holds real
-   clients, whose copy will change independently of this flow. */
+/* Most of the walkthrough is still a scripted demo — there is no Google or
+   Meta lookup yet — so the listings and the numbers need a business that
+   stays put. Copy that should name the customer's own business or city uses
+   {business} and {city}, which the wizard fills from their answers. */
 const demo = {
-  business: "Sharma Coaching Classes",
   city: "Kolkata",
+  business: "Sharma Coaching Classes",
   headline: "6 to 120 leads a month in one quarter",
 } as const;
 
@@ -66,6 +64,8 @@ export const onboardingSteps: readonly OnboardingStep[] = [
     body: "We'll size your real audience on Facebook here.",
     cta: "Next",
   },
+  /* Hidden until the Google Places lookup exists: the listings below are
+     placeholders, so every customer would be shown the same ones.
   {
     id: "confirm",
     eyebrow: "Confirm your business",
@@ -73,6 +73,7 @@ export const onboardingSteps: readonly OnboardingStep[] = [
     body: `We found these on Google near ${demo.city}.`,
     cta: "Confirm & continue",
   },
+  */
   {
     id: "goal",
     eyebrow: "Your goal",
@@ -81,7 +82,7 @@ export const onboardingSteps: readonly OnboardingStep[] = [
   },
   {
     id: "audience",
-    eyebrow: `Live audience · ${demo.city}`,
+    eyebrow: "Live audience · {city}",
     title: "Your customers are scrolling",
     accent: "right now",
     cta: "Can I reach them?",
@@ -98,7 +99,7 @@ export const onboardingSteps: readonly OnboardingStep[] = [
     id: "ad",
     eyebrow: "Your ad is ready",
     title: "Here's your first Meta ad 🎉",
-    body: `Made for ${demo.business} — ready to go live.`,
+    body: "Made for {business} — ready to go live.",
     cta: "Choose my plan & go live",
   },
   {
@@ -112,7 +113,6 @@ export const onboardingSteps: readonly OnboardingStep[] = [
 
 export const businessStep = {
   placeholder: "Business name",
-  prefill: demo.business,
   categoryLabel: "What do you offer?",
 } as const;
 
@@ -129,10 +129,9 @@ export const categories = [
 
 export const locationStep = {
   placeholder: "Location",
-  prefill: demo.city,
   noteTitle: "Why we ask",
   noteBody:
-    "We pull your live Google listing and calculate how many people near you are ready to buy — before you spend a rupee.",
+    "We use your area to work out how many people near you are ready to buy — before you spend a rupee.",
 } as const;
 
 export const googleListings = [
@@ -165,12 +164,23 @@ export const notListed = {
   note: "We'll create your profile during setup",
 } as const;
 
-export const goals = [
+type Goal = {
+  id: string;
+  icon: "message" | "phone" | "form" | "store";
+  title: string;
+  desc: string;
+  /** Shown but not pickable until the integration behind it exists. */
+  comingSoon?: boolean;
+};
+
+export const goals: readonly Goal[] = [
   {
     id: "whatsapp",
     icon: "message",
     title: "WhatsApp leads",
     desc: "Chats to your phone",
+    /* No WhatsApp Business API yet. */
+    comingSoon: true,
   },
   {
     id: "phone",
@@ -190,7 +200,7 @@ export const goals = [
     title: "Store visits",
     desc: "Footfall near you",
   },
-] as const;
+];
 
 export const monthlyBudgets = [
   { id: "under-10k", label: "Under ₹10k" },
@@ -224,10 +234,10 @@ export const readiness = {
 
 export const adPreview = {
   badge: "Generated for you",
-  author: demo.business,
-  meta: `Sponsored · ${demo.city}`,
-  eyebrow: `Now enrolling · ${demo.city}`,
-  headline: `Looking for the best coaching in ${demo.city}?`,
+  author: "{business}",
+  meta: "Sponsored · {city}",
+  eyebrow: "Now enrolling · {city}",
+  headline: "Looking for the best coaching in {city}?",
   cta: "Book a free demo",
   leadCta: "Send WhatsApp",
   footer: "AI writes fresh copy & creatives every week",
@@ -252,77 +262,9 @@ export const appNav = [
   { href: "/billing", label: "Billing", icon: "card" },
 ] as const;
 
-export const profile = {
-  business: "Sharma Teaching Classes",
-  city: "Bengaluru",
-  category: "Coaching / Classes",
-  initial: "A",
-  phone: "+91 98••• ••210",
-} as const;
-
-/* ------------------------------------------------------------------ *
- * Dashboard
- * ------------------------------------------------------------------ */
-
-export const campaign = {
-  name: "Consultations — Bengaluru 5 km",
-  status: "live",
-  liveSince: "24 days",
-  dailyBudget: 800,
-  spent: 18176,
-  monthlyCap: 24000,
-} as const;
-
-export const dashboardStats = [
-  {
-    id: "leads",
-    label: "Leads this month",
-    value: "128",
-    delta: "+22%",
-    up: true,
-    upIsGood: true,
-  },
-  {
-    id: "cpl",
-    label: "Cost per lead",
-    value: "₹142",
-    delta: "−18%",
-    up: false,
-    upIsGood: false,
-  },
-  {
-    id: "spend",
-    label: "Ad spend",
-    value: "₹18,176",
-    delta: "+9%",
-    up: true,
-    upIsGood: true,
-  },
-  {
-    id: "reach",
-    label: "People reached",
-    value: "41,280",
-    delta: "+14%",
-    up: true,
-    upIsGood: true,
-  },
-] as const;
-
-export const leadsByDay = [
-  { day: "18 Aug", leads: 3 },
-  { day: "19 Aug", leads: 5 },
-  { day: "20 Aug", leads: 2 },
-  { day: "21 Aug", leads: 6 },
-  { day: "22 Aug", leads: 4 },
-  { day: "23 Aug", leads: 6 },
-  { day: "24 Aug", leads: 5 },
-  { day: "25 Aug", leads: 3 },
-  { day: "26 Aug", leads: 7 },
-  { day: "27 Aug", leads: 5 },
-  { day: "28 Aug", leads: 4 },
-  { day: "29 Aug", leads: 8 },
-  { day: "30 Aug", leads: 6 },
-  { day: "31 Aug", leads: 4 },
+export const appSupport = [
+  { href: "mailto:Hello@growthrush.ai", label: "Help & support", icon: "help" },
+  { href: "/legal", label: "Terms & policies", icon: "legal" },
 ] as const;
 
 /* ------------------------------------------------------------------ *
@@ -337,99 +279,3 @@ export const leadStatuses = [
 ] as const;
 
 export type LeadStatus = (typeof leadStatuses)[number]["id"];
-
-export const leads = [
-  {
-    id: "l-1042",
-    name: "Priya Ranganathan",
-    phone: "+91 98450 21188",
-    enquiry: "Panchakarma package — asked about weekend slots",
-    source: "Facebook",
-    receivedAt: "12 min ago",
-    status: "new",
-  },
-  {
-    id: "l-1041",
-    name: "Karthik Rao",
-    phone: "+91 99001 74530",
-    enquiry: "First consultation, wants pricing",
-    source: "Facebook",
-    receivedAt: "1 hour ago",
-    status: "new",
-  },
-  {
-    id: "l-1040",
-    name: "Sneha Iyer",
-    phone: "+91 97417 33902",
-    enquiry: "Knee pain — asked if you take insurance",
-    source: "Facebook",
-    receivedAt: "3 hours ago",
-    status: "contacted",
-  },
-  {
-    id: "l-1039",
-    name: "Mohammed Arif",
-    phone: "+91 88849 60215",
-    enquiry: "Booked for Saturday 11am",
-    source: "Facebook",
-    receivedAt: "Yesterday",
-    status: "converted",
-  },
-  {
-    id: "l-1038",
-    name: "Deepa Nair",
-    phone: "+91 90352 47761",
-    enquiry: "Skin treatment — comparing clinics",
-    source: "Facebook",
-    receivedAt: "Yesterday",
-    status: "contacted",
-  },
-  {
-    id: "l-1037",
-    name: "Rahul Bhat",
-    phone: "+91 95388 10047",
-    enquiry: "Asked for a branch closer to Whitefield",
-    source: "Facebook",
-    receivedAt: "2 days ago",
-    status: "lost",
-  },
-  {
-    id: "l-1036",
-    name: "Anitha Kumari",
-    phone: "+91 91082 55613",
-    enquiry: "Therapy for migraine, wants a call back",
-    source: "Facebook",
-    receivedAt: "2 days ago",
-    status: "converted",
-  },
-  {
-    id: "l-1035",
-    name: "Vivek Shetty",
-    phone: "+91 99721 40836",
-    enquiry: "Corporate wellness enquiry for 40 staff",
-    source: "Facebook",
-    receivedAt: "3 days ago",
-    status: "contacted",
-  },
-] as const;
-
-/* ------------------------------------------------------------------ *
- * Billing
- * ------------------------------------------------------------------ */
-
-export const billing = {
-  planId: "ai",
-  renewsOn: "28 September 2026",
-  paymentMethod: { brand: "HDFC Visa", last4: "4417", expiry: "08/29" },
-} as const;
-
-export const invoices = [
-  {
-    id: "GR-2026-0812",
-    period: "August 2026",
-    amount: "₹2,399",
-    status: "Paid",
-  },
-  { id: "GR-2026-0711", period: "July 2026", amount: "₹2,399", status: "Paid" },
-  { id: "GR-2026-0610", period: "June 2026", amount: "₹2,399", status: "Paid" },
-] as const;

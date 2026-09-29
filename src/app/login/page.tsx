@@ -1,30 +1,20 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import { AuthShell, AuthCard } from "@/components/auth/auth-shell";
 import { CtaButton } from "@/components/cta-button";
 import { ConsentCheckbox } from "@/components/consent-checkbox";
 import { account } from "@/lib/data";
-import { PENDING_NUMBER_KEY } from "@/lib/session";
+import { toE164 } from "@/lib/phone";
+import { requestOtp } from "./actions";
 
 export default function LoginPage() {
-  const router = useRouter();
+  const [state, action, pending] = useActionState(requestOtp, undefined);
   const [agreed, setAgreed] = useState(false);
   const [number, setNumber] = useState("");
 
-  /* Indian mobile numbers are ten digits; anything shorter is a typo. */
-  const complete = number.length === 10;
-
-  const submit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!complete || !agreed) return;
-    /* No backend yet — hand the number to the verify screen for its masked
-       heading. sessionStorage rather than a query param: a phone number in a
-       URL ends up in history and server logs. */
-    sessionStorage.setItem(PENDING_NUMBER_KEY, number);
-    router.push("/login/verify");
-  };
+  /* Ten digits starting 6–9; the server checks the same rule again. */
+  const complete = toE164(number) !== null;
 
   return (
     <AuthShell>
@@ -36,13 +26,17 @@ export default function LoginPage() {
           Enter your mobile number to continue
         </p>
 
-        <form onSubmit={submit} noValidate>
+        {/* The number goes to the server in the POST body, never the URL —
+            a phone number in a URL ends up in history and access logs. */}
+        <form action={action} noValidate>
+          <input type="hidden" name="consent" value={agreed ? "on" : ""} />
           <div className="rhythm-md flex items-center rounded-xl border border-hairline bg-surface-subtle px-3 py-2 transition-all focus-within:border-brand focus-within:bg-surface-hover focus-within:ring-[3px] focus-within:ring-brand/15 sm:px-4">
             <div className="mr-3 shrink-0 border-r border-hairline pr-3 font-semibold text-subtle sm:mr-4 sm:pr-4">
               {account.countryCode} {account.dialCode}
             </div>
             <input
               type="tel"
+              name="phone"
               inputMode="numeric"
               autoComplete="tel-national"
               maxLength={10}
@@ -62,8 +56,21 @@ export default function LoginPage() {
             className="rhythm-md"
           />
 
-          <CtaButton type="submit" className="rhythm-lg" disabled={!agreed || !complete}>
-            Continue
+          {state?.error && (
+            <p
+              role="alert"
+              className="rhythm-md text-[0.85rem] font-semibold text-danger"
+            >
+              {state.error}
+            </p>
+          )}
+
+          <CtaButton
+            type="submit"
+            className="rhythm-lg"
+            disabled={!agreed || !complete || pending}
+          >
+            {pending ? "Sending code…" : "Continue"}
           </CtaButton>
         </form>
 

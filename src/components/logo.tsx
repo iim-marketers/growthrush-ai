@@ -54,6 +54,25 @@ export function Logo({
   );
 }
 
+export function LogoMark({
+  className,
+  decorative = false,
+}: {
+  className?: string;
+  decorative?: boolean;
+}) {
+  return (
+    <Image
+      src="/brand/mark.png"
+      alt={decorative ? "" : `${brand.name}${brand.suffix}`}
+      width={256}
+      height={256}
+      sizes="64px"
+      className={cn("size-7 object-contain", className)}
+    />
+  );
+}
+
 /** The mark on its own, for favicons and tight spots. */
 export function TrendIcon({ size = 18 }: { size?: number }) {
   return (

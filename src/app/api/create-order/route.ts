@@ -1,5 +1,6 @@
 import { getDb } from "@/db";
 import { orders } from "@/db/schema";
+import { getSessionUser } from "@/lib/auth/session";
 import { plans } from "@/lib/landing-data";
 import {
   MIN_ORDER_AMOUNT,
@@ -8,6 +9,11 @@ import {
 } from "@/lib/razorpay";
 
 export async function POST(request: Request) {
+  const user = await getSessionUser();
+  if (!user) {
+    return Response.json({ error: "Please sign in again." }, { status: 401 });
+  }
+
   const body = await request.json().catch(() => null);
 
   // The client only names the plan; the price always comes from the server.
@@ -30,7 +36,7 @@ export async function POST(request: Request) {
       amount: plan.amount,
       currency: "INR",
       receipt,
-      notes: { plan_id: plan.id },
+      notes: { plan_id: plan.id, user_id: user.id },
     });
   } catch (error) {
     console.error("Razorpay order creation failed", error);
@@ -53,6 +59,7 @@ export async function POST(request: Request) {
       amountPaise: plan.amount,
       currency: order.currency,
       receipt,
+      userId: user.id,
     });
   } catch (error) {
     console.error("Could not save order", order.id, error);
