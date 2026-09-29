@@ -2,9 +2,11 @@ import Link from "next/link";
 import {
   ArrowRight,
   ArrowUpRight,
+  Check,
   Clock,
   type LucideIcon,
   Lock,
+  Phone,
   TrendingDown,
   TrendingUp,
 } from "lucide-react";
@@ -62,7 +64,12 @@ export function DashboardHero({
   greeting: string;
   date: string;
   business: string;
-  plan: { name: string; renews: string } | null;
+  plan: {
+    name: string;
+    renews: string;
+    daysLeft: number;
+    used: number;
+  } | null;
   children?: React.ReactNode;
 }) {
   return (
@@ -93,17 +100,33 @@ export function DashboardHero({
         </div>
 
         {plan ? (
-          <div className="flex shrink-0 items-center gap-3 rounded-xl border border-white/15 bg-white/8 px-4 py-3 backdrop-blur-sm">
-            <span className="relative flex size-2.5">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-              <span className="relative inline-flex size-2.5 rounded-full bg-emerald-400" />
-            </span>
-            <span className="text-sm leading-tight">
-              <span className="block font-semibold">{plan.name}</span>
-              <span className="block text-xs text-white/60">
-                Renews {plan.renews}
+          <div className="flex w-full shrink-0 flex-col gap-3 rounded-xl border border-white/15 bg-white/8 px-4 py-3 backdrop-blur-sm sm:w-64">
+            <div className="flex items-center gap-3">
+              <span className="relative flex size-2.5">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                <span className="relative inline-flex size-2.5 rounded-full bg-emerald-400" />
               </span>
-            </span>
+              <span className="text-sm leading-tight font-semibold">
+                {plan.name} · Live
+              </span>
+            </div>
+            <div>
+              <div
+                aria-hidden
+                className="h-1.5 w-full overflow-hidden rounded-full bg-white/15"
+              >
+                <div
+                  className="h-full rounded-full bg-white"
+                  style={{ width: `${plan.used}%` }}
+                />
+              </div>
+              <p className="mt-1.5 flex justify-between text-xs text-white/60">
+                <span>
+                  {plan.daysLeft} {plan.daysLeft === 1 ? "day" : "days"} left
+                </span>
+                <span>Renews {plan.renews}</span>
+              </p>
+            </div>
           </div>
         ) : (
           children
@@ -113,34 +136,84 @@ export function DashboardHero({
   );
 }
 
+/** Tiny server-rendered trend line for a KPI card. */
+function Sparkline({ values }: { values: number[] }) {
+  if (values.length < 2) return null;
+  const max = Math.max(1, ...values);
+  const w = 100;
+  const h = 32;
+  const points = values.map((v, i) => [
+    (i / (values.length - 1)) * w,
+    h - 2 - (v / max) * (h - 4),
+  ]);
+  const line = points
+    .map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`)
+    .join(" ");
+
+  return (
+    <svg
+      aria-hidden
+      viewBox={`0 0 ${w} ${h}`}
+      preserveAspectRatio="none"
+      className="h-8 w-full overflow-visible text-brand"
+    >
+      <polygon
+        points={`0,${h} ${line} ${w},${h}`}
+        className="fill-current opacity-10"
+      />
+      <polyline
+        points={line}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.75}
+        strokeLinejoin="round"
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+}
+
+const kpiTones = {
+  brand: "bg-brand/10 text-brand",
+  warn: "bg-warn/12 text-warn",
+  success: "bg-success/12 text-success",
+} as const;
+
 /** `upIsGood` picks the colour: a falling cost per lead is good news. */
 export function KpiCard({
   label,
   value,
+  suffix,
   icon: Icon,
+  tone = "brand",
   delta,
   up = true,
   upIsGood = true,
   note,
-  pending = false,
+  trend,
+  href,
 }: {
   label: string;
   value: string;
+  suffix?: string;
   icon: LucideIcon;
+  tone?: keyof typeof kpiTones;
   delta?: string;
   up?: boolean;
   upIsGood?: boolean;
-  note?: string;
-  pending?: boolean;
+  note?: React.ReactNode;
+  trend?: number[];
+  href?: string;
 }) {
   const good = up === upIsGood;
   const Arrow = up ? TrendingUp : TrendingDown;
 
-  return (
+  const card = (
     <Card
       className={cn(
-        "gap-3 rounded-2xl py-4 transition-shadow hover:shadow-md sm:py-5",
-        pending && "bg-surface-subtle shadow-none hover:shadow-none",
+        "h-full gap-3 rounded-2xl py-4 transition-all sm:py-5",
+        href && "group-hover:-translate-y-0.5 group-hover:shadow-md",
       )}
     >
       <CardHeader className="px-4 sm:px-5">
@@ -149,33 +222,39 @@ export function KpiCard({
           <span
             className={cn(
               "flex size-8 items-center justify-center rounded-lg",
-              pending ? "bg-surface-mute text-faint" : "bg-brand/10 text-brand",
+              kpiTones[tone],
             )}
           >
             <Icon aria-hidden className="size-4" />
           </span>
         </CardAction>
-        <CardTitle
-          className={cn(
-            "font-display text-2xl font-extrabold tabular-nums sm:text-3xl",
-            pending ? "text-faint" : "text-ink",
-          )}
-        >
+        <CardTitle className="font-display text-2xl font-extrabold text-ink tabular-nums sm:text-3xl">
           {value}
+          {suffix && (
+            <span className="ml-0.5 text-lg text-faint">{suffix}</span>
+          )}
         </CardTitle>
       </CardHeader>
-      <CardContent className="px-4 sm:px-5">
+      <CardContent className="mt-auto flex flex-col gap-3 px-4 sm:px-5">
+        {trend && <Sparkline values={trend} />}
         {delta === undefined ? (
-          <p className="flex items-center gap-1.5 text-xs text-faint">
-            {pending && <Clock aria-hidden className="size-3.5" />}
+          <p className="flex items-center gap-1 text-xs text-faint">
             {note}
+            {href && (
+              <ArrowRight
+                aria-hidden
+                className="ml-auto size-3.5 text-brand transition-transform group-hover:translate-x-0.5"
+              />
+            )}
           </p>
         ) : (
           <p className="flex flex-wrap items-center gap-1.5 text-xs text-faint">
             <Badge
               className={cn(
                 "gap-1 font-semibold",
-                good ? "bg-success/12 text-success" : "bg-danger/12 text-danger",
+                good
+                  ? "bg-success/12 text-success"
+                  : "bg-danger/12 text-danger",
               )}
             >
               <Arrow aria-hidden />
@@ -187,6 +266,123 @@ export function KpiCard({
       </CardContent>
     </Card>
   );
+
+  return href ? (
+    <Link
+      href={href}
+      className="group rounded-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+    >
+      {card}
+    </Link>
+  ) : (
+    card
+  );
+}
+
+/** Stands in for the ad metrics until Meta reporting is connected. */
+export function AdMetricsCard({
+  metrics,
+}: {
+  metrics: { label: string; icon: LucideIcon }[];
+}) {
+  return (
+    <Card className="h-full gap-3 rounded-2xl border-dashed bg-surface-subtle py-4 shadow-none sm:py-5">
+      <CardHeader className="px-4 sm:px-5">
+        <CardDescription className="font-medium">
+          Ad performance
+        </CardDescription>
+        <CardAction>
+          <span className="flex size-8 items-center justify-center rounded-lg bg-surface-mute text-faint">
+            <Clock aria-hidden className="size-4" />
+          </span>
+        </CardAction>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-2 px-4 sm:px-5">
+        {metrics.map(({ label, icon: Icon }) => (
+          <p
+            key={label}
+            className="flex items-center gap-2 text-sm text-subtle"
+          >
+            <Icon aria-hidden className="size-3.5 text-faint" />
+            {label}
+            <span className="ml-auto font-display font-bold text-faint">—</span>
+          </p>
+        ))}
+        <p className="mt-1 text-xs text-faint">Shows once your ads are live</p>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function LaunchSteps({
+  steps,
+}: {
+  steps: { title: string; detail: string; done: boolean }[];
+}) {
+  const current = steps.findIndex((step) => !step.done);
+  const doneCount = steps.filter((step) => step.done).length;
+
+  return (
+    <Card className="gap-4 rounded-2xl py-5">
+      <CardHeader className="px-5">
+        <CardTitle className="font-display text-base font-bold text-ink">
+          Getting you live
+        </CardTitle>
+        <CardDescription>
+          {doneCount} of {steps.length} steps done
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="px-5">
+        <ol className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {steps.map((step, i) => {
+            const isCurrent = i === current;
+            return (
+              <li
+                key={step.title}
+                aria-current={isCurrent ? "step" : undefined}
+                className={cn(
+                  "relative flex gap-3 rounded-xl border p-3",
+                  step.done && "border-hairline bg-surface-subtle",
+                  isCurrent &&
+                    "border-brand/40 bg-brand/5 ring-1 ring-brand/20",
+                  !step.done && !isCurrent && "border-dashed border-hairline",
+                )}
+              >
+                <span
+                  className={cn(
+                    "flex size-6 shrink-0 items-center justify-center rounded-full font-display text-xs font-bold",
+                    step.done && "bg-success text-white",
+                    isCurrent && "bg-brand text-white",
+                    !step.done && !isCurrent && "bg-surface-mute text-faint",
+                  )}
+                >
+                  {step.done ? (
+                    <Check aria-hidden className="size-3.5" />
+                  ) : (
+                    i + 1
+                  )}
+                </span>
+                <span className="min-w-0">
+                  <span
+                    className={cn(
+                      "block text-sm font-semibold",
+                      step.done || isCurrent ? "text-ink" : "text-subtle",
+                    )}
+                  >
+                    {step.title}
+                    {step.done && <span className="sr-only"> (done)</span>}
+                  </span>
+                  <span className="mt-0.5 block text-xs leading-snug text-faint">
+                    {step.detail}
+                  </span>
+                </span>
+              </li>
+            );
+          })}
+        </ol>
+      </CardContent>
+    </Card>
+  );
 }
 
 export function LeadPipeline({ leads }: { leads: Lead[] }) {
@@ -195,8 +391,7 @@ export function LeadPipeline({ leads }: { leads: Lead[] }) {
     ...status,
     count: leads.filter((lead) => lead.status === status.id).length,
   }));
-  const converted = counts.find((s) => s.id === "converted")?.count ?? 0;
-  const rate = total > 0 ? Math.round((converted / total) * 100) : 0;
+  const max = Math.max(1, ...counts.map((s) => s.count));
 
   return (
     <Card className="gap-4 rounded-2xl py-5">
@@ -204,50 +399,48 @@ export function LeadPipeline({ leads }: { leads: Lead[] }) {
         <CardTitle className="font-display text-base font-bold text-ink">
           Lead pipeline
         </CardTitle>
-        <CardDescription>Where every enquiry stands</CardDescription>
+        <CardDescription>
+          Where your {total.toLocaleString("en-IN")}{" "}
+          {total === 1 ? "enquiry" : "enquiries"} stand
+        </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-1 flex-col gap-5 px-5">
-        <div>
-          <p className="font-display text-4xl font-extrabold text-ink tabular-nums">
-            {rate}
-            <span className="text-2xl text-faint">%</span>
-          </p>
-          <p className="mt-1 text-xs text-faint">
-            of {total.toLocaleString("en-IN")} leads converted
-          </p>
-        </div>
-
-        <div
-          aria-hidden
-          className="flex h-2.5 w-full gap-0.5 overflow-hidden rounded-full bg-surface-mute"
-        >
-          {total > 0 &&
-            counts.map(
-              (status) =>
-                status.count > 0 && (
-                  <span
-                    key={status.id}
-                    className={cn("h-full", statusTones[status.tone].dot)}
-                    style={{ width: `${(status.count / total) * 100}%` }}
-                  />
-                ),
-            )}
-        </div>
-
-        <ul className="grid grid-cols-2 gap-x-4 gap-y-3">
-          {counts.map((status) => (
-            <li key={status.id} className="flex items-center gap-2 text-sm">
-              <span
+      <CardContent className="flex flex-1 flex-col justify-center gap-4 px-5">
+        {counts.map((status) => {
+          const share =
+            total > 0 ? Math.round((status.count / total) * 100) : 0;
+          return (
+            <div key={status.id}>
+              <p className="mb-1.5 flex items-baseline gap-2 text-sm">
+                <span
+                  aria-hidden
+                  className={cn(
+                    "size-2 rounded-full",
+                    statusTones[status.tone].dot,
+                  )}
+                />
+                <span className="text-subtle">{status.label}</span>
+                <span className="ml-auto font-semibold text-ink tabular-nums">
+                  {status.count.toLocaleString("en-IN")}
+                </span>
+                <span className="w-9 text-right text-xs text-faint tabular-nums">
+                  {share}%
+                </span>
+              </p>
+              <div
                 aria-hidden
-                className={cn("size-2 rounded-full", statusTones[status.tone].dot)}
-              />
-              <span className="text-subtle">{status.label}</span>
-              <span className="ml-auto font-semibold text-ink tabular-nums">
-                {status.count}
-              </span>
-            </li>
-          ))}
-        </ul>
+                className="h-2 w-full overflow-hidden rounded-full bg-surface-mute"
+              >
+                <div
+                  className={cn(
+                    "h-full rounded-full transition-[width] duration-700",
+                    statusTones[status.tone].dot,
+                  )}
+                  style={{ width: `${(status.count / max) * 100}%` }}
+                />
+              </div>
+            </div>
+          );
+        })}
       </CardContent>
       <CardFooter className="border-hairline bg-surface-subtle px-5 py-3!">
         <Link
@@ -264,12 +457,12 @@ export function LeadPipeline({ leads }: { leads: Lead[] }) {
 
 export function RecentLeads({ leads }: { leads: Lead[] }) {
   return (
-    <Card className="gap-0 rounded-2xl py-0">
+    <Card className="h-full gap-0 rounded-2xl py-0">
       <CardHeader className="border-b border-hairline px-5 py-4!">
         <CardTitle className="font-display text-base font-bold text-ink">
           Latest leads
         </CardTitle>
-        <CardDescription>The newest enquiries from your ads</CardDescription>
+        {/* <CardDescription>The newest enquiries from your ads</CardDescription> */}
         <CardAction>
           <Button asChild variant="ghost" size="sm" className="text-brand">
             <Link href="/leads">
@@ -287,8 +480,8 @@ export function RecentLeads({ leads }: { leads: Lead[] }) {
               <TableHead className="pl-5">Lead</TableHead>
               <TableHead className="hidden md:table-cell">Enquiry</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="hidden pr-5 text-right sm:table-cell">
-                Received
+              <TableHead className="pr-5 text-right">
+                <span className="sr-only">Call</span>
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -303,7 +496,7 @@ export function RecentLeads({ leads }: { leads: Lead[] }) {
                         {lead.name}
                       </span>
                       <span className="block truncate text-xs text-faint">
-                        {lead.source}
+                        {lead.receivedAt} · {lead.source}
                       </span>
                     </span>
                   </div>
@@ -316,8 +509,20 @@ export function RecentLeads({ leads }: { leads: Lead[] }) {
                 <TableCell>
                   <StatusBadge status={lead.status} />
                 </TableCell>
-                <TableCell className="hidden pr-5 text-right text-xs text-faint sm:table-cell">
-                  {lead.receivedAt}
+                <TableCell className="pr-5 text-right">
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="icon-sm"
+                    className="rounded-lg text-subtle hover:text-brand"
+                  >
+                    <a
+                      href={`tel:${lead.phone.replace(/[^\d+]/g, "")}`}
+                      aria-label={`Call ${lead.name}`}
+                    >
+                      <Phone />
+                    </a>
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -357,22 +562,12 @@ export function SetupCard({
   rows: { label: string; value?: string | null; icon: LucideIcon }[];
 }) {
   return (
-    <Card className="gap-2 rounded-2xl py-5">
+    <Card className="gap-2 rounded-2xl py-4">
       <CardHeader className="px-5">
         <CardTitle className="font-display text-base font-bold text-ink">
           Your setup
         </CardTitle>
         <CardDescription>What your campaign is built on</CardDescription>
-        <CardAction>
-          <Badge
-            variant="outline"
-            className="h-6 gap-1 px-2 font-medium text-faint"
-            title="Your setup can't be changed once your campaign is built"
-          >
-            <Lock aria-hidden />
-            Locked
-          </Badge>
-        </CardAction>
       </CardHeader>
       <CardContent className="px-3">
         <ItemGroup>

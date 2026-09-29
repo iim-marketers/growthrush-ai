@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
+  BellRing,
   Building2,
+  CircleCheckBig,
   Eye,
   IndianRupee,
   MapPin,
@@ -12,8 +14,10 @@ import {
   Wallet,
 } from "lucide-react";
 import {
+  AdMetricsCard,
   DashboardHero,
   KpiCard,
+  LaunchSteps,
   LeadPipeline,
   RecentLeads,
   SetupCard,
@@ -24,6 +28,7 @@ import { goals, monthlyBudgets } from "@/lib/app-data";
 import { getBusiness, requireOnboardedUser } from "@/lib/auth/dal";
 import { plans } from "@/lib/landing-data";
 import {
+  billingCycle,
   formatDate,
   getActivePlan,
   getLeadStats,
@@ -38,8 +43,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const AWAITING_ADS = "Shows once your ads are live";
-
 export default async function DashboardPage() {
   const user = await requireOnboardedUser();
   const [business, stats, leads, active] = await Promise.all([
@@ -52,9 +55,15 @@ export default async function DashboardPage() {
   const chosenPlan =
     plans.find((plan) => plan.id === business?.planId) ?? plans[0];
   const now = new Date();
+  const cycle = active && billingCycle(active.renewsOn);
+
+  const newLeads = leads.filter((lead) => lead.status === "new").length;
+  const converted = leads.filter((lead) => lead.status === "converted").length;
+  const conversion =
+    leads.length > 0 ? Math.round((converted / leads.length) * 100) : 0;
 
   return (
-    <div className="flex flex-col gap-4 sm:gap-5">
+    <div className="flex flex-col gap-4 sm:gap-5 [&>*]:motion-safe:animate-slide-up">
       <DashboardHero
         greeting={greetingFor(now)}
         date={new Intl.DateTimeFormat("en-IN", {
@@ -65,9 +74,12 @@ export default async function DashboardPage() {
         }).format(now)}
         business={business?.name ?? "there"}
         plan={
-          active && {
+          active &&
+          cycle && {
             name: active.plan.name,
             renews: formatDate(active.renewsOn),
+            daysLeft: cycle.daysLeft,
+            used: cycle.percent,
           }
         }
       >
@@ -88,33 +100,63 @@ export default async function DashboardPage() {
         </div>
       </DashboardHero>
 
+      {/* {!active && (
+        <LaunchSteps
+          steps={[
+            {
+              title: "Business profile",
+              detail: "Who you are and where you work",
+              done: Boolean(business?.name && business.city),
+            },
+            {
+              title: "Campaign setup",
+              detail: "Your goal and monthly ad budget",
+              done: Boolean(business?.goal && business.budgetBand),
+            },
+            {
+              title: "Choose a plan",
+              detail: `${chosenPlan.name} · ${chosenPlan.price}/month`,
+              done: false,
+            },
+            {
+              title: "Ads go live",
+              detail: "Leads start arriving on this page",
+              done: false,
+            },
+          ]}
+        />
+      )} */}
+
       <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         <KpiCard
           label="Leads this month"
           value={stats.thisMonth.toLocaleString("en-IN")}
           icon={Users}
+          // trend={stats.byDay.slice(-14).map((d) => d.leads)}
           {...leadDelta(stats.thisMonth, stats.lastMonth)}
         />
         <KpiCard
-          label="Cost per lead"
-          value="—"
-          icon={IndianRupee}
-          note={AWAITING_ADS}
-          pending
+          label="Needs follow-up"
+          value={newLeads.toLocaleString("en-IN")}
+          icon={BellRing}
+          tone={newLeads > 0 ? "warn" : "brand"}
+          note={newLeads > 0 ? "Not contacted yet" : "You’re all caught up"}
+          href="/leads"
         />
         <KpiCard
-          label="Ad spend"
-          value="—"
-          icon={Wallet}
-          note={AWAITING_ADS}
-          pending
+          label="Conversion rate"
+          value={String(conversion)}
+          suffix="%"
+          icon={CircleCheckBig}
+          tone="success"
+          note={`${converted.toLocaleString("en-IN")} of ${leads.length.toLocaleString("en-IN")} leads converted`}
         />
-        <KpiCard
-          label="People reached"
-          value="—"
-          icon={Eye}
-          note={AWAITING_ADS}
-          pending
+        <AdMetricsCard
+          metrics={[
+            { label: "Cost per lead", icon: IndianRupee },
+            { label: "Ad spend", icon: Wallet },
+            { label: "People reached", icon: Eye },
+          ]}
         />
       </div>
 

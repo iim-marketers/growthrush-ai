@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { BarChart3 } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   Card,
@@ -36,15 +37,18 @@ export function LeadsChart({
   const [days, setDays] = useState<number>(14);
   const data = leadsByDay.slice(-days);
   const total = data.reduce((sum, d) => sum + d.leads, 0);
-  const best = data.reduce((top, d) => (d.leads > top.leads ? d : top), data[0]);
+  const best = data.reduce(
+    (top, d) => (d.leads > top.leads ? d : top),
+    data[0],
+  );
 
   return (
-    <Card className="gap-2 rounded-2xl py-5">
+    <Card className="h-full gap-2 rounded-2xl py-5">
       <CardHeader className="px-5">
         <CardTitle className="font-display text-base font-bold text-ink">
           Leads per day
         </CardTitle>
-        <CardDescription>
+        {/* <CardDescription>
           <span className="font-semibold text-ink tabular-nums">{total}</span>{" "}
           leads in the last {days} days
           {best?.leads > 0 && (
@@ -53,7 +57,7 @@ export function LeadsChart({
               · best day {best.day} ({best.leads})
             </span>
           )}
-        </CardDescription>
+        </CardDescription> */}
         <CardAction>
           <Tabs value={String(days)} onValueChange={(v) => setDays(Number(v))}>
             <TabsList aria-label="Date range">
@@ -71,13 +75,39 @@ export function LeadsChart({
         </CardAction>
       </CardHeader>
 
-      <CardContent className="px-2 sm:px-4">
-        <ChartContainer config={config} className="aspect-auto h-56 w-full sm:h-64">
+      <CardContent className="relative px-2 sm:px-4">
+        {total === 0 && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center px-6">
+            <div className="flex max-w-xs flex-col items-center gap-2 rounded-xl border border-hairline bg-card/90 px-5 py-4 text-center shadow-sm backdrop-blur-sm">
+              <span className="flex size-9 items-center justify-center rounded-lg bg-brand/10 text-brand">
+                <BarChart3 aria-hidden className="size-4" />
+              </span>
+              <p className="font-display text-sm font-bold text-ink">
+                No leads in this period
+              </p>
+              <p className="text-xs text-faint">
+                Your daily lead count will chart here as enquiries come in.
+              </p>
+            </div>
+          </div>
+        )}
+        <ChartContainer
+          config={config}
+          className="aspect-auto h-56 w-full sm:h-64"
+        >
           <AreaChart data={data} margin={{ left: 0, right: 8, top: 12 }}>
             <defs>
               <linearGradient id="leads-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--color-leads)" stopOpacity={0.28} />
-                <stop offset="100%" stopColor="var(--color-leads)" stopOpacity={0} />
+                <stop
+                  offset="0%"
+                  stopColor="var(--color-leads)"
+                  stopOpacity={0.28}
+                />
+                <stop
+                  offset="100%"
+                  stopColor="var(--color-leads)"
+                  stopOpacity={0}
+                />
               </linearGradient>
             </defs>
             <CartesianGrid vertical={false} strokeDasharray="3 4" />
