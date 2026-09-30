@@ -30,7 +30,7 @@ import { plans } from "@/lib/landing-data";
 import {
   billingCycle,
   formatDate,
-  getActivePlan,
+  getLatestPlan,
   getLeadStats,
   getLeads,
 } from "@/lib/queries";
@@ -45,17 +45,20 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage() {
   const user = await requireOnboardedUser();
-  const [business, stats, leads, active] = await Promise.all([
+  const [business, stats, leads, latest] = await Promise.all([
     getBusiness(user.id),
     getLeadStats(user.id),
     getLeads(user.id),
-    getActivePlan(user.id),
+    getLatestPlan(user.id),
   ]);
 
+  const active = latest && !latest.expired ? latest : null;
   const chosenPlan =
-    plans.find((plan) => plan.id === business?.planId) ?? plans[0];
+    latest?.plan ??
+    plans.find((plan) => plan.id === business?.planId) ??
+    plans[0];
   const now = new Date();
-  const cycle = active && billingCycle(active.renewsOn);
+  const cycle = active && billingCycle(active);
 
   const newLeads = leads.filter((lead) => lead.status === "new").length;
   const converted = leads.filter((lead) => lead.status === "converted").length;
@@ -73,6 +76,7 @@ export default async function DashboardPage() {
           month: "long",
         }).format(now)}
         business={business?.name ?? "there"}
+        expiredOn={latest?.expired ? formatDate(latest.renewsOn) : null}
         plan={
           active &&
           cycle && {
@@ -90,12 +94,12 @@ export default async function DashboardPage() {
             className="h-11 rounded-xl bg-white px-5 font-display font-bold text-[#0b1220] shadow-[0_8px_30px_rgba(64,89,232,0.45)] hover:bg-white/90"
           >
             <Link href="/billing">
-              Go live
+              {latest?.expired ? "Renew plan" : "Go live"}
               <ArrowRight data-icon="inline-end" />
             </Link>
           </Button>
           <p className="text-xs text-white/60">
-            {chosenPlan.name} · {chosenPlan.price}/month
+            {chosenPlan.name} · {chosenPlan.price}/month + GST
           </p>
         </div>
       </DashboardHero>
@@ -115,7 +119,7 @@ export default async function DashboardPage() {
             },
             {
               title: "Choose a plan",
-              detail: `${chosenPlan.name} · ${chosenPlan.price}/month`,
+              detail: `${chosenPlan.name} · ${chosenPlan.price}/month + GST`,
               done: false,
             },
             {

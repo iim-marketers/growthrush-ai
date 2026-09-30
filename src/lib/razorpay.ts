@@ -22,22 +22,6 @@ export function getRazorpay() {
   return client;
 }
 
-export function isValidPaymentSignature({
-  orderId,
-  paymentId,
-  signature,
-}: {
-  orderId: string;
-  paymentId: string;
-  signature: string;
-}) {
-  const expected = createHmac("sha256", readKeys().keySecret)
-    .update(`${orderId}|${paymentId}`)
-    .digest("hex");
-
-  return sameHex(expected, signature);
-}
-
 export function isValidWebhookSignature(body: string, signature: string) {
   const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
   if (!secret) {

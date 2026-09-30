@@ -71,6 +71,7 @@ export type Profile = {
     renews: string;
     used: number;
   } | null;
+  expiredOn: string | null;
   newLeads: number;
 };
 
@@ -216,7 +217,7 @@ export function AppSidebar({
         {profile.plan ? (
           <PlanCard plan={profile.plan} />
         ) : (
-          <GoLive onNavigate={closeOnPhone} />
+          <GoLive onNavigate={closeOnPhone} expiredOn={profile.expiredOn} />
         )}
         <SidebarSeparator className="mx-0" />
         <NavUser profile={profile} />
@@ -256,7 +257,13 @@ function PlanCard({ plan }: { plan: NonNullable<Profile["plan"]> }) {
   );
 }
 
-function GoLive({ onNavigate }: { onNavigate: () => void }) {
+function GoLive({
+  onNavigate,
+  expiredOn,
+}: {
+  onNavigate: () => void;
+  expiredOn: string | null;
+}) {
   return (
     <>
       <div className="relative isolate overflow-hidden rounded-xl bg-[#0b1220] p-4 text-white group-data-[collapsible=icon]:hidden">
@@ -270,13 +277,15 @@ function GoLive({ onNavigate }: { onNavigate: () => void }) {
         />
         <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2 py-0.5 text-[0.65rem] font-semibold tracking-wide text-white/80 uppercase">
           <span aria-hidden className="size-1.5 rounded-full bg-warn" />
-          Not live
+          {expiredOn ? "Expired" : "Not live"}
         </span>
         <p className="mt-3 font-display text-sm font-bold">
-          Launch your first campaign
+          {expiredOn ? "Your plan has ended" : "Launch your first campaign"}
         </p>
         <p className="mt-1 text-xs leading-relaxed text-white/65">
-          Your setup is done. Pick a plan and your ads go live.
+          {expiredOn
+            ? `It ended on ${expiredOn}. Renew to keep your ads running.`
+            : "Your setup is done. Pick a plan and your ads go live."}
         </p>
         <Button
           asChild
@@ -284,7 +293,7 @@ function GoLive({ onNavigate }: { onNavigate: () => void }) {
           className="mt-3 w-full bg-white font-semibold text-[#0b1220] hover:bg-white/90"
         >
           <Link href="/billing" onClick={onNavigate}>
-            Go live
+            {expiredOn ? "Renew plan" : "Go live"}
             <ArrowRight data-icon="inline-end" />
           </Link>
         </Button>
@@ -294,12 +303,12 @@ function GoLive({ onNavigate }: { onNavigate: () => void }) {
         <SidebarMenuItem>
           <SidebarMenuButton
             asChild
-            tooltip="Go live"
+            tooltip={expiredOn ? "Renew plan" : "Go live"}
             className="bg-brand text-white hover:bg-brand/90 hover:text-white"
           >
             <Link href="/billing">
               <Rocket />
-              <span>Go live</span>
+              <span>{expiredOn ? "Renew plan" : "Go live"}</span>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
@@ -386,7 +395,13 @@ function BusinessAvatar({ initial }: { initial: string }) {
   );
 }
 
-export function AppHeader({ activePlan }: { activePlan: string | null }) {
+export function AppHeader({
+  activePlan,
+  expired,
+}: {
+  activePlan: string | null;
+  expired: boolean;
+}) {
   const active = useActiveItem();
 
   return (
@@ -431,7 +446,7 @@ export function AppHeader({ activePlan }: { activePlan: string | null }) {
           <Button asChild size="sm" className="rounded-full px-3 font-semibold">
             <Link href="/billing">
               <Rocket data-icon="inline-start" />
-              Go live
+              {expired ? "Renew" : "Go live"}
             </Link>
           </Button>
         )}

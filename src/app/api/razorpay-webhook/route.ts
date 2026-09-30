@@ -1,6 +1,7 @@
 import { and, eq, ne } from "drizzle-orm";
 import { getDb } from "@/db";
 import { orders } from "@/db/schema";
+import { emailInvoice } from "@/lib/invoice-email";
 import { isValidWebhookSignature } from "@/lib/razorpay";
 
 export async function POST(request: Request) {
@@ -40,6 +41,7 @@ export async function POST(request: Request) {
           .where(
             and(eq(orders.razorpayOrderId, orderId), ne(orders.status, "paid")),
           );
+        await emailInvoice(orderId);
         break;
       case "payment.failed":
         await db

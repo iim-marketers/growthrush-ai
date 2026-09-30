@@ -22,6 +22,34 @@
       "when": 1790664801902,
       "tag": "0002_add_auth_onboarding_leads",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790686243236,
+      "tag": "0003_add_email_and_invoices",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790687395949,
+      "tag": "0004_add_billing_details_and_gst",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790690930003,
+      "tag": "0005_move_email_to_billing",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790747816046,
+      "tag": "0006_add_receipt_numbers",
+      "breakpoints": true
     }
   ]
 }

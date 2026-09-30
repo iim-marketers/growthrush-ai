@@ -29,7 +29,7 @@ type RazorpayOptions = {
   name: string;
   description: string;
   theme: { color: string };
-  prefill: { contact: string };
+  prefill: { contact: string; email?: string };
   handler: (response: PaymentSuccess) => void;
   modal: { ondismiss: () => void };
 };
@@ -53,7 +53,6 @@ type Status =
   | { kind: "paid"; charge: Charge; paymentId: string }
   | { kind: "cancelled"; charge: Charge }
   | { kind: "failed"; charge: Charge; reason?: string; paymentId?: string }
-  // Razorpay reported success but our server couldn't record it.
   | { kind: "unconfirmed"; charge: Charge; paymentId: string }
   | { kind: "error"; message: string };
 
@@ -70,8 +69,6 @@ async function post(url: string, body: unknown) {
   }
 }
 
-/* Razorpay's description is often just "Payment failed", which would repeat
-   the modal title, so that one is dropped. */
 function failureReason(description?: string) {
   const text = description?.trim();
   if (!text || /^payment failed\.?$/i.test(text)) return undefined;
@@ -157,11 +154,13 @@ export function CheckoutButton({
   planName,
   children,
   className,
+  disabled,
 }: {
   planId: string;
   planName: string;
   children: React.ReactNode;
   className?: string;
+  disabled?: boolean;
 }) {
   const router = useRouter();
   const [status, setStatus] = useState<Status>({ kind: "idle" });
@@ -173,8 +172,11 @@ export function CheckoutButton({
     setStatus({ kind: "confirming", charge, paymentId });
     const { ok } = await post("/api/verify-payment", response);
     setStatus({ kind: ok ? "paid" : "unconfirmed", charge, paymentId });
-    /* The plan and payments on screen are read on the server. */
-    if (ok) router.refresh();
+  };
+
+  const close = () => {
+    setClosedStatus(status);
+    if (status.kind === "paid") router.refresh();
   };
 
   const pay = async () => {
@@ -198,8 +200,7 @@ export function CheckoutButton({
     }
 
     const charge: Charge = { amount: data.amount, currency: data.currency };
-    // Checkout lets the customer retry inside its modal, so a failed attempt
-    // is only reported once they close it without paying.
+
     let lastFailure: { reason?: string; paymentId?: string } | undefined;
 
     const checkout = new window.Razorpay({
@@ -210,7 +211,7 @@ export function CheckoutButton({
       name: "growthrush.ai",
       description: planName,
       theme: { color: "#4059e8" },
-      prefill: { contact: data.contact },
+      prefill: { contact: data.contact, email: data.email ?? undefined },
       handler: (response) => void confirm(charge, response),
       modal: {
         // Closing after a success must not overwrite "confirming" or "paid".
@@ -235,6 +236,17 @@ export function CheckoutButton({
 
   const busy = status.kind === "opening" || status.kind === "confirming";
 
+  const label =
+    status.kind === "opening"
+      ? "Opening checkout…"
+      : status.kind === "confirming"
+        ? "Confirming payment…"
+        : status.kind === "paid"
+          ? "Paid"
+          : status.kind === "unconfirmed"
+            ? "Awaiting confirmation"
+            : null;
+
   return (
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
@@ -244,25 +256,28 @@ export function CheckoutButton({
         onClick={pay}
         // Paying again while a payment is unconfirmed could charge twice.
         disabled={
-          busy || status.kind === "paid" || status.kind === "unconfirmed"
+          disabled ||
+          busy ||
+          status.kind === "paid" ||
+          status.kind === "unconfirmed"
         }
         className={cn(
-          "btn-glow inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3",
+          "btn-glow inline-flex w-48 max-w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3",
           "font-display text-sm font-bold text-white transition-transform hover:-translate-y-0.5",
           "disabled:pointer-events-none disabled:opacity-60 disabled:shadow-none",
           className,
         )}
       >
-        {busy && <Loader2 size={16} aria-hidden className="animate-spin" />}
-        {status.kind === "opening"
-          ? "Opening checkout…"
-          : status.kind === "confirming"
-            ? "Confirming payment…"
-            : status.kind === "paid"
-              ? "Paid"
-              : status.kind === "unconfirmed"
-                ? "Awaiting confirmation"
-                : children}
+        {busy && (
+          <Loader2 size={16} aria-hidden className="shrink-0 animate-spin" />
+        )}
+        {label ? (
+          <span className="min-w-0 truncate">{label}</span>
+        ) : (
+          <span className="flex min-w-0 items-center gap-2 [&>svg]:shrink-0">
+            {children}
+          </span>
+        )}
       </button>
 
       <PaymentStatusModal
@@ -270,7 +285,7 @@ export function CheckoutButton({
         planName={planName}
         open={closedStatus !== status}
         onRetry={pay}
-        onClose={() => setClosedStatus(status)}
+        onClose={close}
       />
     </>
   );

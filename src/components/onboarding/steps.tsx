@@ -689,7 +689,7 @@ function PlanCard({
         <span className="font-display text-2xl font-extrabold text-ink">
           {plan.price}
         </span>
-        <span className="text-sm text-subtle">/mo</span>
+        <span className="text-sm text-subtle">/mo + GST</span>
       </span>
       <span className="mt-1 flex items-center gap-2 text-xs">
         <span className="text-faint line-through">{plan.oldPrice}</span>

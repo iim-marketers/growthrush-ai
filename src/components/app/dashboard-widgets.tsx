@@ -58,12 +58,14 @@ export function DashboardHero({
   greeting,
   date,
   business,
+  expiredOn,
   plan,
   children,
 }: {
   greeting: string;
   date: string;
   business: string;
+  expiredOn: string | null;
   plan: {
     name: string;
     renews: string;
@@ -95,7 +97,9 @@ export function DashboardHero({
           <p className="mt-2 max-w-[52ch] text-sm leading-relaxed text-white/70 sm:text-[0.95rem]">
             {plan
               ? "Your ads are running. Here’s what they brought in."
-              : "Everything is set up. Go live and your first leads start arriving here."}
+              : expiredOn
+                ? `Your plan ended on ${expiredOn}. Renew to keep your ads running.`
+                : "Everything is set up. Go live and your first leads start arriving here."}
           </p>
         </div>
 

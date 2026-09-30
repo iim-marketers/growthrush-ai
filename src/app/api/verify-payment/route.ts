@@ -2,10 +2,22 @@ import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { orders } from "@/db/schema";
 import { getSessionUser } from "@/lib/auth/session";
-import { isValidPaymentSignature } from "@/lib/razorpay";
+import { emailInvoice } from "@/lib/invoice-email";
+import { getRazorpay } from "@/lib/razorpay";
 
 function isFilled(value: unknown): value is string {
   return typeof value === "string" && value.length > 0;
+}
+
+/* Invoice payments return no order signature, so the payment is fetched
+   with our key instead. It can sit in `authorized` briefly before capture. */
+async function fetchCapturedPayment(paymentId: string) {
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const payment = await getRazorpay().payments.fetch(paymentId);
+    if (payment.status !== "authorized") return payment;
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+  }
+  return getRazorpay().payments.fetch(paymentId);
 }
 
 export async function POST(request: Request) {
@@ -15,28 +27,28 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json().catch(() => null);
-  const orderId = body?.razorpay_order_id;
   const paymentId = body?.razorpay_payment_id;
-  const signature = body?.razorpay_signature;
-
-  if (!isFilled(orderId) || !isFilled(paymentId) || !isFilled(signature)) {
+  if (!isFilled(paymentId)) {
     return Response.json(
       { error: "Missing payment details." },
       { status: 400 },
     );
   }
 
-  let valid;
+  let payment;
   try {
-    valid = isValidPaymentSignature({ orderId, paymentId, signature });
+    payment = await fetchCapturedPayment(paymentId);
   } catch (error) {
-    console.error("Could not verify payment signature", error);
+    console.error("Could not fetch payment", paymentId, error);
     return Response.json(
       { error: "Could not verify the payment." },
       { status: 500 },
     );
   }
-  if (!valid) {
+
+  const orderId = payment.order_id;
+  if (payment.status !== "captured" || !isFilled(orderId)) {
+    console.error("Payment not captured", paymentId, payment.status);
     return Response.json(
       { error: "Payment could not be verified." },
       { status: 400 },
@@ -78,6 +90,8 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   }
+
+  await emailInvoice(orderId);
 
   return Response.json({
     success: true,
