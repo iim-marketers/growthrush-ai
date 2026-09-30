@@ -7,7 +7,7 @@ import { getBusiness, requireOnboardedUser } from "@/lib/auth/dal";
 import {
   billingCycle,
   formatDate,
-  getActivePlan,
+  getLatestPlan,
   getLeads,
 } from "@/lib/queries";
 
@@ -22,10 +22,10 @@ export default async function AppLayout({
   children: React.ReactNode;
 }) {
   const user = await requireOnboardedUser();
-  const [business, leads, active, jar] = await Promise.all([
+  const [business, leads, latest, jar] = await Promise.all([
     getBusiness(user.id),
     getLeads(user.id),
-    getActivePlan(user.id),
+    getLatestPlan(user.id),
     cookies(),
   ]);
 
@@ -34,11 +34,15 @@ export default async function AppLayout({
     business: name,
     city: business?.city ?? "",
     initial: name.charAt(0).toUpperCase(),
-    plan: active && {
-      name: active.plan.name,
-      renews: formatDate(active.renewsOn),
-      used: billingCycle(active.renewsOn).percent,
-    },
+    plan:
+      latest && !latest.expired
+        ? {
+            name: latest.plan.name,
+            renews: formatDate(latest.renewsOn),
+            used: billingCycle(latest).percent,
+          }
+        : null,
+    expiredOn: latest?.expired ? formatDate(latest.renewsOn) : null,
     newLeads: leads.filter((lead) => lead.status === "new").length,
   };
 
@@ -53,7 +57,10 @@ export default async function AppLayout({
       >
         <AppSidebar profile={profile} variant="inset" />
         <SidebarInset className="min-w-0">
-          <AppHeader activePlan={profile.plan?.name ?? null} />
+          <AppHeader
+            activePlan={profile.plan?.name ?? null}
+            expired={Boolean(profile.expiredOn)}
+          />
           <div className="mx-auto w-full max-w-full px-4 py-6 sm:px-8 ">
             {children}
           </div>

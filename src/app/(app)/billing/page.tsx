@@ -46,7 +46,7 @@ import {
   billingCycle,
   formatDate,
   formatRupees,
-  getActivePlan,
+  getLatestPlan,
   getPaidOrders,
 } from "@/lib/queries";
 
@@ -60,19 +60,21 @@ export const metadata: Metadata = {
 
 export default async function BillingPage() {
   const user = await requireOnboardedUser();
-  const [business, active, payments] = await Promise.all([
+  const [business, latest, payments] = await Promise.all([
     getBusiness(user.id),
-    getActivePlan(user.id),
+    getLatestPlan(user.id),
     getPaidOrders(user.id),
   ]);
 
+  const active = latest && !latest.expired ? latest : null;
+  const expired = latest?.expired ? latest : null;
   const current =
-    active?.plan ??
+    latest?.plan ??
     plans.find((plan) => plan.id === business?.planId) ??
     plans[0];
   const other = plans.find((plan) => plan.id !== current.id);
   const budget = monthlyBudgets.find((b) => b.id === business?.budgetBand);
-  const cycle = active && billingCycle(active.renewsOn);
+  const cycle = active && billingCycle(active);
   const billing = billingDetailsOf(business);
   const gst = billing && gstFor(current.amount, billing.stateCode);
 
@@ -111,7 +113,9 @@ export default async function BillingPage() {
                 className={
                   active
                     ? "h-6 gap-1.5 bg-emerald-400/15 px-2.5 font-semibold text-emerald-300"
-                    : "h-6 bg-white/10 px-2.5 font-semibold text-white/70"
+                    : expired
+                      ? "h-6 bg-amber-400/15 px-2.5 font-semibold text-amber-300"
+                      : "h-6 bg-white/10 px-2.5 font-semibold text-white/70"
                 }
               >
                 {active && (
@@ -120,7 +124,7 @@ export default async function BillingPage() {
                     className="size-1.5 rounded-full bg-current"
                   />
                 )}
-                {active ? "Active" : "Not started"}
+                {active ? "Active" : expired ? "Expired" : "Not started"}
               </Badge>
             </div>
 
@@ -129,7 +133,7 @@ export default async function BillingPage() {
                 {current.price}
               </span>
               <span className="text-sm text-white/60">/month + GST</span>
-              {!active && (
+              {!latest && (
                 <span className="text-sm text-white/40 line-through">
                   {current.oldPrice}
                 </span>
@@ -169,13 +173,22 @@ export default async function BillingPage() {
               </div>
             ) : (
               <div>
+                {expired && (
+                  <p className="mb-3 text-sm text-subtle">
+                    Your plan ended on{" "}
+                    <span className="font-semibold text-ink">
+                      {formatDate(expired.renewsOn)}
+                    </span>
+                    . Renew to keep your ads running.
+                  </p>
+                )}
                 <CheckoutButton
                   planId={current.id}
                   planName={current.name}
                   disabled={!billing}
                   className="w-full"
                 >
-                  Pay &amp; go live
+                  {expired ? "Renew plan" : <>Pay &amp; go live</>}
                 </CheckoutButton>
                 {!billing && <BillingNeeded />}
               </div>
@@ -235,7 +248,7 @@ export default async function BillingPage() {
         </Card>
       </div>
 
-      {active && other && (
+      {latest && other && (
         <Card className="mt-4 flex-col gap-4 rounded-2xl border-0 bg-linear-to-r from-brand/8 via-grape/6 to-transparent px-6 py-5 ring-brand/20 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-3">
             <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand/12 text-brand">

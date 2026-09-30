@@ -104,31 +104,54 @@ export const getPaidOrders = cache(async (userId: string) => {
     .orderBy(desc(orders.paidAt));
 });
 
-/**
- * The plan the latest payment covers, while it still does. Plans are billed
- * monthly and there is no subscription yet, so a payment buys one month.
- */
-export async function getActivePlan(userId: string) {
+/* A payment buys one calendar month; there is no subscription yet. */
+export async function getLatestPlan(userId: string) {
   const [latest] = await getPaidOrders(userId);
   if (!latest?.paidAt) return null;
 
-  const renewsOn = new Date(latest.paidAt);
-  renewsOn.setMonth(renewsOn.getMonth() + 1);
-  if (renewsOn.getTime() < Date.now()) return null;
-
   const plan = plans.find((p) => p.id === latest.planId);
-  return plan ? { plan, renewsOn } : null;
+  if (!plan) return null;
+
+  const renewsOn = addMonth(latest.paidAt);
+  return {
+    plan,
+    paidAt: latest.paidAt,
+    renewsOn,
+    expired: renewsOn.getTime() < Date.now(),
+  };
 }
 
-export function billingCycle(renewsOn: Date) {
-  const start = new Date(renewsOn);
-  start.setMonth(start.getMonth() - 1);
+export function billingCycle({
+  paidAt,
+  renewsOn,
+}: {
+  paidAt: Date;
+  renewsOn: Date;
+}) {
   const now = Date.now();
-  const length = renewsOn.getTime() - start.getTime();
+  const length = renewsOn.getTime() - paidAt.getTime();
   return {
-    percent: Math.min(100, Math.max(0, ((now - start.getTime()) / length) * 100)),
+    percent: Math.min(
+      100,
+      Math.max(0, ((now - paidAt.getTime()) / length) * 100),
+    ),
     daysLeft: Math.max(0, Math.ceil((renewsOn.getTime() - now) / DAY_MS)),
   };
+}
+
+// 31 Jan + 1 month is 28/29 Feb, not 2/3 Mar.
+function addMonth(date: Date) {
+  const next = new Date(date);
+  const day = next.getDate();
+  next.setDate(1);
+  next.setMonth(next.getMonth() + 1);
+  const lastDay = new Date(
+    next.getFullYear(),
+    next.getMonth() + 1,
+    0,
+  ).getDate();
+  next.setDate(Math.min(day, lastDay));
+  return next;
 }
 
 /* ------------------------------------------------------------------ *
