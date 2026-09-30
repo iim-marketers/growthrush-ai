@@ -236,6 +236,17 @@ export function CheckoutButton({
 
   const busy = status.kind === "opening" || status.kind === "confirming";
 
+  const label =
+    status.kind === "opening"
+      ? "Opening checkout…"
+      : status.kind === "confirming"
+        ? "Confirming payment…"
+        : status.kind === "paid"
+          ? "Paid"
+          : status.kind === "unconfirmed"
+            ? "Awaiting confirmation"
+            : null;
+
   return (
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
@@ -251,22 +262,22 @@ export function CheckoutButton({
           status.kind === "unconfirmed"
         }
         className={cn(
-          "btn-glow inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3",
+          "btn-glow inline-flex w-48 max-w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3",
           "font-display text-sm font-bold text-white transition-transform hover:-translate-y-0.5",
           "disabled:pointer-events-none disabled:opacity-60 disabled:shadow-none",
           className,
         )}
       >
-        {busy && <Loader2 size={16} aria-hidden className="animate-spin" />}
-        {status.kind === "opening"
-          ? "Opening checkout…"
-          : status.kind === "confirming"
-            ? "Confirming payment…"
-            : status.kind === "paid"
-              ? "Paid"
-              : status.kind === "unconfirmed"
-                ? "Awaiting confirmation"
-                : children}
+        {busy && (
+          <Loader2 size={16} aria-hidden className="shrink-0 animate-spin" />
+        )}
+        {label ? (
+          <span className="min-w-0 truncate">{label}</span>
+        ) : (
+          <span className="flex min-w-0 items-center gap-2 [&>svg]:shrink-0">
+            {children}
+          </span>
+        )}
       </button>
 
       <PaymentStatusModal

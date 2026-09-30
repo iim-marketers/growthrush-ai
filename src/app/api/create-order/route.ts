@@ -54,9 +54,6 @@ export async function POST(request: Request) {
   const gst = gstFor(plan.amount, billing.stateCode);
   const placeOfSupply = `${stateName(billing.stateCode)} (${billing.stateCode})`;
 
-  /* An invoice carries its own order, which Checkout pays like any other.
-     Notifications stay off here: the webhook emails it once it is paid, so
-     an abandoned checkout doesn't send the customer a bill. */
   let invoice;
   try {
     invoice = await getRazorpay().invoices.create({
@@ -81,8 +78,7 @@ export async function POST(request: Request) {
           country: "in",
         },
       },
-      /* The Invoices API can't apply GST itself, so the tax goes on as its
-         own lines. */
+      // The Invoices API can't apply GST, so tax goes on as its own lines.
       line_items: [
         {
           name: plan.name,

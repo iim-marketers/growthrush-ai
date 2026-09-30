@@ -1,9 +1,4 @@
-/**
- * GST on the plan fee, charged on top of the listed price. Shared by the
- * browser and the server so the breakup shown is the one charged.
- */
-
-/* West Bengal, from the first two digits of our GSTIN. */
+// West Bengal, from our GSTIN.
 export const SELLER_STATE_CODE = "19";
 export const GST_RATE_PERCENT = 18;
 
@@ -52,18 +47,19 @@ export function stateName(code: string) {
 
 export type TaxLine = { label: string; paise: number };
 
-/** CGST + SGST within West Bengal, IGST for every other state. */
 export function gstFor(basePaise: number, stateCode: string) {
   const tax = Math.round((basePaise * GST_RATE_PERCENT) / 100);
+  return { lines: taxLines(tax, stateCode), tax, total: basePaise + tax };
+}
+
+export function taxLines(tax: number, stateCode: string): TaxLine[] {
   const half = GST_RATE_PERCENT / 2;
-  const lines: TaxLine[] =
-    stateCode === SELLER_STATE_CODE
-      ? [
-          { label: `CGST @ ${half}%`, paise: Math.floor(tax / 2) },
-          { label: `SGST @ ${half}%`, paise: tax - Math.floor(tax / 2) },
-        ]
-      : [{ label: `IGST @ ${GST_RATE_PERCENT}%`, paise: tax }];
-  return { lines, tax, total: basePaise + tax };
+  return stateCode === SELLER_STATE_CODE
+    ? [
+        { label: `CGST @ ${half}%`, paise: Math.floor(tax / 2) },
+        { label: `SGST @ ${half}%`, paise: tax - Math.floor(tax / 2) },
+      ]
+    : [{ label: `IGST @ ${GST_RATE_PERCENT}%`, paise: tax }];
 }
 
 const GSTIN = /^\d{2}[A-Z]{5}\d{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/;

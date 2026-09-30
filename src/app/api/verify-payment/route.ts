@@ -9,9 +9,8 @@ function isFilled(value: unknown): value is string {
   return typeof value === "string" && value.length > 0;
 }
 
-/* Invoice payments don't come back from Checkout with the order signature,
-   so the payment is looked up with our key instead of trusting the browser.
-   A payment can sit in `authorized` for a moment before auto-capture. */
+/* Invoice payments return no order signature, so the payment is fetched
+   with our key instead. It can sit in `authorized` briefly before capture. */
 async function fetchCapturedPayment(paymentId: string) {
   for (let attempt = 0; attempt < 4; attempt++) {
     const payment = await getRazorpay().payments.fetch(paymentId);

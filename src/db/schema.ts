@@ -88,10 +88,7 @@ export const businesses = pgTable("businesses", {
   goal: text("goal"),
   budgetBand: text("budget_band"),
   planId: text("plan_id"),
-  /* Billing details for GST invoices, filled in on /billing. The state is a
-     GST state code, which decides CGST + SGST or IGST. */
   billingName: text("billing_name"),
-  /* Where invoices are emailed. */
   billingEmail: text("billing_email"),
   billingGstin: text("billing_gstin"),
   billingLine1: text("billing_line1"),
@@ -175,7 +172,6 @@ export const orders = pgTable(
   (t) => [index("orders_user_idx").on(t.userId)],
 ).enableRLS();
 
-/* The last receipt number handed out in each financial year ("2026-27"). */
 export const receiptCounters = pgTable("receipt_counters", {
   financialYear: text("financial_year").primaryKey(),
   lastNumber: integer("last_number").notNull(),

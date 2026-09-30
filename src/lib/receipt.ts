@@ -5,8 +5,7 @@ import { receiptCounters } from "@/db/schema";
 
 const PREFIX = "GRWR";
 
-/* GST wants invoice numbers unique within a financial year (April to March,
-   in IST) and at most 16 characters: GRWR/26-27/00001 is exactly that. */
+// GST: unique per financial year (Apr–Mar, IST), at most 16 characters.
 export async function nextReceiptNumber(now = new Date()) {
   const { short, full } = financialYear(now);
   const [counter] = await getDb()

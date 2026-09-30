@@ -2,20 +2,16 @@ import "server-only";
 import { and, eq, isNotNull, isNull } from "drizzle-orm";
 import { getDb } from "@/db";
 import { businesses, orders } from "@/db/schema";
+import { billingDetailsOf } from "@/lib/billing";
+import { stateName, taxLines } from "@/lib/gst";
+import { invoiceEmailHtml } from "@/lib/invoice-email-template";
 import { plans } from "@/lib/landing-data";
 import { formatDate, formatRupees } from "@/lib/queries";
 
-/* Razorpay won't email an invoice once it is paid, so the receipt, with a
-   link to the paid invoice, goes out through Resend instead. */
-
-/* Until a domain is verified in Resend, its test sender only delivers to the
-   Resend account's own address. */
 const DEFAULT_FROM = "growthrush.ai <onboarding@resend.dev>";
 
-/* The browser's confirmation and both webhook events (order.paid,
-   payment.captured) all call this for one payment, so the send is claimed
-   first. A failed send is released for the next caller to try, and never
-   throws: the payment is already recorded by then. */
+/* Called by verify-payment and both webhook events for the same payment, so
+   the send is claimed first and released again if it fails. */
 export async function emailInvoice(orderId: string) {
   const db = getDb();
   let claimed = false;
@@ -36,16 +32,16 @@ export async function emailInvoice(orderId: string) {
     claimed = true;
 
     const [business] = await db
-      .select({ name: businesses.billingName, email: businesses.billingEmail })
+      .select()
       .from(businesses)
       .where(eq(businesses.userId, order.userId))
       .limit(1);
-    if (!business?.email) throw new Error("No billing email");
+    if (!business?.billingEmail) throw new Error("No billing email");
 
     await send({
-      to: business.email,
-      subject: `Your growthrush.ai invoice for ${formatRupees(order.amountPaise)}`,
-      html: receiptHtml(order, business.name),
+      to: business.billingEmail,
+      subject: `Invoice ${order.receipt} · ${formatRupees(order.amountPaise)} paid to growthrush.ai`,
+      html: invoiceEmailHtml(emailContent(order, business)),
       idempotencyKey: `invoice-${order.id}`,
     });
   } catch (error) {
@@ -88,63 +84,44 @@ async function send(email: {
   }
 }
 
-function receiptHtml(
+function emailContent(
   order: typeof orders.$inferSelect,
-  billedTo: string | null,
+  business: typeof businesses.$inferSelect,
 ) {
-  const plan = plans.find((p) => p.id === order.planId);
-  const base = order.amountPaise - order.taxPaise;
-  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://www.growthrush.ai";
+  const planName = plans.find((p) => p.id === order.planId)?.name ?? order.planId;
+  const billing = billingDetailsOf(business);
+  const stateCode =
+    order.placeOfSupply?.match(/\((\d{2})\)$/)?.[1] ?? billing?.stateCode;
+  const tax = order.taxPaise
+    ? stateCode
+      ? taxLines(order.taxPaise, stateCode)
+      : [{ label: "GST", paise: order.taxPaise }]
+    : [];
 
-  const row = (label: string, value: string, strong = false) => `
-    <tr>
-      <td style="padding:8px 0;color:#64748b;font-size:14px">${label}</td>
-      <td style="padding:8px 0;text-align:right;font-size:14px;${strong ? "font-weight:700;color:#0b1220" : "color:#0b1220"}">${value}</td>
-    </tr>`;
-
-  return `<!doctype html>
-<html>
-  <body style="margin:0;background:#f4f6fb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px">
-      <tr><td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:16px;padding:32px">
-          <tr><td>
-            <p style="margin:0;font-size:20px;font-weight:800;color:#4059e8">growthrush.ai</p>
-            <h1 style="margin:24px 0 8px;font-size:22px;color:#0b1220">Payment received</h1>
-            <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#475569">
-              Thank you${billedTo ? `, ${escapeHtml(billedTo)}` : ""}. Your ${escapeHtml(plan?.name ?? order.planId)} plan is active. Your GST invoice is ready below.
-            </p>
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0">
-              ${row("Invoice no.", escapeHtml(order.receipt))}
-              ${row("Plan", escapeHtml(plan?.name ?? order.planId))}
-              ${row("Plan fee", formatRupees(base))}
-              ${row("GST", formatRupees(order.taxPaise))}
-              ${row("Total paid", formatRupees(order.amountPaise), true)}
-              ${order.paidAt ? row("Paid on", formatDate(order.paidAt)) : ""}
-              ${order.razorpayPaymentId ? row("Payment ID", escapeHtml(order.razorpayPaymentId)) : ""}
-            </table>
-            ${
-              order.invoiceUrl
-                ? `<p style="margin:28px 0 0;text-align:center">
-              <a href="${escapeHtml(order.invoiceUrl)}" style="display:inline-block;background:#4059e8;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px;padding:14px 28px;border-radius:12px">View &amp; download invoice</a>
-            </p>`
-                : ""
-            }
-            <p style="margin:28px 0 0;font-size:13px;line-height:1.6;color:#94a3b8;text-align:center">
-              All your invoices are also on your <a href="${site}/billing" style="color:#4059e8">Billing page</a>.
-            </p>
-          </td></tr>
-        </table>
-      </td></tr>
-    </table>
-  </body>
-</html>`;
-}
-
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+  return {
+    invoiceNumber: order.receipt,
+    paidOn: formatDate(order.paidAt ?? new Date()),
+    planName,
+    billedTo: billing && {
+      name: billing.name,
+      gstin: billing.gstin,
+      address: [
+        billing.line1,
+        billing.line2,
+        `${billing.city}, ${stateName(billing.stateCode) ?? billing.stateCode} ${billing.pincode}`,
+      ].filter((line): line is string => Boolean(line)),
+    },
+    placeOfSupply: order.placeOfSupply,
+    items: [
+      {
+        label: planName,
+        detail: "Monthly plan fee",
+        paise: order.amountPaise - order.taxPaise,
+      },
+      ...tax,
+    ],
+    totalPaise: order.amountPaise,
+    invoiceUrl: order.invoiceUrl,
+    siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://www.growthrush.ai",
+  };
 }

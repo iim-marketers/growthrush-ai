@@ -11,7 +11,6 @@ export type BillingDetailsValue = {
   pincode: string;
 };
 
-/** The saved billing details, or null until every required one is in. */
 export function billingDetailsOf(
   business: typeof businesses.$inferSelect | null,
 ): BillingDetailsValue | null {

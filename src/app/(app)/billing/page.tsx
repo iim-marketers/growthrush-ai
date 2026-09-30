@@ -135,7 +135,7 @@ export default async function BillingPage() {
                 </span>
               )}
             </p>
-            {gst && (
+            {/* {gst && (
               <p className="mt-2 text-xs text-white/60 tabular-nums">
                 {current.price} +{" "}
                 {gst.lines
@@ -146,7 +146,7 @@ export default async function BillingPage() {
                   {formatRupees(gst.total)}
                 </span>
               </p>
-            )}
+            )} */}
           </div>
 
           <CardContent className="flex flex-col gap-5 px-6 py-6">
