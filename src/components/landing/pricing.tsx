@@ -53,7 +53,7 @@ export function Pricing() {
                   <span className="font-display text-4xl font-extrabold text-ink">
                     {plan.price}
                   </span>
-                  <span className="text-sm text-subtle">/mo</span>
+                  <span className="text-sm text-subtle">/mo + GST</span>
                 </div>
 
                 <ul className="mt-7 flex flex-1 flex-col gap-3">

@@ -88,6 +88,17 @@ export const businesses = pgTable("businesses", {
   goal: text("goal"),
   budgetBand: text("budget_band"),
   planId: text("plan_id"),
+  /* Billing details for GST invoices, filled in on /billing. The state is a
+     GST state code, which decides CGST + SGST or IGST. */
+  billingName: text("billing_name"),
+  /* Where invoices are emailed. */
+  billingEmail: text("billing_email"),
+  billingGstin: text("billing_gstin"),
+  billingLine1: text("billing_line1"),
+  billingLine2: text("billing_line2"),
+  billingCity: text("billing_city"),
+  billingStateCode: text("billing_state_code"),
+  billingPincode: text("billing_pincode"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
@@ -141,10 +152,15 @@ export const orders = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     razorpayOrderId: text("razorpay_order_id").notNull().unique(),
     razorpayPaymentId: text("razorpay_payment_id").unique(),
+    razorpayInvoiceId: text("razorpay_invoice_id").unique(),
+    invoiceUrl: text("invoice_url"),
     planId: text("plan_id").notNull(),
+    /* What was charged, GST included. */
     amountPaise: integer("amount_paise").notNull(),
+    taxPaise: integer("tax_paise").notNull().default(0),
+    placeOfSupply: text("place_of_supply"),
     currency: text("currency").notNull(),
-    receipt: text("receipt").notNull(),
+    receipt: text("receipt").notNull().unique(),
     status: orderStatus("status").notNull().default("created"),
     /* Nullable: orders placed before sign-in existed have no owner. */
     userId: uuid("user_id").references(() => users.id, {
@@ -154,6 +170,13 @@ export const orders = pgTable(
       .notNull()
       .defaultNow(),
     paidAt: timestamp("paid_at", { withTimezone: true }),
+    invoiceEmailedAt: timestamp("invoice_emailed_at", { withTimezone: true }),
   },
   (t) => [index("orders_user_idx").on(t.userId)],
 ).enableRLS();
+
+/* The last receipt number handed out in each financial year ("2026-27"). */
+export const receiptCounters = pgTable("receipt_counters", {
+  financialYear: text("financial_year").primaryKey(),
+  lastNumber: integer("last_number").notNull(),
+}).enableRLS();

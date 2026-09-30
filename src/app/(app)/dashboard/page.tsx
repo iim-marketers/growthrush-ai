@@ -95,7 +95,7 @@ export default async function DashboardPage() {
             </Link>
           </Button>
           <p className="text-xs text-white/60">
-            {chosenPlan.name} · {chosenPlan.price}/month
+            {chosenPlan.name} · {chosenPlan.price}/month + GST
           </p>
         </div>
       </DashboardHero>
@@ -115,7 +115,7 @@ export default async function DashboardPage() {
             },
             {
               title: "Choose a plan",
-              detail: `${chosenPlan.name} · ${chosenPlan.price}/month`,
+              detail: `${chosenPlan.name} · ${chosenPlan.price}/month + GST`,
               done: false,
             },
             {

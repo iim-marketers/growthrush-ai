@@ -95,7 +95,8 @@ export const getPaidOrders = cache(async (userId: string) => {
       planId: orders.planId,
       amountPaise: orders.amountPaise,
       currency: orders.currency,
-      paymentId: orders.razorpayPaymentId,
+      receipt: orders.receipt,
+      invoiceUrl: orders.invoiceUrl,
       paidAt: orders.paidAt,
     })
     .from(orders)

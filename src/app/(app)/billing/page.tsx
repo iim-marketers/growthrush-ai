@@ -7,6 +7,7 @@ import {
   ShieldCheck,
   Wallet,
 } from "lucide-react";
+import { BillingDetails } from "@/components/app/billing-details";
 import { PageHeader } from "@/components/app/primitives";
 import { CheckoutButton } from "@/components/checkout-button";
 import { LogoMark } from "@/components/logo";
@@ -38,6 +39,8 @@ import {
 } from "@/components/ui/table";
 import { monthlyBudgets } from "@/lib/app-data";
 import { getBusiness, requireOnboardedUser } from "@/lib/auth/dal";
+import { billingDetailsOf } from "@/lib/billing";
+import { gstFor } from "@/lib/gst";
 import { plans } from "@/lib/landing-data";
 import {
   billingCycle,
@@ -70,6 +73,8 @@ export default async function BillingPage() {
   const other = plans.find((plan) => plan.id !== current.id);
   const budget = monthlyBudgets.find((b) => b.id === business?.budgetBand);
   const cycle = active && billingCycle(active.renewsOn);
+  const billing = billingDetailsOf(business);
+  const gst = billing && gstFor(current.amount, billing.stateCode);
 
   return (
     <>
@@ -123,13 +128,25 @@ export default async function BillingPage() {
               <span className="font-display text-4xl font-extrabold">
                 {current.price}
               </span>
-              <span className="text-sm text-white/60">/month</span>
+              <span className="text-sm text-white/60">/month + GST</span>
               {!active && (
                 <span className="text-sm text-white/40 line-through">
                   {current.oldPrice}
                 </span>
               )}
             </p>
+            {gst && (
+              <p className="mt-2 text-xs text-white/60 tabular-nums">
+                {current.price} +{" "}
+                {gst.lines
+                  .map((line) => `${formatRupees(line.paise)} ${line.label}`)
+                  .join(" + ")}{" "}
+                ={" "}
+                <span className="font-semibold text-white">
+                  {formatRupees(gst.total)}
+                </span>
+              </p>
+            )}
           </div>
 
           <CardContent className="flex flex-col gap-5 px-6 py-6">
@@ -151,13 +168,17 @@ export default async function BillingPage() {
                 />
               </div>
             ) : (
-              <CheckoutButton
-                planId={current.id}
-                planName={current.name}
-                className="w-full"
-              >
-                Pay &amp; go live
-              </CheckoutButton>
+              <div>
+                <CheckoutButton
+                  planId={current.id}
+                  planName={current.name}
+                  disabled={!billing}
+                  className="w-full"
+                >
+                  Pay &amp; go live
+                </CheckoutButton>
+                {!billing && <BillingNeeded />}
+              </div>
             )}
 
             <Separator />
@@ -227,23 +248,31 @@ export default async function BillingPage() {
                   : `Switch to ${other.name}.`}
               </p>
               <p className="mt-1 text-sm leading-relaxed text-subtle">
-                {other.desc} {other.price}/month.
+                {other.desc} {other.price}/month + GST.
               </p>
             </div>
           </div>
-          <CheckoutButton planId={other.id} planName={other.name}>
+          <CheckoutButton
+            planId={other.id}
+            planName={other.name}
+            disabled={!billing}
+          >
             {other.amount > current.amount ? "Upgrade" : "Switch"}
             <ArrowUpRight size={16} aria-hidden />
           </CheckoutButton>
         </Card>
       )}
 
+      <BillingDetails details={billing} />
+
       <Card className="mt-4 gap-0 rounded-2xl py-0">
         <CardHeader className="border-b border-hairline px-6 py-4!">
           <CardTitle className="font-display text-base font-bold text-ink">
             Payment history
           </CardTitle>
-          <CardDescription>Plan fees paid to growthrush.ai</CardDescription>
+          <CardDescription>
+            Plan fees paid to growthrush.ai, GST included
+          </CardDescription>
         </CardHeader>
 
         {payments.length > 0 ? (
@@ -253,9 +282,10 @@ export default async function BillingPage() {
                 <TableHead className="pl-6">Date</TableHead>
                 <TableHead>Plan</TableHead>
                 <TableHead className="hidden md:table-cell">
-                  Payment ID
+                  Invoice no.
                 </TableHead>
                 <TableHead className="text-right">Amount</TableHead>
+                <TableHead className="text-right">Invoice</TableHead>
                 <TableHead className="hidden pr-6 text-right sm:table-cell">
                   Status
                 </TableHead>
@@ -272,10 +302,25 @@ export default async function BillingPage() {
                       payment.planId}
                   </TableCell>
                   <TableCell className="hidden font-mono text-xs text-faint md:table-cell">
-                    {payment.paymentId}
+                    {payment.receipt}
                   </TableCell>
                   <TableCell className="text-right font-semibold text-ink tabular-nums">
                     {formatRupees(payment.amountPaise)}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {payment.invoiceUrl ? (
+                      <a
+                        href={payment.invoiceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 font-semibold text-brand underline-offset-2 hover:underline"
+                      >
+                        View
+                        <ArrowUpRight aria-hidden className="size-3.5" />
+                      </a>
+                    ) : (
+                      <span className="text-faint">—</span>
+                    )}
                   </TableCell>
                   <TableCell className="hidden pr-6 text-right sm:table-cell">
                     <Badge className="h-6 gap-1 bg-success/12 px-2.5 font-semibold text-success">
@@ -312,5 +357,19 @@ export default async function BillingPage() {
         Payments are processed securely by Razorpay.
       </p>
     </>
+  );
+}
+
+function BillingNeeded() {
+  return (
+    <p className="mt-2 text-center text-xs text-faint">
+      <a
+        href="#billing-details"
+        className="font-semibold text-brand underline-offset-2 hover:underline"
+      >
+        Add your billing details
+      </a>{" "}
+      below to pay. GST is added based on your state.
+    </p>
   );
 }
