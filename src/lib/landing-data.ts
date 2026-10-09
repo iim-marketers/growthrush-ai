@@ -17,17 +17,17 @@ export const heroStats = [
 ] as const;
 
 export const showcaseBrands = [
-  { name: "Haldiram's", src: "/logos/haldiram.png" },
-  { name: "EY", src: "/logos/ey.png" },
-  { name: "Emami", src: "/logos/emami.png" },
-  { name: "ITC", src: "/logos/itc.png" },
-  { name: "Joy", src: "/logos/joy.png" },
-  { name: "Nephrocare", src: "/logos/nephrocare.png" },
-  { name: "Adyant Ayurveda", src: "/logos/adyant-ayurveda.png" },
-  { name: "Emporium Solutions", src: "/logos/emporium-solutions.png" },
-  { name: "Pepsi", src: "/logos/pepsi.png" },
-  { name: "Magik LED", src: "/logos/magik-led.png" },
-  { name: "Century Ply", src: "/logos/centuryply.png" },
+  { name: "Haldiram's", src: "/logos/haldiram.webp" },
+  { name: "EY", src: "/logos/ey.webp" },
+  { name: "Emami", src: "/logos/emami.webp" },
+  { name: "ITC", src: "/logos/itc.webp" },
+  { name: "Joy", src: "/logos/joy.webp" },
+  { name: "Nephrocare", src: "/logos/nephrocare.webp" },
+  { name: "Adyant Ayurveda", src: "/logos/adyant-ayurveda.webp" },
+  { name: "Emporium Solutions", src: "/logos/emporium-solutions.webp" },
+  { name: "Pepsi", src: "/logos/pepsi.webp" },
+  { name: "Magik LED", src: "/logos/magik-led.webp" },
+  { name: "Century Ply", src: "/logos/centuryply.webp" },
 ] as const;
 
 export const caseStudies = [
@@ -40,7 +40,7 @@ export const caseStudies = [
       "A unified D2C storefront with live store inventory, turning a fragmented digital presence into a growth channel.",
     metric: "4000+",
     metricLabel: "Distributor leads generated",
-    logo: "/logos/haldiram-color.jpeg",
+    logo: "/logos/haldiram-color.webp",
     overview:
       "Haldiram's is a premier Indian sweets, snacks and restaurant company headquartered in Nagpur. Over eight decades it has become synonymous with traditional Indian taste, running a vast retail network and exporting to more than 80 countries.",
     challenge:
@@ -76,7 +76,7 @@ export const caseStudies = [
       "Hyper-local Meta campaigns around every dealership that turned EV curiosity into booked test rides.",
     metric: "+150%",
     metricLabel: "monthly test-ride bookings",
-    logo: "/logos/mercstone.png",
+    logo: "/logos/mercstone.webp",
     logoOnDark: true,
     overview:
       "Mercstone EV is a Kolkata-based maker of smart, connected electric scooters, built with LFP batteries, IoT anti-theft and app integration, and manufactured near Barrackpore through an Indo-Thai partnership with Assara Electric.",
@@ -113,7 +113,7 @@ export const caseStudies = [
       "Always-on lead generation for electric two-wheelers that reached first-time EV buyers in smaller cities.",
     metric: "500+",
     metricLabel: "Distributor leads generated",
-    logo: "/logos/mudit-ridh.png",
+    logo: "/logos/mudit-ridh.webp",
     overview:
       "Mudit Ridh Electric Vehicles makes electric scooters and utility two-wheelers for daily commuters, students and small traders, with a focus on smaller cities where fuel costs hit hardest.",
     challenge:
@@ -172,37 +172,37 @@ export const features = [
     title: "Creatives on autopilot",
     body: "Fresh ad copy and designs every week, written for your category — no designer, no agency retainer.",
     icon: "sparkles",
-    image: "/images/feature-creatives.jpg",
+    image: "/images/feature-creatives.webp",
   },
   {
     title: "Local audience targeting",
     body: "We find the people within a few kilometres of you who actually buy what you sell.",
     icon: "map",
-    image: "/images/feature-targeting.jpg",
+    image: "/images/feature-targeting.webp",
   },
   {
     title: "Leads to WhatsApp",
     body: "Every enquiry lands in the app you already check a hundred times a day. No dashboard to learn.",
     icon: "message",
-    image: "/images/feature-whatsapp.jpg",
+    image: "/images/feature-whatsapp.webp",
   },
   {
     title: "Daily optimisation",
     body: "The AI shifts budget toward whatever is producing the cheapest leads, every single day.",
     icon: "trend",
-    image: "/images/feature-optimisation.jpg",
+    image: "/images/feature-optimisation.webp",
   },
   {
     title: "Your budget, your control",
     body: "Ad spend stays in your own account. Start at ₹300/day, change or pause it whenever you like.",
     icon: "wallet",
-    image: "/images/feature-budget.jpg",
+    image: "/images/feature-budget.webp",
   },
   {
     title: "Real reporting",
     body: "Leads, cost per lead, and what it turned into. One number that matters, not forty vanity metrics.",
     icon: "chart",
-    image: "/images/feature-reporting.jpg",
+    image: "/images/feature-reporting.webp",
   },
 ] as const;
 

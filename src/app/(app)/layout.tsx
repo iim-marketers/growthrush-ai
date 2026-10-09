@@ -1,4 +1,4 @@
-import type { Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
 import { AppHeader, AppSidebar, type Profile } from "@/components/app/app-nav";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -10,6 +10,10 @@ import {
   getLatestPlan,
   getLeads,
 } from "@/lib/queries";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export const viewport: Viewport = {
   themeColor: "#f3f5fa",

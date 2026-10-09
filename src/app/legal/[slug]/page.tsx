@@ -25,7 +25,11 @@ export async function generateMetadata(
     title: doc.title,
     description: doc.description,
     alternates: { canonical: `/legal/${slug}` },
-    openGraph: { title: doc.title, description: doc.description },
+    openGraph: {
+      title: doc.title,
+      description: doc.description,
+      images: "/opengraph-image",
+    },
   };
 }
 

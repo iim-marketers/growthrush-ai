@@ -8,8 +8,8 @@ import { brand } from "@/lib/data";
  * surfaces (the hero's logo pill, print). Both share the purple mark.
  */
 const wordmark = {
-  light: "/brand/wordmark-light.png",
-  dark: "/brand/wordmark.png",
+  light: "/brand/wordmark-light.webp",
+  dark: "/brand/wordmark.webp",
 } as const;
 
 /** Height only — the aspect ratio comes from the file (1078 × 166). */
@@ -63,7 +63,7 @@ export function LogoMark({
 }) {
   return (
     <Image
-      src="/brand/mark.png"
+      src="/brand/mark.webp"
       alt={decorative ? "" : `${brand.name}${brand.suffix}`}
       width={256}
       height={256}

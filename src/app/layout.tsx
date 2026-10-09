@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Outfit } from "next/font/google";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const inter = Inter({
@@ -16,16 +17,13 @@ const outfit = Outfit({
   display: "swap",
 });
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.growthrush.ai";
-const SITE_NAME = "growthrush.ai";
 const DESCRIPTION =
   "AI-run Facebook ads for local businesses. growthrush.ai writes the copy, designs the creatives and sends ready-to-buy leads straight to your WhatsApp.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME}`,
+    default: `${SITE_NAME} — AI Facebook Ads That Send Leads to Your WhatsApp`,
     template: `%s · ${SITE_NAME}`,
   },
   description: DESCRIPTION,
