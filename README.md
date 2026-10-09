@@ -6,7 +6,7 @@ from static data in [`src/lib/data.ts`](src/lib/data.ts).
 ## Stack
 
 - **Next.js 16** (App Router) + React 19
-- **pnpm**
+- **npm**
 - **Tailwind CSS v4** (CSS-first config in `src/app/globals.css`)
 - **shadcn/ui** (Radix base) + lucide-react icons
 - **Inter** / **Outfit** via `next/font`
@@ -14,9 +14,9 @@ from static data in [`src/lib/data.ts`](src/lib/data.ts).
 ## Getting started
 
 ```bash
-pnpm install
-pnpm dev      # http://localhost:3000
-pnpm build    # production build
+npm install
+npm run dev   # http://localhost:3000
+npm run build # production build
 ```
 
 ## Screens

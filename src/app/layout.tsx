@@ -1,19 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Outfit } from "next/font/google";
+import localFont from "next/font/local";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
-const inter = Inter({
+const inter = localFont({
   variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  src: [
+    { path: "./fonts/inter-400.woff2", weight: "400" },
+    { path: "./fonts/inter-500.woff2", weight: "500" },
+    { path: "./fonts/inter-600.woff2", weight: "600" },
+    { path: "./fonts/inter-700.woff2", weight: "700" },
+    { path: "./fonts/inter-800.woff2", weight: "800" },
+  ],
   display: "swap",
 });
 
-const outfit = Outfit({
+const outfit = localFont({
   variable: "--font-outfit",
-  subsets: ["latin"],
-  weight: ["500", "700", "800"],
+  src: [
+    { path: "./fonts/outfit-500.woff2", weight: "500" },
+    { path: "./fonts/outfit-700.woff2", weight: "700" },
+    { path: "./fonts/outfit-800.woff2", weight: "800" },
+  ],
   display: "swap",
 });
 
