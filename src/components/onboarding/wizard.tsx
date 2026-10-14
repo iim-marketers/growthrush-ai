@@ -9,8 +9,8 @@ import { Progress } from "@/components/ui/progress";
 import { signOut } from "@/app/login/actions";
 import { saveOnboarding } from "@/app/onboarding/actions";
 import { onboardingSteps, type StepId } from "@/lib/app-data";
-import { plans } from "@/lib/landing-data";
 import { personalise, type Answers } from "@/lib/onboarding";
+import type { Plan } from "@/lib/plans";
 import {
   AdStep,
   AudienceStep,
@@ -22,11 +22,6 @@ import {
   ReadinessStep,
 } from "./steps";
 
-/**
- * Whether a step has enough to move on, keyed by step id so the rule sits
- * beside the step it guards. The four playback steps have nothing to answer,
- * so they are absent and default to ready.
- */
 const ready: Partial<Record<StepId, (a: Answers) => boolean>> = {
   business: (a) => a.business.trim().length > 1 && a.category !== "",
   location: (a) => a.city.trim().length > 1,
@@ -37,11 +32,11 @@ const ready: Partial<Record<StepId, (a: Answers) => boolean>> = {
 
 export function OnboardingWizard({
   saved,
+  plans,
   onboarded,
 }: {
-  /** Answers already on record — empty for a first visit. */
   saved: Answers;
-  /** Back from the app to edit their setup, rather than setting up. */
+  plans: Plan[];
   onboarded: boolean;
 }) {
   const [index, setIndex] = useState(0);
@@ -63,7 +58,6 @@ export function OnboardingWizard({
     setError(null);
 
     if (isLast) {
-      /* On success the action redirects into the app. */
       startFinish(async () => {
         const result = await saveOnboarding(answers, true);
         if (result?.error) setError(result.error);
@@ -71,8 +65,6 @@ export function OnboardingWizard({
       return;
     }
 
-    /* Save as they go, without holding up the next step: a customer who
-       drops off halfway is still worth knowing about. */
     void saveOnboarding(answers, false).catch(() => {});
     setIndex((i) => i + 1);
   };
@@ -99,7 +91,6 @@ export function OnboardingWizard({
               <ArrowLeft size={18} aria-hidden />
             </Link>
           ) : index === 0 ? (
-            /* Nowhere to go back to yet, so the way out is signing out. */
             <form action={signOut}>
               <button
                 type="submit"
@@ -131,14 +122,11 @@ export function OnboardingWizard({
         />
       </header>
 
-      {/* Only this middle part scrolls; the header and the action stay put.
-          Re-keying on the step id starts each step at the top and restarts
-          its entry animation. */}
       <main
         key={step.id}
         className="relative z-1 min-h-0 flex-1 overflow-y-auto overscroll-contain"
       >
-        <div className="animate-slide-up mx-auto w-full max-w-xl px-4 py-8 sm:px-6 sm:py-10">
+        <div className="animate-slide-up mx-auto w-full max-w-xl px-4 py-8 ">
           <p className="font-display text-xs font-bold tracking-[0.14em] text-brand uppercase">
             {personalise(step.eyebrow, answers)}
           </p>
@@ -168,7 +156,7 @@ export function OnboardingWizard({
             {step.id === "audience" && <AudienceStep answers={answers} />}
             {step.id === "readiness" && <ReadinessStep />}
             {step.id === "ad" && <AdStep answers={answers} />}
-            {step.id === "plan" && <PlanStep {...props} />}
+            {step.id === "plan" && <PlanStep {...props} plans={plans} />}
           </div>
         </div>
       </main>
@@ -187,7 +175,7 @@ export function OnboardingWizard({
             {finishing
               ? "Saving…"
               : isLast
-                ? `${step.cta} with ${planName(answers.plan)}`
+                ? `${step.cta} with ${planName(plans, answers.plan)}`
                 : step.cta}
           </CtaButton>
         </div>
@@ -196,6 +184,6 @@ export function OnboardingWizard({
   );
 }
 
-function planName(id: string) {
-  return plans.find((plan) => plan.id === id)?.name ?? plans[0].name;
+function planName(plans: Plan[], id: string) {
+  return plans.find((plan) => plan.id === id)?.name ?? plans[0]?.name;
 }

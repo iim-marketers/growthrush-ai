@@ -28,19 +28,15 @@ import {
   planStep,
   readiness,
 } from "@/lib/app-data";
-import { plans } from "@/lib/landing-data";
 import { personalise, type Answers } from "@/lib/onboarding";
-import { cn } from "@/lib/utils";
+import type { Plan } from "@/lib/plans";
+import { cn, formatRupees } from "@/lib/utils";
 import { Chip, Field, TextInput } from "./controls";
 
 type StepProps = {
   answers: Answers;
   set: <K extends keyof Answers>(key: K, value: Answers[K]) => void;
 };
-
-/* ---------------------------------------------------------------- *
- * 1 · About your business
- * ---------------------------------------------------------------- */
 
 export function BusinessStep({ answers, set }: StepProps) {
   return (
@@ -69,10 +65,6 @@ export function BusinessStep({ answers, set }: StepProps) {
   );
 }
 
-/* ---------------------------------------------------------------- *
- * 2 · Your location
- * ---------------------------------------------------------------- */
-
 export function LocationStep({ answers, set }: StepProps) {
   return (
     <>
@@ -92,10 +84,6 @@ export function LocationStep({ answers, set }: StepProps) {
     </>
   );
 }
-
-/* ---------------------------------------------------------------- *
- * 3 · Confirm your business
- * ---------------------------------------------------------------- */
 
 export function ConfirmStep({ answers, set }: StepProps) {
   return (
@@ -186,10 +174,6 @@ function Rating({ rating, reviews }: { rating: number; reviews: number }) {
   );
 }
 
-/* ---------------------------------------------------------------- *
- * 4 · Your goal
- * ---------------------------------------------------------------- */
-
 const goalIcons = {
   message: MessageCircle,
   phone: Phone,
@@ -264,14 +248,8 @@ export function GoalStep({ answers, set }: StepProps) {
   );
 }
 
-/* ---------------------------------------------------------------- *
- * 5 · Live audience
- * ---------------------------------------------------------------- */
-
 export function AudienceStep({ answers }: { answers: Answers }) {
   const { interest } = copyFor(answers.category);
-  /* Bars are scaled against the largest share, so length encodes the number
-     rather than being picked to look tidy. */
   const widest = Math.max(...audience.breakdown.map((row) => row.pct));
 
   return (
@@ -327,10 +305,6 @@ export function AudienceStep({ answers }: { answers: Answers }) {
   );
 }
 
-/* ---------------------------------------------------------------- *
- * 6 · Lead readiness
- * ---------------------------------------------------------------- */
-
 export function ReadinessStep() {
   return (
     <>
@@ -375,15 +349,8 @@ export function ReadinessStep() {
   );
 }
 
-/**
- * A meter, not a chart: one ratio against a limit, so it gets a gauge rather
- * than a one-bar chart. The arc is a full circle masked into a ring and
- * clipped to its top half; the value is written in the opening so the reading
- * never depends on judging an angle.
- */
 function Gauge({ score, grade }: { score: number; grade: string }) {
   const ring = "radial-gradient(circle at center, transparent 58%, black 59%)";
-  /* The visible half-ring spans 180°, starting at 9 o'clock. */
   const sweep = (score / 100) * 180;
 
   return (
@@ -400,7 +367,6 @@ function Gauge({ score, grade }: { score: number; grade: string }) {
           className="absolute top-0 left-0 h-64 w-64"
           style={{ maskImage: ring, WebkitMaskImage: ring }}
         >
-          {/* Track, then the filled portion on top of it. */}
           <div className="absolute inset-0 rounded-full bg-surface-mute" />
           <div
             className="absolute inset-0 rounded-full"
@@ -418,7 +384,6 @@ function Gauge({ score, grade }: { score: number; grade: string }) {
         </div>
       </div>
 
-      {/* The scale, below the arc rather than on top of it. */}
       <div className="mt-1 flex justify-between px-2 text-xs font-bold">
         <span className="text-danger">0</span>
         <span className="text-success">100</span>
@@ -468,10 +433,6 @@ function GrowthCard({
   );
 }
 
-/* ---------------------------------------------------------------- *
- * 7 · The generated ad
- * ---------------------------------------------------------------- */
-
 export function AdStep({ answers }: { answers: Answers }) {
   const copy = copyFor(answers.category);
   const ad = {
@@ -499,7 +460,6 @@ export function AdStep({ answers }: { answers: Answers }) {
         <MoreHorizontal size={18} aria-hidden className="shrink-0 text-faint" />
       </div>
 
-      {/* The creative itself. */}
       <div className="relative overflow-hidden bg-linear-to-br from-brand to-grape px-6 py-12 text-center">
         <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-black/25 px-2.5 py-1 text-[0.65rem] font-bold text-white backdrop-blur-sm">
           <Sparkles size={11} aria-hidden />
@@ -540,19 +500,15 @@ export function AdStep({ answers }: { answers: Answers }) {
   );
 }
 
-/* ---------------------------------------------------------------- *
- * 8 · Pick your plan
- * ---------------------------------------------------------------- */
-
-export function PlanStep({ answers, set }: StepProps) {
+export function PlanStep({
+  answers,
+  set,
+  plans,
+}: StepProps & { plans: Plan[] }) {
   const chosen = plans.find((plan) => plan.id === answers.plan) ?? plans[0];
-  const base = plans[0];
-  /* The bigger plan lists "Everything in AI, plus …" first; show only what it
-     adds, under a line that says so. */
-  const extras = chosen.id === base.id ? null : chosen.features.slice(1);
   /* Hidden until leads can be sent to WhatsApp; the landing page shares
-     these lists, so they are filtered here rather than edited at source. */
-  const features = (extras ?? chosen.features).filter(
+     the plan rows, so they are filtered here rather than edited at source. */
+  const features = (chosen?.features ?? []).filter(
     (feature) => !/whatsapp/i.test(feature),
   );
 
@@ -567,7 +523,7 @@ export function PlanStep({ answers, set }: StepProps) {
           <PlanCard
             key={plan.id}
             plan={plan}
-            selected={chosen.id === plan.id}
+            selected={chosen?.id === plan.id}
             onSelect={() => set("plan", plan.id)}
           />
         ))}
@@ -575,13 +531,8 @@ export function PlanStep({ answers, set }: StepProps) {
 
       <div className="mt-4 rounded-2xl border border-hairline bg-surface-subtle p-5">
         <p className="text-xs font-bold tracking-[0.12em] text-faint uppercase">
-          What you get
+          What&apos;s included
         </p>
-        {extras && (
-          <p className="mt-2 text-sm font-semibold text-ink">
-            Everything in {base.name}, plus:
-          </p>
-        )}
         <ul className="mt-3 grid gap-2.5">
           {features.map((feature) => (
             <li
@@ -630,16 +581,13 @@ function PlanCard({
   selected,
   onSelect,
 }: {
-  plan: (typeof plans)[number];
+  plan: Plan;
   selected: boolean;
   onSelect: () => void;
 }) {
-  /* Both plans are discounted by the same share; read it off the two prices
-     rather than storing a third number that could fall out of step. */
-  const toNumber = (price: string) => Number(price.replace(/[^\d]/g, ""));
-  const off = Math.round(
-    (1 - toNumber(plan.price) / toNumber(plan.oldPrice)) * 100,
-  );
+  const off =
+    plan.compareAtPaise &&
+    Math.round((1 - plan.pricePaise / plan.compareAtPaise) * 100);
 
   return (
     <button
@@ -666,35 +614,41 @@ function PlanCard({
         >
           {selected && <Check size={12} strokeWidth={3} />}
         </span>
-        <span
-          className={cn(
-            "rounded-full px-2 py-0.5 text-[0.65rem] font-bold tracking-wide uppercase",
-            plan.highlighted
-              ? "bg-success/12 text-success"
-              : "bg-orange/10 text-orange",
-          )}
-        >
-          {plan.highlighted ? "Recommended" : plan.badge}
-        </span>
+        {plan.badge && (
+          <span
+            className={cn(
+              "rounded-full px-2 py-0.5 text-[0.65rem] font-bold tracking-wide uppercase",
+              plan.highlighted
+                ? "bg-success/12 text-success"
+                : "bg-orange/10 text-orange",
+            )}
+          >
+            {plan.badge}
+          </span>
+        )}
       </span>
 
       <span className="mt-4 block font-display text-base font-extrabold text-ink">
         {plan.name}
       </span>
       <span className="mt-0.5 block text-[0.8rem] leading-snug text-subtle">
-        {plan.desc}
+        {plan.description}
       </span>
 
       <span className="mt-auto flex flex-wrap items-baseline gap-x-1.5 pt-4">
         <span className="font-display text-2xl font-extrabold text-ink">
-          {plan.price}
+          {formatRupees(plan.pricePaise)}
         </span>
-        <span className="text-sm text-subtle">/mo + GST</span>
+        <span className="text-sm text-subtle">/{plan.billingPeriod} + GST</span>
       </span>
-      <span className="mt-1 flex items-center gap-2 text-xs">
-        <span className="text-faint line-through">{plan.oldPrice}</span>
-        <span className="font-bold text-success">Save {off}%</span>
-      </span>
+      {plan.compareAtPaise && off ? (
+        <span className="mt-1 flex items-center gap-2 text-xs">
+          <span className="text-faint line-through">
+            {formatRupees(plan.compareAtPaise)}
+          </span>
+          <span className="font-bold text-success">Save {off}%</span>
+        </span>
+      ) : null}
     </button>
   );
 }

@@ -41,14 +41,14 @@ import { monthlyBudgets } from "@/lib/app-data";
 import { getBusiness, requireOnboardedUser } from "@/lib/auth/dal";
 import { billingDetailsOf } from "@/lib/billing";
 import { gstFor } from "@/lib/gst";
-import { plans } from "@/lib/landing-data";
 import {
   billingCycle,
   formatDate,
-  formatRupees,
   getLatestPlan,
   getPaidOrders,
+  getPlans,
 } from "@/lib/queries";
+import { formatRupees } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Billing",
@@ -60,23 +60,25 @@ export const metadata: Metadata = {
 
 export default async function BillingPage() {
   const user = await requireOnboardedUser();
-  const [business, latest, payments] = await Promise.all([
+  const [business, latest, payments, plans] = await Promise.all([
     getBusiness(user.id),
     getLatestPlan(user.id),
     getPaidOrders(user.id),
+    getPlans(),
   ]);
 
   const active = latest && !latest.expired ? latest : null;
   const expired = latest?.expired ? latest : null;
+  const offered = plans.filter((plan) => plan.active);
   const current =
-    latest?.plan ??
-    plans.find((plan) => plan.id === business?.planId) ??
-    plans[0];
-  const other = plans.find((plan) => plan.id !== current.id);
+    active?.plan ??
+    offered.find((plan) => plan.id === (latest?.plan.id ?? business?.planId)) ??
+    offered[0];
+  const other = offered.find((plan) => plan.id !== current.id);
   const budget = monthlyBudgets.find((b) => b.id === business?.budgetBand);
   const cycle = active && billingCycle(active);
   const billing = billingDetailsOf(business);
-  const gst = billing && gstFor(current.amount, billing.stateCode);
+  const gst = billing && gstFor(current.pricePaise, billing.stateCode);
 
   return (
     <>
@@ -107,7 +109,9 @@ export default async function BillingPage() {
                 <p className="mt-2 font-display text-xl font-extrabold">
                   {current.name}
                 </p>
-                <p className="mt-1 text-sm text-white/70">{current.desc}</p>
+                <p className="mt-1 text-sm text-white/70">
+                  {current.description}
+                </p>
               </div>
               <Badge
                 className={
@@ -130,18 +134,20 @@ export default async function BillingPage() {
 
             <p className="mt-6 flex items-baseline gap-2">
               <span className="font-display text-4xl font-extrabold">
-                {current.price}
+                {formatRupees(current.pricePaise)}
               </span>
-              <span className="text-sm text-white/60">/month + GST</span>
-              {!latest && (
+              <span className="text-sm text-white/60">
+                /{current.billingPeriod} + GST
+              </span>
+              {!latest && current.compareAtPaise ? (
                 <span className="text-sm text-white/40 line-through">
-                  {current.oldPrice}
+                  {formatRupees(current.compareAtPaise)}
                 </span>
-              )}
+              ) : null}
             </p>
             {/* {gst && (
               <p className="mt-2 text-xs text-white/60 tabular-nums">
-                {current.price} +{" "}
+                {formatRupees(current.pricePaise)} +{" "}
                 {gst.lines
                   .map((line) => `${formatRupees(line.paise)} ${line.label}`)
                   .join(" + ")}{" "}
@@ -256,12 +262,13 @@ export default async function BillingPage() {
             </span>
             <div>
               <p className="font-display text-base font-bold text-ink">
-                {other.amount > current.amount
-                  ? `Want a human on it too? Move to ${other.name}.`
-                  : `Switch to ${other.name}.`}
+                {other.highlighted
+                  ? `Ready to scale? Move to the ${other.name} plan.`
+                  : `Switch to the ${other.name} plan.`}
               </p>
               <p className="mt-1 text-sm leading-relaxed text-subtle">
-                {other.desc} {other.price}/month + GST.
+                {other.description} {formatRupees(other.pricePaise)}/
+                {other.billingPeriod} + GST.
               </p>
             </div>
           </div>
@@ -270,7 +277,7 @@ export default async function BillingPage() {
             planName={other.name}
             disabled={!billing}
           >
-            {other.amount > current.amount ? "Upgrade" : "Switch"}
+            {other.highlighted ? "Upgrade" : "Switch"}
             <ArrowUpRight size={16} aria-hidden />
           </CheckoutButton>
         </Card>

@@ -1,4 +1,5 @@
 import {
+  boolean,
   index,
   integer,
   pgEnum,
@@ -12,12 +13,6 @@ import {
    Supabase's public Data API, while the server connects as the table owner
    and is unaffected. */
 
-/* ------------------------------------------------------------------ *
- * Accounts
- * ------------------------------------------------------------------ */
-
-/* One row per mobile number. `phone` is E.164 (+91XXXXXXXXXX), so the same
-   person can't end up with two accounts by typing it differently. */
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   phone: text("phone").notNull().unique(),
@@ -25,16 +20,10 @@ export const users = pgTable("users", {
     .notNull()
     .defaultNow(),
   lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
-  /* When the policies under /legal were last agreed to at sign-in — the
-     DPDP Act wants consent that can be shown, not assumed. */
   consentedAt: timestamp("consented_at", { withTimezone: true }),
-  /* Set when the onboarding wizard is finished; until then the app sends the
-     user back to it. */
   onboardedAt: timestamp("onboarded_at", { withTimezone: true }),
 }).enableRLS();
 
-/* A sign-in attempt. Only a hash of the code is kept, and each challenge
-   takes a handful of guesses before it is dead. */
 export const otpChallenges = pgTable(
   "otp_challenges",
   {
@@ -51,8 +40,6 @@ export const otpChallenges = pgTable(
   (t) => [index("otp_challenges_phone_created_idx").on(t.phone, t.createdAt)],
 ).enableRLS();
 
-/* The browser holds a random token; the table holds its SHA-256, so a leaked
-   row can't be replayed as a cookie. */
 export const sessions = pgTable(
   "sessions",
   {
@@ -69,12 +56,6 @@ export const sessions = pgTable(
   (t) => [index("sessions_user_idx").on(t.userId)],
 ).enableRLS();
 
-/* ------------------------------------------------------------------ *
- * Onboarding answers
- * ------------------------------------------------------------------ */
-
-/* One business per user. Columns are nullable because the wizard saves as
-   the customer goes, so a half-finished setup is still on record. */
 export const businesses = pgTable("businesses", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
@@ -104,10 +85,6 @@ export const businesses = pgTable("businesses", {
     .defaultNow(),
 }).enableRLS();
 
-/* ------------------------------------------------------------------ *
- * Leads
- * ------------------------------------------------------------------ */
-
 export const leadStatus = pgEnum("lead_status", [
   "new",
   "contacted",
@@ -115,7 +92,6 @@ export const leadStatus = pgEnum("lead_status", [
   "lost",
 ]);
 
-/* Filled by the ad integration once it exists; the app only reads it today. */
 export const leads = pgTable(
   "leads",
   {
@@ -135,12 +111,23 @@ export const leads = pgTable(
   (t) => [index("leads_user_received_idx").on(t.userId, t.receivedAt)],
 ).enableRLS();
 
-/* ------------------------------------------------------------------ *
- * Payments
- * ------------------------------------------------------------------ */
+export const billingPeriod = pgEnum("billing_period", ["week", "month"]);
 
-/* `failed` is left for a webhook to set: a failure in the browser isn't final,
-   since Checkout lets the customer retry against the same order. */
+export const plans = pgTable("plans", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  badge: text("badge").notNull().default(""),
+  description: text("description").notNull().default(""),
+  /* GST excluded. ₹25,000 is 2500000. */
+  pricePaise: integer("price_paise").notNull(),
+  compareAtPaise: integer("compare_at_paise"),
+  billingPeriod: billingPeriod("billing_period").notNull(),
+  features: text("features").array().notNull().default([]),
+  highlighted: boolean("highlighted").notNull().default(false),
+  active: boolean("active").notNull().default(true),
+  sortOrder: integer("sort_order").notNull().default(0),
+}).enableRLS();
+
 export const orderStatus = pgEnum("order_status", ["created", "paid", "failed"]);
 
 export const orders = pgTable(
@@ -159,7 +146,6 @@ export const orders = pgTable(
     currency: text("currency").notNull(),
     receipt: text("receipt").notNull().unique(),
     status: orderStatus("status").notNull().default("created"),
-    /* Nullable: orders placed before sign-in existed have no owner. */
     userId: uuid("user_id").references(() => users.id, {
       onDelete: "set null",
     }),

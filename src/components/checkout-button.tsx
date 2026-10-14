@@ -164,7 +164,6 @@ export function CheckoutButton({
 }) {
   const router = useRouter();
   const [status, setStatus] = useState<Status>({ kind: "idle" });
-  // Every status is a fresh object, so a new outcome reopens the modal.
   const [closedStatus, setClosedStatus] = useState<Status | null>(null);
 
   const confirm = async (charge: Charge, response: PaymentSuccess) => {

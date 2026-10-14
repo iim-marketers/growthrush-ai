@@ -2,7 +2,6 @@
 
 import { cn } from "@/lib/utils";
 
-/** Label + control pair, so every question in the flow is spaced the same. */
 export function Field({
   label,
   className,
@@ -29,7 +28,6 @@ export function TextInput({
   value: string;
   onChange: (value: string) => void;
   placeholder: string;
-  /** Optional leading glyph, matching the reference flow's inset icons. */
   icon?: React.ReactNode;
 }) {
   return (

@@ -3,7 +3,6 @@ import { ArrowLeft } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { legalNav } from "@/lib/legal";
 
-/** Shared chrome for every document under /legal. */
 export default function LegalLayout({ children }: LayoutProps<"/legal">) {
   return (
     <div className="min-h-dvh bg-background">

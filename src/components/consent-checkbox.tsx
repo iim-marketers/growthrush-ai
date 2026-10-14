@@ -55,7 +55,6 @@ export function ConsentCheckbox({
   );
 }
 
-/** Opens in a new tab so a half-filled login form is not lost to a policy read. */
 function PolicyLink({
   href,
   children,

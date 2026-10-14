@@ -35,11 +35,8 @@ export function Hero() {
         </div>
       }
     >
-      {/* Tablet and up: one wide panel across the top, as on the reference.
-          On desktop it stretches to fill the screen, content centred. */}
       <div className="animate-slide-up relative mx-auto w-full max-w-3xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-linear-to-b from-white/9 via-brand/10 to-brand/22 px-4 py-8 shadow-[0_40px_120px_-40px_rgba(0,0,0,0.9)] backdrop-blur-sm sm:rounded-[2.5rem] sm:px-10 sm:py-10 md:max-w-none md:rounded-[1.25rem] md:py-12 lg:flex lg:flex-1 lg:flex-col lg:justify-center lg:py-16 desktop-short:py-12">
         <div className="w-full">
-          {/* Logo, sitting on the dashed rule that runs across the card. */}
           <div className="relative flex items-center justify-center">
             <span
               aria-hidden

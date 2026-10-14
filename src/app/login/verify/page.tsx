@@ -6,7 +6,6 @@ import { STUB_CODE, otpStubEnabled } from "@/lib/auth/sms";
 import { maskNumber } from "@/lib/phone";
 
 export default async function VerifyPage() {
-  /* No live code for this browser — nothing to verify, so start over. */
   const challenge = await currentChallenge();
   if (!challenge) redirect("/login");
 

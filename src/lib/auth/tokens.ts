@@ -5,7 +5,6 @@ export function sha256(value: string) {
   return createHash("sha256").update(value).digest("hex");
 }
 
-/** 32 random bytes, URL-safe — the value that lives in the session cookie. */
 export function newToken() {
   return randomBytes(32).toString("base64url");
 }

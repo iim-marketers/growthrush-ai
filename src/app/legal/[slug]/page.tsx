@@ -9,7 +9,6 @@ function isLegalSlug(value: string): value is LegalSlug {
   return value in legalDocs;
 }
 
-/** Prerender all three documents at build time — they never change per request. */
 export function generateStaticParams() {
   return legalNav.map((entry) => ({ slug: entry.slug }));
 }

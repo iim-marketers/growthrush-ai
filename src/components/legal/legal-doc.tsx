@@ -54,7 +54,6 @@ function SectionBody({ section }: { section: Section }) {
   return (
     <section
       id={section.id}
-      /* Clears the sticky header when jumped to from the contents list. */
       className="scroll-mt-24 pt-8"
     >
       <h2 className="text-xl leading-snug sm:text-2xl">
@@ -116,7 +115,6 @@ function BlockBody({ block }: { block: Block }) {
 
     case "table":
       return (
-        /* Legal tables are wide; let them scroll rather than the page body. */
         <div className="mt-6 overflow-x-auto rounded-xl border border-white/10">
           <table className="w-full min-w-136 border-collapse text-left text-sm">
             <thead>

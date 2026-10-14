@@ -8,7 +8,6 @@ function createDb(url: string) {
   return drizzle(postgres(url, { prepare: false }), { schema });
 }
 
-// Reuse one pool across dev hot reloads.
 const cache = globalThis as unknown as { db?: ReturnType<typeof createDb> };
 
 export function getDb() {

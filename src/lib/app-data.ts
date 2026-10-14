@@ -1,29 +1,16 @@
 import { heroStats } from "@/lib/landing-data";
 
-/* ------------------------------------------------------------------ *
- * Auth — the step between /login and onboarding
- * ------------------------------------------------------------------ */
-
 export const verify = {
   length: 6,
   resendSeconds: 30,
   title: "Enter the code",
   subtitle: "We sent a 6-digit code to %s",
   cta: "Verify & continue",
-  /* The mock SMS shown while lib/auth/sms.ts is stubbed. */
   sender: "GRWTHR",
   smsBody: "%s is your growthrush.ai code",
   wrongCode: "That code is not right. Check the message and try again.",
 } as const;
 
-/* ------------------------------------------------------------------ *
- * Onboarding — the guided walk from "who are you?" to a live campaign
- * ------------------------------------------------------------------ */
-
-/* Most of the walkthrough is still a scripted demo — there is no Google or
-   Meta lookup yet — so the listings and the numbers need a business that
-   stays put. Copy that should name the customer's own business or city uses
-   {business} and {city}, which the wizard fills from their answers. */
 const demo = {
   city: "Kolkata",
   business: "Sharma Coaching Classes",
@@ -106,7 +93,7 @@ export const onboardingSteps: readonly OnboardingStep[] = [
     id: "plan",
     eyebrow: "Pick your plan",
     title: "Go live and start getting leads",
-    body: "Both plans run your Facebook ads. Cancel anytime.",
+    body: "Try it for a week, or go straight to fully managed monthly growth. No lock-in either way.",
     cta: "Go live",
   },
 ];
@@ -172,7 +159,6 @@ type Goal = {
   icon: "message" | "phone" | "form" | "store";
   title: string;
   desc: string;
-  /** Shown but not pickable until the integration behind it exists. */
   comingSoon?: boolean;
 };
 
@@ -182,7 +168,6 @@ export const goals: readonly Goal[] = [
     icon: "message",
     title: "WhatsApp leads",
     desc: "Chats to your phone",
-    /* No WhatsApp Business API yet. */
     comingSoon: true,
   },
   {
@@ -334,10 +319,6 @@ export const planStep = {
   guaranteeNote: "cancel anytime",
 } as const;
 
-/* ------------------------------------------------------------------ *
- * The signed-in shell
- * ------------------------------------------------------------------ */
-
 export const appNav = [
   { href: "/dashboard", label: "Dashboard", icon: "home" },
   { href: "/leads", label: "Leads", icon: "inbox" },
@@ -348,10 +329,6 @@ export const appSupport = [
   { href: "mailto:Hello@growthrush.ai", label: "Help & support", icon: "help" },
   { href: "/legal", label: "Terms & policies", icon: "legal" },
 ] as const;
-
-/* ------------------------------------------------------------------ *
- * Leads
- * ------------------------------------------------------------------ */
 
 export const leadStatuses = [
   { id: "new", label: "New", tone: "brand" },

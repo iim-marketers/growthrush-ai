@@ -9,7 +9,6 @@ export const hero = {
   note: "No card needed · Live in under 10 minutes",
 } as const;
 
-/** The headline numbers, shown in the pill inside the hero card. */
 export const heroStats = [
   { value: "400+", label: "Happy Clients" },
   { value: "1000+", label: "Guaranteed Leads of Quality" },
@@ -142,7 +141,6 @@ export const caseStudies = [
   },
 ] as const;
 
-/** Scarcity band, mirroring the reference layout. */
 export const scarcity = {
   label: "Onboarding limited",
   text: "We cap new accounts each month so every campaign gets proper attention.",
@@ -223,43 +221,6 @@ export const testimonials = [
   },
 ] as const;
 
-export const plans = [
-  {
-    id: "ai",
-    badge: "Recommended",
-    name: "AI Lead Generation",
-    desc: "AI runs your Meta ads — hands-free.",
-    oldPrice: "₹2,999",
-    price: "₹2,399",
-    /* What Razorpay charges, in paise. Keep in step with `price`. */
-    amount: 239900,
-    features: [
-      "AI writes copy & designs creatives",
-      "Auto-targets your local audience",
-      "Optimises daily for lowest cost per lead",
-      "Leads to your WhatsApp instantly",
-    ],
-    highlighted: true,
-  },
-  {
-    id: "custom",
-    badge: "Most leads",
-    name: "Custom Lead Generation",
-    desc: "A dedicated expert plus the AI.",
-    oldPrice: "₹9,999",
-    price: "₹7,999",
-    amount: 799900,
-    features: [
-      "Everything in AI, plus a human ads expert",
-      "Hand-designed creatives & offers",
-      "Custom audiences + retargeting funnels",
-      "A landing page built to convert",
-      "Weekly optimisation + strategy calls",
-    ],
-    highlighted: false,
-  },
-] as const;
-
 export const faqs = [
   {
     q: "Do I need a Facebook page already?",
@@ -281,7 +242,6 @@ export const faqs = [
 
 export const footer = {
   tagline: "AI-run Facebook ads that send leads straight to your WhatsApp.",
-  /* Flat, because the footer renders these inline rather than as a column. */
   legal: [
     { label: "Terms", href: "/legal/terms" },
     { label: "Privacy", href: "/legal/privacy" },

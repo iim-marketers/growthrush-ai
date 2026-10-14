@@ -7,18 +7,14 @@ import { verify } from "@/lib/app-data";
 import { sendOtp } from "./sms";
 import { safeEqual, sha256 } from "./tokens";
 
-/* The challenge id rides in its own short-lived cookie, so the verify screen
-   knows which number it is for without putting the number in the URL. */
 const CHALLENGE_COOKIE = "gr_otp";
 
 const TTL_MS = 10 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
-/* Caps how many texts one number can trigger — SMS costs money. */
 const MAX_PER_HOUR = 5;
 
 export type Challenge = typeof otpChallenges.$inferSelect;
 
-/* The id salts the hash, so equal codes on two challenges hash differently. */
 const hashCode = (challengeId: string, code: string) =>
   sha256(`${challengeId}:${code}`);
 
@@ -26,7 +22,6 @@ export type StartResult =
   | { ok: true }
   | { ok: false; reason: "too-many" | "too-soon"; retryInSeconds?: number };
 
-/** Sends a fresh code to `phone` and points the challenge cookie at it. */
 export async function startChallenge(phone: string): Promise<StartResult> {
   const db = getDb();
 
@@ -81,7 +76,6 @@ export async function startChallenge(phone: string): Promise<StartResult> {
   return { ok: true };
 }
 
-/** The challenge the cookie points at, if it can still be answered. */
 export async function currentChallenge() {
   const id = (await cookies()).get(CHALLENGE_COOKIE)?.value;
   if (!id || !isUuid(id)) return null;
@@ -100,7 +94,6 @@ export type CheckResult =
   | { ok: true; phone: string }
   | { ok: false; reason: "expired" | "wrong" | "locked" };
 
-/** Spends one attempt on `code`. A correct code closes the challenge. */
 export async function checkCode(code: string): Promise<CheckResult> {
   const challenge = await currentChallenge();
   if (!challenge) return { ok: false, reason: "expired" };
@@ -129,7 +122,6 @@ export async function checkCode(code: string): Promise<CheckResult> {
     };
   }
 
-  /* Only one request may consume the code. */
   const [consumed] = await db
     .update(otpChallenges)
     .set({ consumedAt: new Date() })
@@ -147,7 +139,6 @@ export async function checkCode(code: string): Promise<CheckResult> {
   return { ok: true, phone: consumed.phone };
 }
 
-/** Seconds until another code may be requested for this challenge's number. */
 export function resendWait(challenge: Challenge) {
   const waited = (Date.now() - challenge.createdAt.getTime()) / 1000;
   return Math.max(0, Math.ceil(verify.resendSeconds - waited));

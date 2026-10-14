@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
-/** What the order asks for, in paise. */
 export type Charge = { amount: number; currency: string };
 
 const tones = {
@@ -53,11 +52,8 @@ export type PaymentNotice = {
   action: "retry" | "done" | "none";
 };
 
-/** Brand, success and warm accents, so the burst reads as ours. */
 const confettiColors = ["#4059e8", "#5b7fff", "#10b981", "#f97316", "#facc15"];
 
-/* A burst from each side of the screen, angled in over the modal. Loaded on
-   demand: only a successful payment ever needs it. */
 async function celebrate() {
   const { default: confetti } = await import("canvas-confetti");
   const shared = {
@@ -131,7 +127,6 @@ function ModalContent({
   const tone = tones[notice.tone];
   const Icon = notice.icon;
 
-  // Once per payment, as the modal lands on success.
   const celebrationKey =
     notice.tone === "success" ? (notice.paymentId ?? "success") : null;
   useEffect(() => {

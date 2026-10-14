@@ -8,10 +8,6 @@ import { Frame } from "./frame";
 import { SectionLabel } from "./how-it-works";
 import { faqs } from "@/lib/landing-data";
 
-/**
- * Frame 7 — objection handling. Natural height: an accordion that opens must
- * be free to grow, so pinning it to one screen would fight its own interaction.
- */
 export function Faq() {
   const [open, setOpen] = useState<number | null>(null);
 

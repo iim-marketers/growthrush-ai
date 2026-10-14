@@ -40,7 +40,6 @@ export function FlipNumber({
   value: string;
   className?: string;
   turns?: number;
-  /** Seconds to wait before the reels start, to fall in behind an entrance. */
   delay?: number;
 }) {
   const reduced = useReducedMotion();

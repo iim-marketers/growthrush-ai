@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 
 const DISMISS_KEY = "apk-popup-dismissed";
 
-/** Nudge to install the native Android build. Shown once per browser session. */
 export function ApkPopup() {
   const [open, setOpen] = useState(false);
 

@@ -1,22 +1,11 @@
 import "server-only";
-import { and, desc, eq, gte } from "drizzle-orm";
+import { and, asc, desc, eq, gte } from "drizzle-orm";
 import { cache } from "react";
 import { getDb } from "@/db";
-import { leads, orders } from "@/db/schema";
+import { leads, orders, plans } from "@/db/schema";
 import type { Lead } from "@/components/app/lead-row";
-import { plans } from "@/lib/landing-data";
 
-/**
- * Reads for the signed-in screens. Every function takes the user id from
- * lib/auth/dal.ts and filters on it — never an id from the browser.
- */
-
-/* Customers are in India, so "today" and month boundaries are IST. */
 const TZ = "Asia/Kolkata";
-
-/* ------------------------------------------------------------------ *
- * Leads
- * ------------------------------------------------------------------ */
 
 export const getLeads = cache(async (userId: string): Promise<Lead[]> => {
   const rows = await getDb()
@@ -44,7 +33,6 @@ export type LeadStats = {
   byDay: { day: string; leads: number }[];
 };
 
-/** This month vs last, and a count per day for the last 30 days. */
 export async function getLeadStats(userId: string): Promise<LeadStats> {
   const now = new Date();
   const monthStart = istMonthStart(now, 0);
@@ -84,9 +72,13 @@ export async function getLeadStats(userId: string): Promise<LeadStats> {
   return { thisMonth, lastMonth, byDay: [...byDay.values()] };
 }
 
-/* ------------------------------------------------------------------ *
- * Plan & payments
- * ------------------------------------------------------------------ */
+export const getPlans = cache(async () => {
+  return getDb().select().from(plans).orderBy(asc(plans.sortOrder));
+});
+
+export async function getOfferedPlans() {
+  return (await getPlans()).filter((plan) => plan.active);
+}
 
 export const getPaidOrders = cache(async (userId: string) => {
   return getDb()
@@ -104,15 +96,20 @@ export const getPaidOrders = cache(async (userId: string) => {
     .orderBy(desc(orders.paidAt));
 });
 
-/* A payment buys one calendar month; there is no subscription yet. */
 export async function getLatestPlan(userId: string) {
-  const [latest] = await getPaidOrders(userId);
+  const [[latest], all] = await Promise.all([
+    getPaidOrders(userId),
+    getPlans(),
+  ]);
   if (!latest?.paidAt) return null;
 
-  const plan = plans.find((p) => p.id === latest.planId);
+  const plan = all.find((p) => p.id === latest.planId);
   if (!plan) return null;
 
-  const renewsOn = addMonth(latest.paidAt);
+  const renewsOn =
+    plan.billingPeriod === "week"
+      ? new Date(latest.paidAt.getTime() + 7 * DAY_MS)
+      : addMonth(latest.paidAt);
   return {
     plan,
     paidAt: latest.paidAt,
@@ -154,10 +151,6 @@ function addMonth(date: Date) {
   return next;
 }
 
-/* ------------------------------------------------------------------ *
- * Formatting
- * ------------------------------------------------------------------ */
-
 const DAY_MS = 24 * 60 * 60 * 1000;
 const CHART_DAYS = 30;
 
@@ -178,12 +171,6 @@ export function formatMonth(date: Date) {
   }).format(date);
 }
 
-export function formatRupees(paise: number) {
-  return `₹${(paise / 100).toLocaleString("en-IN", {
-    maximumFractionDigits: 2,
-  })}`;
-}
-
 function timeAgo(then: Date, now: Date) {
   const minutes = Math.floor((now.getTime() - then.getTime()) / 60000);
   if (minutes < 1) return "Just now";
@@ -196,7 +183,6 @@ function timeAgo(then: Date, now: Date) {
   return formatDate(then);
 }
 
-/** Midnight IST on the 1st of this month (offset 0) or an earlier one. */
 function istMonthStart(now: Date, offset: number) {
   const [year, month] = new Intl.DateTimeFormat("en-CA", {
     timeZone: TZ,

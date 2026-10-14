@@ -2,12 +2,6 @@ import { Check } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { pitch } from "@/lib/data";
 
-/**
- * The two-column auth screen: value proposition on the left from `lg` up, and
- * whatever card the route supplies on the right. Lifted out of the login page
- * so `/login/verify` inherits the same glows, spacing and breakpoints instead
- * of a copy that drifts.
- */
 export function AuthShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="theme-light relative min-h-dvh w-full bg-background">
@@ -24,7 +18,6 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** The card the auth screens sit in. Same panel, different contents. */
 export function AuthCard({ children }: { children: React.ReactNode }) {
   return (
     <div className="glass-panel glass-panel-roomy animate-slide-up w-full max-w-104 shrink-0 sm:max-w-108 lg:mx-0">
@@ -38,7 +31,6 @@ export function AuthCard({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** The value proposition. Only rendered from lg up, where there is room for it. */
 function PitchPanel() {
   return (
     <section className="hidden max-w-xl flex-col lg:flex">

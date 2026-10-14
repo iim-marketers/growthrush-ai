@@ -26,14 +26,15 @@ import { LeadsChart } from "@/components/app/leads-chart";
 import { Button } from "@/components/ui/button";
 import { goals, monthlyBudgets } from "@/lib/app-data";
 import { getBusiness, requireOnboardedUser } from "@/lib/auth/dal";
-import { plans } from "@/lib/landing-data";
 import {
   billingCycle,
   formatDate,
   getLatestPlan,
   getLeadStats,
   getLeads,
+  getOfferedPlans,
 } from "@/lib/queries";
+import { formatRupees } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -45,17 +46,18 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage() {
   const user = await requireOnboardedUser();
-  const [business, stats, leads, latest] = await Promise.all([
+  const [business, stats, leads, latest, plans] = await Promise.all([
     getBusiness(user.id),
     getLeadStats(user.id),
     getLeads(user.id),
     getLatestPlan(user.id),
+    getOfferedPlans(),
   ]);
 
   const active = latest && !latest.expired ? latest : null;
   const chosenPlan =
-    latest?.plan ??
-    plans.find((plan) => plan.id === business?.planId) ??
+    active?.plan ??
+    plans.find((plan) => plan.id === (latest?.plan.id ?? business?.planId)) ??
     plans[0];
   const now = new Date();
   const cycle = active && billingCycle(active);
@@ -99,7 +101,8 @@ export default async function DashboardPage() {
             </Link>
           </Button>
           <p className="text-xs text-white/60">
-            {chosenPlan.name} · {chosenPlan.price}/month + GST
+            {chosenPlan.name} · {formatRupees(chosenPlan.pricePaise)}/
+            {chosenPlan.billingPeriod} + GST
           </p>
         </div>
       </DashboardHero>
@@ -119,7 +122,7 @@ export default async function DashboardPage() {
             },
             {
               title: "Choose a plan",
-              detail: `${chosenPlan.name} · ${chosenPlan.price}/month + GST`,
+              detail: `${chosenPlan.name} · ${formatRupees(chosenPlan.pricePaise)}/${chosenPlan.billingPeriod} + GST`,
               done: false,
             },
             {

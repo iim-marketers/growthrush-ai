@@ -4,7 +4,6 @@ import { Reveal, Stagger, StaggerItem } from "./motion-primitives";
 import { Frame, cardRail, cardRailItem } from "./frame";
 import { steps } from "@/lib/landing-data";
 
-/** Frame 3 — the mechanism, in three steps. */
 export function HowItWorks() {
   return (
     <Frame id="how-it-works">
@@ -19,7 +18,6 @@ export function HowItWorks() {
       </Reveal>
 
       <Stagger className={`relative mt-14 gap-6 md:mt-10 md:grid-cols-3 ${cardRail}`}>
-        {/* Connecting rule behind the cards on wide screens. */}
         <div
           className="pointer-events-none absolute top-13 right-[16%] left-[16%] hidden h-px bg-linear-to-r from-transparent via-white/15 to-transparent md:block"
           aria-hidden

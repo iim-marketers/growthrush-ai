@@ -4,7 +4,6 @@ export const brand = {
   rating: "★ 4.9 • 4,200+",
 } as const;
 
-/** Shown alongside the login form on wide screens. */
 export const pitch = {
   headline: "Leads that land in your",
   headlineAccent: "WhatsApp",

@@ -116,7 +116,6 @@ export function LeadsBoard({ leads }: { leads: Lead[] }) {
       <ToggleGroup
         type="single"
         value={filter}
-        /* A single toggle group can be emptied; keep one filter always on. */
         onValueChange={(value) => value && setFilter(value as Filter)}
         aria-label="Filter by status"
         spacing={3}
@@ -194,7 +193,6 @@ export function LeadsBoard({ leads }: { leads: Lead[] }) {
                     <div className="flex items-center gap-3">
                       <LeadAvatar name={lead.name} />
                       <span className="min-w-0">
-                        {/* The row click is a mouse shortcut; this is the keyboard control. */}
                         <button
                           type="button"
                           onClick={(event) => {
@@ -284,7 +282,6 @@ function LeadSheet({
       setCopied(true);
       setTimeout(() => setCopied(false), 1600);
     } catch {
-      /* Clipboard blocked — the number is on screen to copy by hand. */
     }
   };
 
