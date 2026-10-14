@@ -19,11 +19,8 @@ export function VerifyForm({
   initialWait,
   demoCode,
 }: {
-  /** The number the code went to, already masked by the server. */
   masked: string;
-  /** Seconds left before another code may be sent. */
   initialWait: number;
-  /** Set only while no SMS gateway is wired up — see lib/auth/sms.ts. */
   demoCode: string | null;
 }) {
   const [state, action, pending] = useActionState(verifyOtp, undefined);
@@ -31,7 +28,6 @@ export function VerifyForm({
     Array.from({ length: verify.length }, () => ""),
   );
   const [secondsLeft, setSecondsLeft] = useState(initialWait);
-  /* Editing the code hides the last error; a new submit brings a new one. */
   const [dismissed, setDismissed] = useState<typeof state>(undefined);
   const [resendError, setResendError] = useState<string | null>(null);
   const [resending, startResend] = useTransition();
@@ -40,7 +36,6 @@ export function VerifyForm({
   const error = state !== dismissed ? state?.error : undefined;
   const wrong = Boolean(error);
 
-  /* Put the caret back in the first box after a failed attempt. */
   useEffect(() => {
     if (state?.error) boxes.current[0]?.focus();
   }, [state]);
@@ -194,8 +189,6 @@ export function VerifyForm({
   );
 }
 
-/* Stands in for the real SMS while there is no gateway, so the flow is not a
-   locked door in development. */
 function DemoSms({ code, onPaste }: { code: string; onPaste: () => void }) {
   return (
     <div className="rhythm-md mt-4 flex items-center gap-3 rounded-xl border border-hairline bg-surface-subtle p-3">

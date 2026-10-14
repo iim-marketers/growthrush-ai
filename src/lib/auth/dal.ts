@@ -12,7 +12,6 @@ import { getSessionUser } from "./session";
  * against the database, so they are the check that counts.
  */
 
-/** Where a signed-in user belongs right now. */
 export function homeFor(user: { onboardedAt: Date | null }) {
   return user.onboardedAt ? "/dashboard" : "/onboarding";
 }
@@ -23,7 +22,6 @@ export async function requireUser() {
   return user;
 }
 
-/** For the app screens: signed in and finished with setup. */
 export async function requireOnboardedUser() {
   const user = await requireUser();
   if (!user.onboardedAt) redirect("/onboarding");

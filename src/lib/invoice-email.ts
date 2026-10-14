@@ -5,8 +5,9 @@ import { businesses, orders } from "@/db/schema";
 import { billingDetailsOf } from "@/lib/billing";
 import { stateName, taxLines } from "@/lib/gst";
 import { invoiceEmailHtml } from "@/lib/invoice-email-template";
-import { plans } from "@/lib/landing-data";
-import { formatDate, formatRupees } from "@/lib/queries";
+import { planFeeLabel, type Plan } from "@/lib/plans";
+import { formatDate, getPlans } from "@/lib/queries";
+import { formatRupees } from "@/lib/utils";
 
 const DEFAULT_FROM = "growthrush.ai <onboarding@resend.dev>";
 
@@ -37,11 +38,12 @@ export async function emailInvoice(orderId: string) {
       .where(eq(businesses.userId, order.userId))
       .limit(1);
     if (!business?.billingEmail) throw new Error("No billing email");
+    const plan = (await getPlans()).find((p) => p.id === order.planId);
 
     await send({
       to: business.billingEmail,
       subject: `Invoice ${order.receipt} · ${formatRupees(order.amountPaise)} paid to growthrush.ai`,
-      html: invoiceEmailHtml(emailContent(order, business)),
+      html: invoiceEmailHtml(emailContent(order, business, plan)),
       idempotencyKey: `invoice-${order.id}`,
     });
   } catch (error) {
@@ -87,8 +89,9 @@ async function send(email: {
 function emailContent(
   order: typeof orders.$inferSelect,
   business: typeof businesses.$inferSelect,
+  plan: Plan | undefined,
 ) {
-  const planName = plans.find((p) => p.id === order.planId)?.name ?? order.planId;
+  const planName = plan?.name ?? order.planId;
   const billing = billingDetailsOf(business);
   const stateCode =
     order.placeOfSupply?.match(/\((\d{2})\)$/)?.[1] ?? billing?.stateCode;
@@ -115,7 +118,7 @@ function emailContent(
     items: [
       {
         label: planName,
-        detail: "Monthly plan fee",
+        detail: plan ? planFeeLabel(plan) : "Plan fee",
         paise: order.amountPaise - order.taxPaise,
       },
       ...tax,

@@ -5,11 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 @custom-variant desktop-short (@media (min-width: 64rem) and (max-height: 820px));
 
-/* ------------------------------------------------------------------
-   growthrush.ai design tokens
-   ------------------------------------------------------------------ */
 :root {
-  /* brand surface */
   --bg-color: #050814;
   --card-bg: #060d1d;
   --text-primary: #ffffff;
@@ -31,14 +27,12 @@
   --border-color: rgba(255, 255, 255, 0.1);
   --border-strong: rgba(255, 255, 255, 0.2);
 
-  /* The frosted auth panel and the ambient glows behind it. */
   --panel-bg: rgba(6, 13, 29, 0.6);
   --panel-border: rgba(255, 255, 255, 0.08);
   --panel-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   --glow-brand: rgba(91, 127, 255, 0.15);
   --glow-warm: rgba(249, 115, 22, 0.08);
 
-  /* Vertical spacing scale — compacted on short viewports further down. */
   --screen-pad-y: 1.5rem;
   --panel-pad-y: 2rem;
   --panel-pad-y-roomy: 2.5rem;
@@ -46,7 +40,6 @@
   --rhythm-lg: 2rem;
   --rhythm-md: 1.5rem;
 
-  /* Palette-specific shadcn values. The derived ones are shared, below. */
   --popover: #0a0f24;
   --secondary: rgba(255, 255, 255, 0.06);
   --muted: rgba(255, 255, 255, 0.05);
@@ -95,7 +88,6 @@ body:has([data-light-portals]) {
   --glow-brand: rgba(64, 89, 232, 0.1);
   --glow-warm: rgba(249, 115, 22, 0.07);
 
-  /* Palette-specific shadcn values, mirroring the dark block above. */
   --popover: #ffffff;
   --secondary: #f1f5f9;
   --muted: #f1f5f9;
@@ -143,12 +135,6 @@ body:has([data-light-portals]) {
   --sidebar-ring: var(--brand);
 }
 
-/*
- * The root layout paints `body`/`.app-shell` from the dark `:root`, which the
- * light screens would otherwise show through overscroll and the scrollbar
- * gutter. Reach up from the themed subtree instead of threading a prop down
- * from the root layout, which does not know the route.
- */
 html:has(.theme-light) {
   color-scheme: light;
 }
@@ -157,10 +143,6 @@ body:has(.theme-light),
   background-color: #ffffff;
 }
 
-/*
- * Screens that pin their header and footer and scroll only the middle. Stop
- * the page itself rubber-banding on a trackpad, which drags the pinned bars.
- */
 html:has([data-fixed-frame]),
 body:has([data-fixed-frame]) {
   overscroll-behavior: none;
@@ -199,7 +181,6 @@ body:has([data-fixed-frame]) {
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* brand-named utilities: bg-brand, text-brand, border-brand … */
   --color-brand: var(--brand);
   --color-brand-soft: var(--brand-soft);
   --color-ink: var(--text-primary);
@@ -238,8 +219,6 @@ body:has([data-fixed-frame]) {
     @apply border-border outline-ring/50;
   }
   html {
-    /* Reserve the scrollbar gutter on every route so the centred shell does not
-       shift sideways when navigating between short and tall screens. */
     scrollbar-gutter: stable;
   }
   body {
@@ -265,7 +244,6 @@ body:has([data-fixed-frame]) {
     overflow-x: clip;
   }
 
-  /* Frosted panel the login screen sits in. */
   .glass-panel {
     @apply relative z-[1] flex w-full flex-col rounded-[1.25rem] border;
     padding: var(--panel-pad-y) 1.5rem;
@@ -276,16 +254,10 @@ body:has([data-fixed-frame]) {
     box-shadow: var(--panel-shadow);
   }
 
-  /* Login uses a slightly roomier version of the same panel. */
   .glass-panel-roomy {
     padding: var(--panel-pad-y-roomy) var(--panel-pad-x-roomy);
   }
 
-  /*
-   * Vertical rhythm. These collapse on short viewports (see the max-height
-   * query below) so a screen that nearly fits a laptop window stops
-   * triggering a scrollbar over a handful of pixels.
-   */
   .rhythm-lg {
     margin-bottom: var(--rhythm-lg);
   }
@@ -293,19 +265,16 @@ body:has([data-fixed-frame]) {
     margin-bottom: var(--rhythm-md);
   }
 
-  /* Outer breathing room around a centred screen. */
   .screen-pad-y {
     padding-block: var(--screen-pad-y);
   }
 
-  /* Soft radial glows behind the glass panels. */
   .glow {
     @apply pointer-events-none absolute z-0 rounded-full;
     width: clamp(260px, 45vw, 620px);
     height: clamp(260px, 45vw, 620px);
   }
 
-  /* Tints for `.glow`, as classes so they follow the theme's tokens. */
   .glow-brand {
     background: radial-gradient(circle, var(--glow-brand) 0%, transparent 70%);
   }
@@ -352,10 +321,6 @@ body:has([data-fixed-frame]) {
   }
 }
 
-/* ------------------------------------------------------------------
-   Short viewports (most laptop windows). Tightens the vertical rhythm so
-   screens fit without a scrollbar appearing over a few pixels of overflow.
-   ------------------------------------------------------------------ */
 @media (max-height: 800px) {
   :root {
     --panel-pad-y: 1.25rem;
@@ -365,7 +330,6 @@ body:has([data-fixed-frame]) {
   }
 }
 
-/* Wider phones and up: the panel can afford more horizontal padding. */
 @media (min-width: 400px) {
   :root {
     --panel-pad-x-roomy: 1.75rem;
@@ -378,7 +342,6 @@ body:has([data-fixed-frame]) {
   }
 }
 
-/* Very short viewports (small phones, landscape). Squeeze the rhythm further. */
 @media (max-height: 640px) {
   :root {
     --screen-pad-y: 0.75rem;
@@ -389,10 +352,6 @@ body:has([data-fixed-frame]) {
   }
 }
 
-/*
- * Landscape phones. Too little height for the full stack, so tighten hard and
- * drop the in-card logo — the heading carries the context there.
- */
 @media (max-height: 480px) {
   :root {
     --screen-pad-y: 0.5rem;
@@ -405,7 +364,6 @@ body:has([data-fixed-frame]) {
   }
 }
 
-/* Honour the OS "reduce motion" setting for the ambient animations. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

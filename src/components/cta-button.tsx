@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-/** Full-width brand CTA that anchors the bottom of every onboarding step. */
 export function CtaButton({
   children,
   className,
@@ -17,7 +16,6 @@ export function CtaButton({
   style?: React.CSSProperties;
   onClick?: () => void;
   disabled?: boolean;
-  /** `submit` where the button ends a form, so Enter works from the inputs. */
   type?: "button" | "submit";
 }) {
   return (
@@ -30,7 +28,6 @@ export function CtaButton({
         "btn-glow h-auto w-full gap-2 rounded-xl bg-brand px-6 py-4",
         "font-display text-lg font-bold text-white",
         "transition-transform hover:-translate-y-0.5 hover:bg-brand active:translate-y-0",
-        /* Drop the lift and the glow when the button is not actionable. */
         "disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none",
         className,
       )}

@@ -4,10 +4,10 @@ import Link from "next/link";
 import { Check, Info } from "lucide-react";
 import { Reveal, Stagger, StaggerItem } from "./motion-primitives";
 import { SectionLabel } from "./how-it-works";
-import { plans } from "@/lib/landing-data";
-import { cn } from "@/lib/utils";
+import type { Plan } from "@/lib/plans";
+import { cn, formatRupees } from "@/lib/utils";
 
-export function Pricing() {
+export function Pricing({ plans }: { plans: Plan[] }) {
   return (
     <section id="pricing" className="scroll-mt-24 py-20 sm:py-28">
       <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -17,7 +17,8 @@ export function Pricing() {
             Plans that pay for themselves
           </h2>
           <p className="mt-4 text-base text-subtle sm:text-lg">
-            Both run your Facebook ads. Cancel anytime.
+            Try it for a week, or go straight to fully managed monthly growth.
+            No lock-in either way.
           </p>
         </Reveal>
 
@@ -32,28 +33,36 @@ export function Pricing() {
                     : "border-white/10 bg-card/60",
                 )}
               >
-                <span
-                  className={cn(
-                    "absolute -top-3 right-7 rounded-full px-3 py-1 text-[11px] font-extrabold tracking-wide text-white uppercase",
-                    plan.highlighted ? "bg-success" : "bg-orange",
-                  )}
-                >
-                  {plan.badge}
-                </span>
+                {plan.badge && (
+                  <span
+                    className={cn(
+                      "absolute -top-3 right-7 rounded-full px-3 py-1 text-[11px] font-extrabold tracking-wide text-white uppercase",
+                      plan.highlighted ? "bg-success" : "bg-orange",
+                    )}
+                  >
+                    {plan.badge}
+                  </span>
+                )}
 
                 <h3 className="font-display text-xl font-extrabold text-ink">
                   {plan.name}
                 </h3>
-                <p className="mt-1.5 text-sm text-subtle">{plan.desc}</p>
+                <p className="mt-1.5 text-sm text-subtle">
+                  {plan.description}
+                </p>
 
                 <div className="mt-6 flex items-baseline gap-2">
-                  <span className="text-sm text-faint line-through">
-                    {plan.oldPrice}
-                  </span>
+                  {plan.compareAtPaise ? (
+                    <span className="text-sm text-faint line-through">
+                      {formatRupees(plan.compareAtPaise)}
+                    </span>
+                  ) : null}
                   <span className="font-display text-4xl font-extrabold text-ink">
-                    {plan.price}
+                    {formatRupees(plan.pricePaise)}
                   </span>
-                  <span className="text-sm text-subtle">/mo + GST</span>
+                  <span className="text-sm text-subtle">
+                    /{plan.billingPeriod} + GST
+                  </span>
                 </div>
 
                 <ul className="mt-7 flex flex-1 flex-col gap-3">

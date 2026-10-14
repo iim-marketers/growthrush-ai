@@ -19,10 +19,6 @@ export type FormState = { error?: string } | undefined;
 
 const SEND_FAILED = "We couldn't send the code. Please try again in a minute.";
 
-/* ------------------------------------------------------------------ *
- * /login — ask for a code
- * ------------------------------------------------------------------ */
-
 export async function requestOtp(
   _: FormState,
   formData: FormData,
@@ -37,8 +33,6 @@ export async function requestOtp(
   const result = await start(phone);
   if (result === "failed") return { error: SEND_FAILED };
   if (!result.ok) {
-    /* A double tap, or back-and-forward: the code sent moments ago to this
-       number is still good, so carry on to it rather than complain. */
     const pending =
       result.reason === "too-soon" ? await currentChallenge() : null;
     if (pending?.phone !== phone) return startError(result);
@@ -49,10 +43,6 @@ export async function requestOtp(
      from the app then goes to where they came from, not to a stale form. */
   redirect("/login/verify", RedirectType.replace);
 }
-
-/* ------------------------------------------------------------------ *
- * /login/verify — answer it
- * ------------------------------------------------------------------ */
 
 export async function verifyOtp(
   _: FormState,
@@ -117,16 +107,10 @@ export async function resendOtp(): Promise<ResendState> {
   return { ok: true, waitSeconds: verify.resendSeconds };
 }
 
-/* ------------------------------------------------------------------ *
- * Everywhere — sign out
- * ------------------------------------------------------------------ */
-
 export async function signOut() {
   await deleteSession();
   redirect("/");
 }
-
-/* ------------------------------------------------------------------ */
 
 async function start(phone: string): Promise<StartResult | "failed"> {
   try {

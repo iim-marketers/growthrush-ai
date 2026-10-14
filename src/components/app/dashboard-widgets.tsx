@@ -140,7 +140,6 @@ export function DashboardHero({
   );
 }
 
-/** Tiny server-rendered trend line for a KPI card. */
 function Sparkline({ values }: { values: number[] }) {
   if (values.length < 2) return null;
   const max = Math.max(1, ...values);
@@ -184,7 +183,6 @@ const kpiTones = {
   success: "bg-success/12 text-success",
 } as const;
 
-/** `upIsGood` picks the colour: a falling cost per lead is good news. */
 export function KpiCard({
   label,
   value,
@@ -283,7 +281,6 @@ export function KpiCard({
   );
 }
 
-/** Stands in for the ad metrics until Meta reporting is connected. */
 export function AdMetricsCard({
   metrics,
 }: {

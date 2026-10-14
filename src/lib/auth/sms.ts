@@ -26,7 +26,6 @@ export class SmsNotConfiguredError extends Error {
   }
 }
 
-/** Picks a code for `phone`, sends it, and returns it so it can be hashed. */
 export async function sendOtp(phone: string) {
   if (otpStubEnabled()) return STUB_CODE;
 

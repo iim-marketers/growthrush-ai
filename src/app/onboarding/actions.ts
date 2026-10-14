@@ -6,6 +6,7 @@ import { getDb } from "@/db";
 import { businesses, users } from "@/db/schema";
 import { getSessionUser } from "@/lib/auth/session";
 import { cleanAnswers, isComplete } from "@/lib/onboarding";
+import { getOfferedPlans } from "@/lib/queries";
 
 export type SaveResult = { error: string } | undefined;
 
@@ -20,12 +21,15 @@ export async function saveOnboarding(
     return { error: "Your setup is locked now that your campaign is built." };
   }
 
-  const answers = cleanAnswers(input);
+  const plans = await getOfferedPlans();
+  const answers = cleanAnswers(
+    input,
+    plans.map((plan) => plan.id),
+  );
   if (complete && !isComplete(answers)) {
     return { error: "A few answers are missing. Go back and fill them in." };
   }
 
-  /* Empty means unanswered, which the table stores as null. */
   const row = {
     name: answers.business || null,
     category: answers.category || null,

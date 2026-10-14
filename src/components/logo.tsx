@@ -2,17 +2,11 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { brand } from "@/lib/data";
 
-/**
- * The real wordmark, in two tones. `light` is the white-lettered cut for the
- * dark app surface; `dark` is the black-lettered original, for the white
- * surfaces (the hero's logo pill, print). Both share the purple mark.
- */
 const wordmark = {
   light: "/brand/wordmark-light.webp",
   dark: "/brand/wordmark.webp",
 } as const;
 
-/** Height only — the aspect ratio comes from the file (1078 × 166). */
 const sizes = {
   sm: "h-5 sm:h-6",
   md: "h-6 sm:h-7",
@@ -30,7 +24,6 @@ export function Logo({
   tone?: keyof typeof wordmark;
   className?: string;
   glow?: boolean;
-  /** Above the fold: skip lazy-loading. (`priority` is deprecated in Next 16.) */
   eager?: boolean;
 }) {
   return (
@@ -73,7 +66,6 @@ export function LogoMark({
   );
 }
 
-/** The mark on its own, for favicons and tight spots. */
 export function TrendIcon({ size = 18 }: { size?: number }) {
   return (
     <svg

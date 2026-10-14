@@ -14,7 +14,6 @@ export function SiteFooter() {
             </p>
           </div>
 
-          {/* Inline, not stacked: three links do not need a titled column. */}
           <nav
             aria-label="Legal"
             className="flex flex-wrap items-center gap-x-6 gap-y-2 sm:pt-1"

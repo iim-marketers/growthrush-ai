@@ -5,7 +5,6 @@ import type { LegalDoc } from "@/lib/legal/types";
 
 const OFFSET = 96;
 
-/** Id of the section the reader is currently level with. */
 function useActiveSection(ids: string[]) {
   const [active, setActive] = useState(ids[0] ?? "");
 
@@ -48,7 +47,6 @@ function useActiveSection(ids: string[]) {
   return active;
 }
 
-/** Jump list rendered beside the document on wide screens. */
 export function LegalToc({ doc }: { doc: LegalDoc }) {
   const ids = useMemo(
     () => doc.sections.map((section) => section.id),

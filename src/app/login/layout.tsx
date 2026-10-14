@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-/* The light screens want white browser chrome, not the landing page's navy. */
 export const viewport: Viewport = {
   themeColor: "#ffffff",
   colorScheme: "light",
@@ -20,7 +19,6 @@ export const viewport: Viewport = {
 export default async function LoginLayout({
   children,
 }: LayoutProps<"/login">) {
-  /* Already signed in? Skip the form. */
   const user = await getSessionUser();
   if (user) redirect(homeFor(user));
 

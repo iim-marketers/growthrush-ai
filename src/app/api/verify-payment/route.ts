@@ -70,7 +70,6 @@ export async function POST(request: Request) {
     }
 
     if (order.status === "paid") {
-      // A repeated request for the same payment is fine.
       if (order.razorpayPaymentId !== paymentId) {
         return Response.json(
           { error: "This order has already been paid." },

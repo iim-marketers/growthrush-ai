@@ -4,7 +4,8 @@ import { getBusiness } from "@/lib/auth/dal";
 import { getSessionUser } from "@/lib/auth/session";
 import { billingDetailsOf } from "@/lib/billing";
 import { gstFor, stateName } from "@/lib/gst";
-import { plans } from "@/lib/landing-data";
+import { planFeeLabel } from "@/lib/plans";
+import { getOfferedPlans } from "@/lib/queries";
 import {
   MIN_ORDER_AMOUNT,
   getRazorpay,
@@ -21,11 +22,14 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
 
   // The client only names the plan; the price always comes from the server.
-  const plan = plans.find((p) => p.id === body?.planId);
+  const plan = (await getOfferedPlans()).find((p) => p.id === body?.planId);
   if (!plan) {
     return Response.json({ error: "Unknown plan." }, { status: 400 });
   }
-  if (!Number.isInteger(plan.amount) || plan.amount < MIN_ORDER_AMOUNT) {
+  if (
+    !Number.isInteger(plan.pricePaise) ||
+    plan.pricePaise < MIN_ORDER_AMOUNT
+  ) {
     return Response.json(
       { error: `Amount must be at least ${MIN_ORDER_AMOUNT} paise.` },
       { status: 400 },
@@ -51,7 +55,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const gst = gstFor(plan.amount, billing.stateCode);
+  const gst = gstFor(plan.pricePaise, billing.stateCode);
   const placeOfSupply = `${stateName(billing.stateCode)} (${billing.stateCode})`;
 
   let invoice;
@@ -78,12 +82,11 @@ export async function POST(request: Request) {
           country: "in",
         },
       },
-      // The Invoices API can't apply GST, so tax goes on as its own lines.
       line_items: [
         {
           name: plan.name,
-          description: "Monthly plan fee",
-          amount: plan.amount,
+          description: planFeeLabel(plan),
+          amount: plan.pricePaise,
           currency: "INR",
           quantity: 1,
         },

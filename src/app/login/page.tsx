@@ -13,7 +13,6 @@ export default function LoginPage() {
   const [agreed, setAgreed] = useState(false);
   const [number, setNumber] = useState("");
 
-  /* Ten digits starting 6–9; the server checks the same rule again. */
   const complete = toE164(number) !== null;
 
   return (

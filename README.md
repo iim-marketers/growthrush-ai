@@ -50,12 +50,17 @@ what the AI "found" and ask for the sale:
 | 5 | Live audience | Reach, and who is searching nearby |
 | 6 | Lead readiness | Score gauge and today-vs-with-AI |
 | 7 | Your ad is ready | Preview of the generated Meta ad |
-| 8 | Pick your plan | The two landing-page plans |
+| 8 | Pick your plan | The plans on sale, from the `plans` table |
 
 Steps 5–8 deliberately reuse the marketing numbers: the reach is `heroStats[0]`,
-the "6 → 120 leads" comparison is the first entry in `caseStudies`, and the plan
-cards read straight from `plans`. Change a figure on the landing page and the
-onboarding flow follows, rather than quoting a second set of numbers.
+and the "6 → 120 leads" comparison is the first entry in `caseStudies`. Change a
+figure on the landing page and the onboarding flow follows, rather than quoting a
+second set of numbers.
+
+Plans live in the `plans` table, not in code. Edit a row — `price_paise` is in
+paise and excludes GST, so ₹25,000 is `2500000` — and onboarding, billing,
+the dashboard and the next Razorpay order all pick it up on the next request.
+Set `active` to false to take a plan off sale; past orders still show its name.
 
 There is deliberately **no navbar**, matching the reference site: the logo sits at
 the top of the hero and the page relies on repeated CTAs instead of nav links.

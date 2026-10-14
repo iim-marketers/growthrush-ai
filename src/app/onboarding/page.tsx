@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { OnboardingWizard } from "@/components/onboarding/wizard";
 import { getBusiness, requireUser } from "@/lib/auth/dal";
 import { cleanAnswers, emptyAnswers, type Answers } from "@/lib/onboarding";
+import { getOfferedPlans } from "@/lib/queries";
 
 export const metadata: Metadata = {
   title: "Set up your campaign",
@@ -12,7 +13,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-/* The light screens want white browser chrome, not the landing page's navy. */
 export const viewport: Viewport = {
   themeColor: "#ffffff",
   colorScheme: "light",
@@ -21,19 +21,31 @@ export const viewport: Viewport = {
 export default async function OnboardingPage() {
   const user = await requireUser();
   if (user.onboardedAt) redirect("/dashboard");
-  const business = await getBusiness(user.id);
+  const [business, plans] = await Promise.all([
+    getBusiness(user.id),
+    getOfferedPlans(),
+  ]);
+  const planIds = plans.map((plan) => plan.id);
 
-  const saved: Answers = cleanAnswers({
-    business: business?.name ?? emptyAnswers.business,
-    category: business?.category ?? emptyAnswers.category,
-    city: business?.city ?? emptyAnswers.city,
-    listing: business?.listingId ?? emptyAnswers.listing,
-    goal: business?.goal ?? emptyAnswers.goal,
-    budget: business?.budgetBand ?? emptyAnswers.budget,
-    plan: business?.planId ?? emptyAnswers.plan,
-  } satisfies Answers);
+  const saved: Answers = cleanAnswers(
+    {
+      business: business?.name ?? emptyAnswers.business,
+      category: business?.category ?? emptyAnswers.category,
+      city: business?.city ?? emptyAnswers.city,
+      listing: business?.listingId ?? emptyAnswers.listing,
+      goal: business?.goal ?? emptyAnswers.goal,
+      budget: business?.budgetBand ?? emptyAnswers.budget,
+      plan: business?.planId ?? emptyAnswers.plan,
+    } satisfies Answers,
+    planIds,
+  );
+  saved.plan ||= planIds[0] ?? "";
 
   return (
-    <OnboardingWizard saved={saved} onboarded={Boolean(user.onboardedAt)} />
+    <OnboardingWizard
+      saved={saved}
+      plans={plans}
+      onboarded={Boolean(user.onboardedAt)}
+    />
   );
 }

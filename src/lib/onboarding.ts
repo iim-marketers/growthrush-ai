@@ -5,9 +5,7 @@ import {
   monthlyBudgets,
   notListed,
 } from "@/lib/app-data";
-import { plans } from "@/lib/landing-data";
 
-/** What the onboarding wizard collects. Empty string means "not answered". */
 export type Answers = {
   business: string;
   category: string;
@@ -25,7 +23,7 @@ export const emptyAnswers: Answers = {
   listing: "",
   goal: "",
   budget: "",
-  plan: plans[0].id,
+  plan: "",
 };
 
 const oneOf = (allowed: readonly string[]) => (value: string) =>
@@ -34,29 +32,32 @@ const oneOf = (allowed: readonly string[]) => (value: string) =>
 const text = (max: number) => (value: string) =>
   value.replace(/\s+/g, " ").trim().slice(0, max);
 
-/* Choices must be one of the options on screen; free text is tidied and
-   capped. Anything else becomes "not answered" rather than being stored. */
-const cleaners: Record<keyof Answers, (value: string) => string> = {
+const cleaners: Record<
+  Exclude<keyof Answers, "plan">,
+  (value: string) => string
+> = {
   business: text(120),
   category: oneOf(categories),
   city: text(80),
   listing: oneOf([...googleListings.map((l) => l.id), notListed.id]),
   goal: oneOf(goals.filter((g) => !g.comingSoon).map((g) => g.id)),
   budget: oneOf(monthlyBudgets.map((b) => b.id)),
-  plan: oneOf(plans.map((p) => p.id)),
 };
 
-export function cleanAnswers(input: unknown): Answers {
+export function cleanAnswers(input: unknown, planIds: string[]): Answers {
   const raw = (typeof input === "object" && input) || {};
+  const value = (key: keyof Answers) => {
+    const v = (raw as Record<string, unknown>)[key];
+    return typeof v === "string" ? v : "";
+  };
   const out = { ...emptyAnswers };
-  for (const key of Object.keys(cleaners) as (keyof Answers)[]) {
-    const value = (raw as Record<string, unknown>)[key];
-    out[key] = typeof value === "string" ? cleaners[key](value) : "";
+  for (const key of Object.keys(cleaners) as (keyof typeof cleaners)[]) {
+    out[key] = cleaners[key](value(key));
   }
+  out.plan = oneOf(planIds)(value("plan"));
   return out;
 }
 
-/** The same bar the wizard's steps hold the customer to. */
 export function isComplete(a: Answers) {
   return (
     a.business.length > 1 &&
@@ -69,7 +70,6 @@ export function isComplete(a: Answers) {
   );
 }
 
-/** Fills {business} and {city} in wizard copy from the customer's answers. */
 export function personalise(
   copy: string,
   a: Pick<Answers, "business" | "city">,
