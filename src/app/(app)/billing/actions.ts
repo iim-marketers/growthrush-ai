@@ -47,6 +47,7 @@ export async function saveBillingDetails(
   }
 
   const row = {
+    userPhone: user.phone,
     billingName: name,
     billingEmail: email,
     billingGstin: gstin,
