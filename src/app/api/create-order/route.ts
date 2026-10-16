@@ -154,6 +154,8 @@ export async function POST(request: Request) {
       currency: "INR",
       receipt,
       userId: user.id,
+      userPhone: user.phone,
+      businessName: business.name,
     });
   } catch (error) {
     console.error("Could not save order", invoice.order_id, error);

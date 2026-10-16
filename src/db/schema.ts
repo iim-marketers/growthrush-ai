@@ -62,6 +62,7 @@ export const businesses = pgTable("businesses", {
     .notNull()
     .unique()
     .references(() => users.id, { onDelete: "cascade" }),
+  userPhone: text("user_phone"),
   name: text("name"),
   category: text("category"),
   city: text("city"),
@@ -69,6 +70,11 @@ export const businesses = pgTable("businesses", {
   goal: text("goal"),
   budgetBand: text("budget_band"),
   planId: text("plan_id"),
+  purchasedPlanId: text("purchased_plan_id"),
+  purchasedPlanName: text("purchased_plan_name"),
+  /* GST included, as charged. */
+  purchasedAmountPaise: integer("purchased_amount_paise"),
+  planPurchasedAt: timestamp("plan_purchased_at", { withTimezone: true }),
   billingName: text("billing_name"),
   billingEmail: text("billing_email"),
   billingGstin: text("billing_gstin"),
@@ -149,6 +155,8 @@ export const orders = pgTable(
     userId: uuid("user_id").references(() => users.id, {
       onDelete: "set null",
     }),
+    userPhone: text("user_phone"),
+    businessName: text("business_name"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

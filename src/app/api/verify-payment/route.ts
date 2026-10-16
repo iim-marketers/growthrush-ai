@@ -3,6 +3,7 @@ import { getDb } from "@/db";
 import { orders } from "@/db/schema";
 import { getSessionUser } from "@/lib/auth/session";
 import { emailInvoice } from "@/lib/invoice-email";
+import { recordPlanPurchase } from "@/lib/plan-purchase";
 import { getRazorpay } from "@/lib/razorpay";
 
 function isFilled(value: unknown): value is string {
@@ -90,6 +91,9 @@ export async function POST(request: Request) {
     );
   }
 
+  await recordPlanPurchase(orderId).catch((error) =>
+    console.error("Could not record plan purchase", orderId, error),
+  );
   await emailInvoice(orderId);
 
   return Response.json({

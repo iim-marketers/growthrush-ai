@@ -31,6 +31,7 @@ export async function saveOnboarding(
   }
 
   const row = {
+    userPhone: user.phone,
     name: answers.business || null,
     category: answers.category || null,
     city: answers.city || null,
