@@ -1,3 +1,4 @@
+import { and, desc, eq, gt, ne } from "drizzle-orm";
 import { getDb } from "@/db";
 import { orders } from "@/db/schema";
 import { getBusiness } from "@/lib/auth/dal";
@@ -36,8 +37,9 @@ export async function POST(request: Request) {
     );
   }
 
-  const billing = billingDetailsOf(await getBusiness(user.id));
-  if (!billing) {
+  const business = await getBusiness(user.id);
+  const billing = billingDetailsOf(business);
+  if (!business || !billing) {
     return Response.json(
       { error: "Add your billing details before paying." },
       { status: 400 },
@@ -46,6 +48,26 @@ export async function POST(request: Request) {
 
   const gst = gstFor(plan.pricePaise, billing.stateCode);
   const placeOfSupply = `${stateName(billing.stateCode)} (${billing.stateCode})`;
+
+  const checkout = (orderId: string) =>
+    Response.json({
+      order_id: orderId,
+      amount: gst.total,
+      currency: "INR",
+      contact: user.phone,
+      email: billing.email,
+    });
+
+  // Every new order uses up a GST receipt number, so reopening checkout
+  // resumes the unpaid order instead of issuing another invoice.
+  const openOrderId = await findOpenOrder({
+    userId: user.id,
+    planId: plan.id,
+    amountPaise: gst.total,
+    placeOfSupply,
+    billingUpdatedAt: business.updatedAt,
+  });
+  if (openOrderId) return checkout(openOrderId);
 
   const taxFitsAsLines = gst.lines.every(
     (line) => line.paise >= MIN_ORDER_AMOUNT,
@@ -58,52 +80,46 @@ export async function POST(request: Request) {
     : [{ name: `${plan.name} (incl. GST)`, amount: gst.total }];
 
   let receipt;
-  try {
-    receipt = await nextReceiptNumber();
-  } catch (error) {
-    console.error("Could not assign a receipt number", error);
-    return Response.json(
-      { error: "Could not start the payment. Please try again." },
-      { status: 500 },
-    );
-  }
-
   let invoice;
   try {
-    invoice = await getRazorpay().invoices.create({
-      type: "invoice",
-      description: [
-        `Billed to ${billing.name}`,
-        billing.gstin && `GSTIN ${billing.gstin}`,
-        `Place of supply: ${placeOfSupply}`,
-      ]
-        .filter(Boolean)
-        .join(" · "),
-      customer: {
-        name: customerName(billing.name),
-        email: billing.email,
-        contact: user.phone,
-        billing_address: {
-          line1: billing.line1,
-          line2: billing.line2 ?? undefined,
-          city: billing.city,
-          state: stateName(billing.stateCode) ?? undefined,
-          zipcode: billing.pincode,
-          country: "in",
+    ({ receipt, invoice } = await getDb().transaction(async (tx) => {
+      const receipt = await nextReceiptNumber(tx);
+      const invoice = await getRazorpay().invoices.create({
+        type: "invoice",
+        description: [
+          `Billed to ${billing.name}`,
+          billing.gstin && `GSTIN ${billing.gstin}`,
+          `Place of supply: ${placeOfSupply}`,
+        ]
+          .filter(Boolean)
+          .join(" · "),
+        customer: {
+          name: customerName(billing.name),
+          email: billing.email,
+          contact: user.phone,
+          billing_address: {
+            line1: billing.line1,
+            line2: billing.line2 ?? undefined,
+            city: billing.city,
+            state: stateName(billing.stateCode) ?? undefined,
+            zipcode: billing.pincode,
+            country: "in",
+          },
         },
-      },
-      line_items: lineItems.map((item, i) => ({
-        ...item,
-        description: i === 0 ? planFeeLabel(plan) : undefined,
+        line_items: lineItems.map((item, i) => ({
+          ...item,
+          description: i === 0 ? planFeeLabel(plan) : undefined,
+          currency: "INR",
+          quantity: 1,
+        })),
         currency: "INR",
-        quantity: 1,
-      })),
-      currency: "INR",
-      receipt,
-      notes: { plan_id: plan.id, user_id: user.id },
-      sms_notify: 0,
-      email_notify: 0,
-    });
+        receipt,
+        notes: { plan_id: plan.id, user_id: user.id },
+        sms_notify: 0,
+        email_notify: 0,
+      });
+      return { receipt, invoice };
+    }));
   } catch (error) {
     console.error("Razorpay invoice creation failed", error);
     if (razorpayStatusCode(error) === 401) {
@@ -147,13 +163,45 @@ export async function POST(request: Request) {
     );
   }
 
-  return Response.json({
-    order_id: invoice.order_id,
-    amount: gst.total,
-    currency: "INR",
-    contact: user.phone,
-    email: billing.email,
-  });
+  return checkout(invoice.order_id);
+}
+
+/* An unpaid order can be paid again as long as its invoice is still open
+   and nothing on it has changed since it was issued. */
+async function findOpenOrder(match: {
+  userId: string;
+  planId: string;
+  amountPaise: number;
+  placeOfSupply: string;
+  billingUpdatedAt: Date;
+}) {
+  try {
+    const [order] = await getDb()
+      .select({
+        orderId: orders.razorpayOrderId,
+        invoiceId: orders.razorpayInvoiceId,
+      })
+      .from(orders)
+      .where(
+        and(
+          eq(orders.userId, match.userId),
+          eq(orders.planId, match.planId),
+          eq(orders.amountPaise, match.amountPaise),
+          eq(orders.placeOfSupply, match.placeOfSupply),
+          ne(orders.status, "paid"),
+          gt(orders.createdAt, match.billingUpdatedAt),
+        ),
+      )
+      .orderBy(desc(orders.createdAt))
+      .limit(1);
+    if (!order?.invoiceId) return null;
+
+    const invoice = await getRazorpay().invoices.fetch(order.invoiceId);
+    return invoice.status === "issued" ? order.orderId : null;
+  } catch (error) {
+    console.error("Could not look up an open order", match.userId, error);
+    return null;
+  }
 }
 
 /* Razorpay only takes letters, digits, spaces, . ' ( ) in a customer name,
