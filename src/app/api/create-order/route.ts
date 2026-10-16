@@ -44,6 +44,19 @@ export async function POST(request: Request) {
     );
   }
 
+  const gst = gstFor(plan.pricePaise, billing.stateCode);
+  const placeOfSupply = `${stateName(billing.stateCode)} (${billing.stateCode})`;
+
+  const taxFitsAsLines = gst.lines.every(
+    (line) => line.paise >= MIN_ORDER_AMOUNT,
+  );
+  const lineItems = taxFitsAsLines
+    ? [
+        { name: plan.name, amount: plan.pricePaise },
+        ...gst.lines.map((line) => ({ name: line.label, amount: line.paise })),
+      ]
+    : [{ name: `${plan.name} (incl. GST)`, amount: gst.total }];
+
   let receipt;
   try {
     receipt = await nextReceiptNumber();
@@ -54,9 +67,6 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   }
-
-  const gst = gstFor(plan.pricePaise, billing.stateCode);
-  const placeOfSupply = `${stateName(billing.stateCode)} (${billing.stateCode})`;
 
   let invoice;
   try {
@@ -82,21 +92,12 @@ export async function POST(request: Request) {
           country: "in",
         },
       },
-      line_items: [
-        {
-          name: plan.name,
-          description: planFeeLabel(plan),
-          amount: plan.pricePaise,
-          currency: "INR",
-          quantity: 1,
-        },
-        ...gst.lines.map((line) => ({
-          name: line.label,
-          amount: line.paise,
-          currency: "INR",
-          quantity: 1,
-        })),
-      ],
+      line_items: lineItems.map((item, i) => ({
+        ...item,
+        description: i === 0 ? planFeeLabel(plan) : undefined,
+        currency: "INR",
+        quantity: 1,
+      })),
       currency: "INR",
       receipt,
       notes: { plan_id: plan.id, user_id: user.id },

@@ -3,20 +3,21 @@ import { sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { receiptCounters } from "@/db/schema";
 
-const PREFIX = "GRWR";
-
 // GST: unique per financial year (Apr–Mar, IST), at most 16 characters.
+// Test-mode payments get their own series so they never use up GST numbers.
 export async function nextReceiptNumber(now = new Date()) {
   const { short, full } = financialYear(now);
+  const test = process.env.RAZORPAY_KEY_ID?.startsWith("rzp_test_");
+  const prefix = test ? "TEST" : "GRWR";
   const [counter] = await getDb()
     .insert(receiptCounters)
-    .values({ financialYear: full, lastNumber: 1 })
+    .values({ financialYear: test ? `${full} test` : full, lastNumber: 1 })
     .onConflictDoUpdate({
       target: receiptCounters.financialYear,
       set: { lastNumber: sql`${receiptCounters.lastNumber} + 1` },
     })
     .returning({ lastNumber: receiptCounters.lastNumber });
-  return `${PREFIX}/${short}/${String(counter.lastNumber).padStart(5, "0")}`;
+  return `${prefix}/${short}/${String(counter.lastNumber).padStart(5, "0")}`;
 }
 
 function financialYear(now: Date) {
