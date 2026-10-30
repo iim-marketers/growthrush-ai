@@ -12,7 +12,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { landingJsonLd } from "@/lib/structured-data";
 
 const DESCRIPTION =
-  "growthrush.ai writes the copy, designs the creatives and runs your Facebook ads — then delivers ready-to-buy leads straight to your WhatsApp. Live in under 10 minutes.";
+  "Scale your business or franchise lead generation with AI-powered Facebook ads. GrowthRush.ai handles copy, creative design, and budget optimization for maximum ROI.";
 
 export const metadata: Metadata = {
   description: DESCRIPTION,

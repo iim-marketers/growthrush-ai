@@ -26,12 +26,12 @@ const outfit = localFont({
 });
 
 const DESCRIPTION =
-  "AI-run Facebook ads for local businesses. growthrush.ai writes the copy, designs the creatives and sends ready-to-buy leads straight to your WhatsApp.";
+  "Scale your business or franchise lead generation with AI-powered Facebook ads. GrowthRush.ai handles copy, creative design, and budget optimization for maximum ROI.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} — AI Facebook Ads That Send Leads to Your WhatsApp`,
+    default: "AI Advertising & Franchise Lead Generation | GrowthRush.ai",
     template: `%s · ${SITE_NAME}`,
   },
   description: DESCRIPTION,
