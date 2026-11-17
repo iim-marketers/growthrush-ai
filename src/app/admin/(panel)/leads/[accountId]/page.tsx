@@ -28,7 +28,7 @@ export default async function AdminAccountLeadsPage({
     account.name ? account.email : null,
     account.phone || null,
     `Created ${formatAdminDate(account.createdAt.toISOString())}`,
-    `${leads.length} ${leads.length === 1 ? "lead" : "leads"}`,
+    // `${leads.length} ${leads.length === 1 ? "lead" : "leads"}`,r4
   ].filter(Boolean);
 
   return (

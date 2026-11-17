@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { deleteAccountLead, updateAccountLeadStatus } from "@/app/admin/actions";
+import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 import { LeadStatusBadge } from "@/components/admin/lead-status-badge";
 import { LeadAvatar } from "@/components/app/primitives";
 import { Button } from "@/components/ui/button";
@@ -145,6 +146,8 @@ export function AccountLeadsBoard({
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [sort, setSort] = useState<Sort>({ key: "date", dir: "desc" });
+  const [leadToDelete, setLeadToDelete] = useState<AccountLead | null>(null);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   const dated = useMemo(() => {
     const [start, end] = presetRange(preset, from, to);
@@ -205,7 +208,6 @@ export function AccountLeadsBoard({
   };
 
   const remove = (lead: AccountLead) => {
-    if (!window.confirm(`Delete the lead "${lead.name}"? This can't be undone.`)) return;
     startTransition(async () => {
       applyChange({ id: lead.id, deleted: true });
       try {
@@ -450,7 +452,13 @@ export function AccountLeadsBoard({
                           Copy phone
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem variant="destructive" onSelect={() => remove(lead)}>
+                        <DropdownMenuItem
+                          variant="destructive"
+                          onSelect={() => {
+                            setLeadToDelete(lead);
+                            setConfirmDeleteOpen(true);
+                          }}
+                        >
                           <Trash2 />
                           Delete lead
                         </DropdownMenuItem>
@@ -484,6 +492,25 @@ export function AccountLeadsBoard({
           </Empty>
         )}
       </Card>
+
+      <ConfirmDialog
+        open={confirmDeleteOpen}
+        onOpenChange={setConfirmDeleteOpen}
+        icon={Trash2}
+        destructive
+        title="Delete this lead?"
+        description={
+          <>
+            <span className="font-semibold text-ink">{leadToDelete?.name}</span>
+            {leadToDelete?.phone && ` (${leadToDelete.phone})`} will be permanently removed
+            from this account. This can&apos;t be undone.
+          </>
+        }
+        confirmLabel="Delete lead"
+        onConfirm={() => {
+          if (leadToDelete) remove(leadToDelete);
+        }}
+      />
     </>
   );
 }

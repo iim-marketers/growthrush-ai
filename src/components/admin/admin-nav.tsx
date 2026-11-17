@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronsUpDown, LayoutDashboard, LogOut, ShieldCheck, Users } from "lucide-react";
 import { adminSignOut } from "@/app/admin/actions";
+import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 import { Logo, LogoMark } from "@/components/logo";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -146,6 +148,7 @@ export function AdminSidebar({
 
 function AdminUser({ email }: { email: string }) {
   const { isMobile } = useSidebar();
+  const [confirmSignOut, setConfirmSignOut] = useState(false);
 
   const avatar = (
     <Avatar className="size-8 rounded-lg after:rounded-lg">
@@ -188,16 +191,27 @@ function AdminUser({ email }: { email: string }) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <form action={adminSignOut}>
-              <DropdownMenuItem asChild>
-                <button type="submit" className="w-full">
-                  <LogOut />
-                  Sign out
-                </button>
-              </DropdownMenuItem>
-            </form>
+            <DropdownMenuItem onSelect={() => setConfirmSignOut(true)}>
+              <LogOut />
+              Sign out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <ConfirmDialog
+          open={confirmSignOut}
+          onOpenChange={setConfirmSignOut}
+          icon={LogOut}
+          title="Sign out of admin?"
+          description={
+            <>
+              You&apos;ll need to log in again to manage accounts and leads. Signed in as{" "}
+              <span className="font-semibold text-ink">{email}</span>.
+            </>
+          }
+          confirmLabel="Sign out"
+          pendingLabel="Signing out…"
+          onConfirm={adminSignOut}
+        />
       </SidebarMenuItem>
     </SidebarMenu>
   );
