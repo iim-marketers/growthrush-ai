@@ -170,3 +170,41 @@ export const receiptCounters = pgTable("receipt_counters", {
   financialYear: text("financial_year").primaryKey(),
   lastNumber: integer("last_number").notNull(),
 }).enableRLS();
+
+export const leadAccounts = pgTable("lead_accounts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull().default(""),
+  phone: text("phone").notNull().default(""),
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+}).enableRLS();
+
+export const accountLeadStatus = pgEnum("account_lead_status", [
+  "valid",
+  "invalid",
+  "follow_up",
+]);
+
+export const accountLeads = pgTable(
+  "account_leads",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    accountId: uuid("account_id")
+      .notNull()
+      .references(() => leadAccounts.id, { onDelete: "cascade" }),
+    accountName: text("account_name").notNull().default(""),
+    accountEmail: text("account_email").notNull(),
+    name: text("name").notNull(),
+    phone: text("phone").notNull(),
+    city: text("city").notNull().default(""),
+    comment: text("comment").notNull().default(""),
+    status: accountLeadStatus("status").notNull().default("follow_up"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [index("account_leads_account_created_idx").on(t.accountId, t.createdAt)],
+).enableRLS();
