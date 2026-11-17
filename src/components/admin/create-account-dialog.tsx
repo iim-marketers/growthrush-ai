@@ -24,12 +24,6 @@ import {
 } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 
-function generatePassword() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
-  const bytes = crypto.getRandomValues(new Uint8Array(12));
-  return Array.from(bytes, (byte) => chars[byte % chars.length]).join("");
-}
-
 export function CreateAccountDialog() {
   const [open, setOpen] = useState(false);
   const [formKey, setFormKey] = useState(0);
@@ -48,7 +42,10 @@ export function CreateAccountDialog() {
           New lead account
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md" onInteractOutside={keepOpenOnToast}>
+      <DialogContent
+        className="sm:max-w-md"
+        onInteractOutside={keepOpenOnToast}
+      >
         <CreateAccountForm key={formKey} onDone={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
@@ -167,16 +164,6 @@ function CreateAccountForm({ onDone }: { onDone: () => void }) {
             >
               {show ? <EyeOff /> : <Eye />}
             </InputGroupButton>
-            {/* <InputGroupButton
-              size="xs"
-              onClick={() => {
-                setPassword(generatePassword());
-                setShow(true);
-              }}
-            >
-              <RefreshCw />
-              Generate
-            </InputGroupButton> */}
           </InputGroupAddon>
         </InputGroup>
       </div>
