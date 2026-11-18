@@ -1,12 +1,14 @@
 "use client";
 
-import { useMemo, useOptimistic, useState, useTransition } from "react";
+import { useMemo, useOptimistic, useRef, useState, useTransition } from "react";
 import {
   ArrowDown,
   ArrowUp,
   ArrowUpDown,
   CalendarDays,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Copy,
   Inbox,
   MoreHorizontal,
@@ -93,6 +95,16 @@ const sortOptions = [
 ] as const;
 
 const DAY_MS = 24 * 60 * 60 * 1000;
+const PAGE_SIZES = [25, 50, 100] as const;
+const fmt = (n: number) => n.toLocaleString("en-IN");
+
+function pageList(current: number, count: number): (number | "gap")[] {
+  if (count <= 7) return Array.from({ length: count }, (_, i) => i + 1);
+  const pages = [...new Set([1, current - 1, current, current + 1, count])]
+    .filter((p) => p >= 1 && p <= count)
+    .sort((a, b) => a - b);
+  return pages.flatMap((p, i) => (i && p - pages[i - 1] > 1 ? ["gap" as const, p] : [p]));
+}
 const statusRank = Object.fromEntries(accountLeadStatuses.map((s, i) => [s.id, i]));
 
 function presetRange(preset: DatePreset, from: string, to: string): [string, string] {
@@ -152,6 +164,9 @@ export function AccountLeadsBoard({
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [leadToEdit, setLeadToEdit] = useState<AccountLead | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [pageSize, setPageSize] = useState<number>(50);
+  const [pager, setPager] = useState({ key: "", page: 1 });
+  const tableTop = useRef<HTMLDivElement>(null);
 
   const dated = useMemo(() => {
     const [start, end] = presetRange(preset, from, to);
@@ -183,6 +198,18 @@ export function AccountLeadsBoard({
   }, [dated, status, sort]);
 
   const filtered = query !== "" || status !== "all" || preset !== "all";
+
+  const pageKey = [query, status, preset, from, to, sort.key, sort.dir, pageSize].join("|");
+  const pageCount = Math.max(1, Math.ceil(visible.length / pageSize));
+  const page = Math.min(pager.key === pageKey ? pager.page : 1, pageCount);
+  const pageStart = (page - 1) * pageSize;
+  const pageRows = visible.slice(pageStart, pageStart + pageSize);
+
+  const goToPage = (next: number) => {
+    setPager({ key: pageKey, page: next });
+    const top = tableTop.current?.getBoundingClientRect().top ?? 0;
+    if (top < 0) tableTop.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const clearFilters = () => {
     setQuery("");
@@ -262,7 +289,7 @@ export function AccountLeadsBoard({
         ))}
       </ToggleGroup>
 
-      <Card className="gap-0 rounded-2xl py-0">
+      <Card ref={tableTop} className="scroll-mt-4 gap-0 rounded-2xl py-0">
         <div className="flex flex-col gap-3 border-b border-hairline px-4 py-3 sm:px-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
             <InputGroup className="h-9 sm:w-72">
@@ -359,8 +386,9 @@ export function AccountLeadsBoard({
           </div>
 
           <p className="shrink-0 text-xs text-faint" aria-live="polite">
-            Showing <span className="font-semibold text-ink">{visible.length}</span> of{" "}
-            {rows.length}
+            <span className="font-semibold text-ink">{fmt(visible.length)}</span>
+            {visible.length !== rows.length && ` of ${fmt(rows.length)}`}{" "}
+            {rows.length === 1 ? "lead" : "leads"}
           </p>
         </div>
 
@@ -380,7 +408,7 @@ export function AccountLeadsBoard({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {visible.map((lead) => (
+              {pageRows.map((lead) => (
                 <TableRow key={lead.id}>
                   <TableCell className="py-3 pl-5">
                     <div className="flex items-center gap-3">
@@ -503,6 +531,83 @@ export function AccountLeadsBoard({
               </Button>
             )}
           </Empty>
+        )}
+
+        {visible.length > PAGE_SIZES[0] && (
+          <div className="flex flex-col gap-3 border-t border-hairline px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+            <div className="flex items-center gap-3 text-xs text-subtle">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-1.5 rounded-lg">
+                    {pageSize} per page
+                    <ChevronDown className="text-faint" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="min-w-36">
+                  <DropdownMenuRadioGroup
+                    value={String(pageSize)}
+                    onValueChange={(value) => setPageSize(Number(value))}
+                  >
+                    {PAGE_SIZES.map((size) => (
+                      <DropdownMenuRadioItem key={size} value={String(size)}>
+                        {size} per page
+                      </DropdownMenuRadioItem>
+                    ))}
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <span className="tabular-nums">
+                {fmt(pageStart + 1)}–{fmt(pageStart + pageRows.length)} of {fmt(visible.length)}
+              </span>
+            </div>
+
+            {pageCount > 1 && (
+              <nav aria-label="Pagination" className="flex items-center gap-1">
+                <Button
+                  variant="outline"
+                  size="icon-sm"
+                  disabled={page === 1}
+                  onClick={() => goToPage(page - 1)}
+                  aria-label="Previous page"
+                >
+                  <ChevronLeft />
+                </Button>
+                <span className="px-2 text-xs text-subtle tabular-nums sm:hidden">
+                  Page {page} of {pageCount}
+                </span>
+                <div className="hidden items-center gap-1 sm:flex">
+                  {pageList(page, pageCount).map((item, index) =>
+                    item === "gap" ? (
+                      <span key={`gap-${index}`} className="w-7 text-center text-xs text-faint">
+                        …
+                      </span>
+                    ) : (
+                      <Button
+                        key={item}
+                        variant={item === page ? "default" : "ghost"}
+                        size="icon-sm"
+                        onClick={() => goToPage(item)}
+                        aria-label={`Page ${item}`}
+                        aria-current={item === page ? "page" : undefined}
+                        className="w-auto min-w-7 px-1.5 text-xs tabular-nums"
+                      >
+                        {item}
+                      </Button>
+                    ),
+                  )}
+                </div>
+                <Button
+                  variant="outline"
+                  size="icon-sm"
+                  disabled={page === pageCount}
+                  onClick={() => goToPage(page + 1)}
+                  aria-label="Next page"
+                >
+                  <ChevronRight />
+                </Button>
+              </nav>
+            )}
+          </div>
         )}
       </Card>
 

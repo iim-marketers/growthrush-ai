@@ -177,7 +177,7 @@ function LeadForm({
             required
             defaultValue={lead?.phone}
             autoComplete="off"
-            placeholder="9876543210"
+            placeholder="e.g. 9876543210"
             className="h-10"
           />
         </div>
