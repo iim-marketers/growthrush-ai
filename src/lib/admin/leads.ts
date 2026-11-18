@@ -72,3 +72,31 @@ const dayKeyFormat = new Intl.DateTimeFormat("en-CA", { timeZone: ADMIN_TZ });
 export const formatAdminDate = (iso: string) => dateFormat.format(new Date(iso));
 export const formatAdminTime = (iso: string) => timeFormat.format(new Date(iso));
 export const dayKey = (date: Date) => dayKeyFormat.format(date);
+
+export const LEAD_PHONE = /^\+?\d{10,15}$/;
+export const cleanPhone = (value: string) => value.replace(/[\s()\-.']/g, "");
+
+export function phoneKey(phone: string) {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.length === 12 && digits.startsWith("91")) return digits.slice(2);
+  if (digits.length === 11 && digits.startsWith("0")) return digits.slice(1);
+  return digits;
+}
+
+export function parseLeadStatus(value: string): AccountLeadStatus | null {
+  const key = value.toLowerCase().replace(/[^a-z]/g, "");
+  if (key === "valid") return "valid";
+  if (key === "invalid") return "invalid";
+  if (key === "followup") return "follow_up";
+  return null;
+}
+
+export type ImportLeadRow = {
+  name: string;
+  phone: string;
+  city: string;
+  comment: string;
+  status: AccountLeadStatus | null;
+};
+
+export const IMPORT_BATCH_SIZE = 500;

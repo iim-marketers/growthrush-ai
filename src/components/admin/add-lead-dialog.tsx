@@ -3,6 +3,7 @@
 import {
   useActionState,
   useEffect,
+  useEffectEvent,
   useRef,
   useState,
   startTransition,
@@ -10,7 +11,7 @@ import {
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { keepOpenOnToast } from "@/components/ui/sonner";
-import { addAccountLead } from "@/app/admin/actions";
+import { addAccountLead, updateAccountLead } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,7 +25,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { accountLeadStatuses } from "@/lib/admin/leads";
+import {
+  accountLeadStatuses,
+  formatAdminDate,
+  type AccountLead,
+} from "@/lib/admin/leads";
 import { cn } from "@/lib/utils";
 
 export function AddLeadDialog({ accountId }: { accountId: string }) {
@@ -49,7 +54,7 @@ export function AddLeadDialog({ accountId }: { accountId: string }) {
         className="sm:max-w-lg"
         onInteractOutside={keepOpenOnToast}
       >
-        <AddLeadForm
+        <LeadForm
           key={formKey}
           accountId={accountId}
           onDone={() => setOpen(false)}
@@ -59,27 +64,69 @@ export function AddLeadDialog({ accountId }: { accountId: string }) {
   );
 }
 
-function AddLeadForm({
+export function EditLeadDialog({
   accountId,
+  lead,
+  open,
+  onOpenChange,
+}: {
+  accountId: string;
+  lead: AccountLead | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        className="sm:max-w-lg"
+        onInteractOutside={keepOpenOnToast}
+      >
+        {lead && (
+          <LeadForm
+            key={lead.id}
+            accountId={accountId}
+            lead={lead}
+            onDone={() => onOpenChange(false)}
+          />
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function LeadForm({
+  accountId,
+  lead,
   onDone,
 }: {
   accountId: string;
+  lead?: AccountLead;
   onDone: () => void;
 }) {
-  const [state, action, pending] = useActionState(addAccountLead, {});
+  const [state, action, pending] = useActionState(
+    lead ? updateAccountLead : addAccountLead,
+    {},
+  );
   const form = useRef<HTMLFormElement>(null);
   const name = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (state.error) {
-      toast.error(state.error);
+  const onResult = useEffectEvent((result: typeof state) => {
+    if (result.error) {
+      toast.error(result.error);
       return;
     }
-    if (!state.ok) return;
+    if (!result.ok) return;
+    if (lead) {
+      toast.success("Lead updated");
+      onDone();
+      return;
+    }
     toast.success("Lead added");
     form.current?.reset();
     name.current?.focus();
-  }, [state]);
+  });
+
+  useEffect(() => onResult(state), [state]);
 
   return (
     <form
@@ -92,12 +139,15 @@ function AddLeadForm({
       className="flex flex-col gap-4"
     >
       <input type="hidden" name="accountId" value={accountId} />
+      {lead && <input type="hidden" name="leadId" value={lead.id} />}
       <DialogHeader>
         <DialogTitle className="font-display text-lg font-bold text-ink">
-          Add lead
+          {lead ? "Edit lead" : "Add lead"}
         </DialogTitle>
         <DialogDescription>
-          The form stays open after saving so you can add the next lead.
+          {lead
+            ? `Added ${formatAdminDate(lead.createdAt)}. Changes save straight to this account.`
+            : "The form stays open after saving so you can add the next lead."}
         </DialogDescription>
       </DialogHeader>
 
@@ -110,6 +160,7 @@ function AddLeadForm({
             name="name"
             required
             maxLength={120}
+            defaultValue={lead?.name}
             autoComplete="off"
             autoFocus
             placeholder="Full name"
@@ -124,6 +175,7 @@ function AddLeadForm({
             type="tel"
             inputMode="tel"
             required
+            defaultValue={lead?.phone}
             autoComplete="off"
             placeholder="9876543210"
             className="h-10"
@@ -137,6 +189,7 @@ function AddLeadForm({
           id="lead-city"
           name="city"
           maxLength={80}
+          defaultValue={lead?.city}
           autoComplete="off"
           placeholder="e.g. Kolkata"
           className="h-10"
@@ -159,7 +212,7 @@ function AddLeadForm({
                 type="radio"
                 name="status"
                 value={status.id}
-                defaultChecked={status.id === "follow_up"}
+                defaultChecked={status.id === (lead?.status ?? "follow_up")}
                 className="sr-only"
               />
               <span
@@ -179,16 +232,17 @@ function AddLeadForm({
           name="comment"
           rows={3}
           maxLength={1000}
+          defaultValue={lead?.comment}
           placeholder="Notes about the enquiry, call outcome…"
         />
       </div>
 
       <DialogFooter>
         <Button type="button" variant="outline" onClick={onDone}>
-          {state.ok ? "Done" : "Cancel"}
+          {state.ok && !lead ? "Done" : "Cancel"}
         </Button>
         <Button type="submit" disabled={pending} className="font-semibold">
-          {pending ? "Saving…" : "Save lead"}
+          {pending ? "Saving…" : lead ? "Save changes" : "Save lead"}
         </Button>
       </DialogFooter>
     </form>

@@ -10,12 +10,14 @@ import {
   Copy,
   Inbox,
   MoreHorizontal,
+  Pencil,
   SearchIcon,
   SearchX,
   Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { deleteAccountLead, updateAccountLeadStatus } from "@/app/admin/actions";
+import { EditLeadDialog } from "@/components/admin/add-lead-dialog";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 import { LeadStatusBadge } from "@/components/admin/lead-status-badge";
 import { LeadAvatar } from "@/components/app/primitives";
@@ -148,6 +150,8 @@ export function AccountLeadsBoard({
   const [sort, setSort] = useState<Sort>({ key: "date", dir: "desc" });
   const [leadToDelete, setLeadToDelete] = useState<AccountLead | null>(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [leadToEdit, setLeadToEdit] = useState<AccountLead | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
 
   const dated = useMemo(() => {
     const [start, end] = presetRange(preset, from, to);
@@ -446,6 +450,15 @@ export function AccountLeadsBoard({
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="min-w-40">
                         <DropdownMenuItem
+                          onSelect={() => {
+                            setLeadToEdit(lead);
+                            setEditOpen(true);
+                          }}
+                        >
+                          <Pencil />
+                          Edit lead
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
                           onSelect={() => navigator.clipboard.writeText(lead.phone).catch(() => {})}
                         >
                           <Copy />
@@ -480,7 +493,7 @@ export function AccountLeadsBoard({
               </EmptyTitle>
               <EmptyDescription>
                 {rows.length === 0
-                  ? "Use “Add lead” to add this account's first lead."
+                  ? "Use “Add lead” or “Import” to add this account's leads."
                   : "No leads match these filters."}
               </EmptyDescription>
             </EmptyHeader>
@@ -492,6 +505,13 @@ export function AccountLeadsBoard({
           </Empty>
         )}
       </Card>
+
+      <EditLeadDialog
+        accountId={accountId}
+        lead={leadToEdit}
+        open={editOpen}
+        onOpenChange={setEditOpen}
+      />
 
       <ConfirmDialog
         open={confirmDeleteOpen}
