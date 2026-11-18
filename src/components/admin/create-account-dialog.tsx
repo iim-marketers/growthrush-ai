@@ -65,6 +65,7 @@ function CreateAccountForm({ onDone }: { onDone: () => void }) {
     return (
       <CreatedAccount
         name={state.name ?? ""}
+        phone={state.phone ?? ""}
         email={state.email ?? ""}
         password={state.password ?? ""}
         onDone={onDone}
@@ -121,13 +122,14 @@ function CreateAccountForm({ onDone }: { onDone: () => void }) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="account-email">Email</Label>
+        <Label htmlFor="account-email">
+          Email <span className="font-normal text-faint">(optional)</span>
+        </Label>
         <Input
           id="account-email"
           name="email"
           type="email"
           autoComplete="off"
-          required
           placeholder="e.g. john.doe@company.com"
           aria-describedby="account-email-note"
           className="h-10"
@@ -137,8 +139,7 @@ function CreateAccountForm({ onDone }: { onDone: () => void }) {
           className="flex gap-1.5 text-xs leading-relaxed text-faint"
         >
           <Info className="mt-0.5 size-3.5 shrink-0" />
-          Use the customer&apos;s real, working email. Changing the password
-          later needs a one-time code (OTP) sent to this address.
+          The customer can log in with their phone number or this email.
         </p>
       </div>
 
@@ -179,11 +180,13 @@ function CreateAccountForm({ onDone }: { onDone: () => void }) {
 
 function CreatedAccount({
   name,
+  phone,
   email,
   password,
   onDone,
 }: {
   name: string;
+  phone: string;
   email: string;
   password: string;
   onDone: () => void;
@@ -199,7 +202,9 @@ function CreatedAccount({
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(
-        `Email: ${email}\nPassword: ${password}`,
+        [`Phone: ${phone}`, email && `Email: ${email}`, `Password: ${password}`]
+          .filter(Boolean)
+          .join("\n"),
       );
       setCopied(true);
     } catch {}
@@ -222,9 +227,15 @@ function CreatedAccount({
 
       <dl className="grid gap-3 rounded-xl bg-surface-hover p-4 text-sm">
         <div>
-          <dt className="text-xs text-faint">Email</dt>
-          <dd className="font-semibold break-all text-ink">{email}</dd>
+          <dt className="text-xs text-faint">Phone number</dt>
+          <dd className="font-semibold tabular-nums text-ink">{phone}</dd>
         </div>
+        {email && (
+          <div>
+            <dt className="text-xs text-faint">Email</dt>
+            <dd className="font-semibold break-all text-ink">{email}</dd>
+          </div>
+        )}
         <div>
           <dt className="text-xs text-faint">Password</dt>
           <dd className="font-mono font-semibold break-all text-ink">

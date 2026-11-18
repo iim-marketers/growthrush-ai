@@ -43,7 +43,7 @@ export type LeadAccountSummary = {
   id: string;
   name: string;
   phone: string;
-  email: string;
+  email: string | null;
   createdAt: string;
   total: number;
   valid: number;

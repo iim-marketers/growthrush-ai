@@ -13,7 +13,7 @@ export async function generateMetadata({
   params,
 }: PageProps<"/admin/leads/[accountId]">): Promise<Metadata> {
   const account = await getLeadAccount((await params).accountId);
-  return { title: account ? account.name || account.email : "Account" };
+  return { title: account ? account.name || account.phone : "Account" };
 }
 
 export default async function AdminAccountLeadsPage({
@@ -25,7 +25,7 @@ export default async function AdminAccountLeadsPage({
 
   const leads = await getAccountLeads(account.id);
   const details = [
-    account.name ? account.email : null,
+    account.email,
     account.phone || null,
     `Created ${formatAdminDate(account.createdAt.toISOString())}`,
     // `${leads.length} ${leads.length === 1 ? "lead" : "leads"}`,r4
@@ -42,7 +42,7 @@ export default async function AdminAccountLeadsPage({
       </Link>
       <PageHeader
         eyebrow="Lead account"
-        title={account.name || account.email}
+        title={account.name || account.phone}
         subtitle={details.join(" · ")}
         action={<AddLeadDialog accountId={account.id} />}
       />

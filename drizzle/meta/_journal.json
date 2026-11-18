@@ -92,6 +92,13 @@
       "when": 1794909515659,
       "tag": "0012_add_lead_account_name_phone",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1794981341854,
+      "tag": "0013_optional_lead_account_email",
+      "breakpoints": true
     }
   ]
 }

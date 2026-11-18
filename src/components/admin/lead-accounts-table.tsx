@@ -37,7 +37,7 @@ export function LeadAccountsTable({ accounts }: { accounts: LeadAccountSummary[]
     return accounts.filter(
       (a) =>
         a.name.toLowerCase().includes(needle) ||
-        a.email.includes(needle) ||
+        a.email?.includes(needle) ||
         a.phone.includes(needle),
     );
   }, [accounts, query]);
@@ -92,7 +92,7 @@ export function LeadAccountsTable({ accounts }: { accounts: LeadAccountSummary[]
                   <TableCell className="py-3 pl-5">
                     <div className="flex items-center gap-3">
                       <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand/10 font-display text-sm font-bold text-brand">
-                        {(account.name || account.email).charAt(0).toUpperCase()}
+                        {(account.name || account.phone).charAt(0).toUpperCase()}
                       </span>
                       <span className="min-w-0">
                         <Link
@@ -100,12 +100,12 @@ export function LeadAccountsTable({ accounts }: { accounts: LeadAccountSummary[]
                           onClick={(event) => event.stopPropagation()}
                           className="block max-w-56 truncate font-semibold text-ink outline-none hover:underline focus-visible:underline sm:max-w-none"
                         >
-                          {account.name || account.email}
+                          {account.name || account.phone}
                         </Link>
                         <span className="block max-w-56 truncate text-xs text-faint sm:max-w-none">
-                          {account.name ? account.email : ""}
+                          {account.email}
                           <span className="xl:hidden">
-                            {account.name && account.phone ? " · " : ""}
+                            {account.email && account.phone ? " · " : ""}
                             {account.phone}
                           </span>
                         </span>

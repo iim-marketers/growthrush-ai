@@ -21,6 +21,7 @@ export type AdminFormState = {
   error?: string;
   at?: number;
   name?: string;
+  phone?: string;
   email?: string;
   password?: string;
 };
@@ -77,21 +78,28 @@ export async function createLeadAccount(
   if (!PHONE.test(phone)) {
     return { error: "Enter a valid phone number (10–15 digits)." };
   }
-  if (!EMAIL.test(email)) return { error: "Enter a valid email address." };
+  if (email && !EMAIL.test(email)) return { error: "Enter a valid email address." };
   if (password.length < MIN_PASSWORD) {
     return { error: `Password must be at least ${MIN_PASSWORD} characters.` };
   }
 
   const [created] = await getDb()
     .insert(leadAccounts)
-    .values({ name, phone, email, passwordHash: await hashPassword(password) })
-    .onConflictDoNothing({ target: leadAccounts.email })
+    .values({
+      name,
+      phone,
+      email: email || null,
+      passwordHash: await hashPassword(password),
+    })
+    .onConflictDoNothing()
     .returning({ id: leadAccounts.id });
 
-  if (!created) return { error: "An account with this email already exists." };
+  if (!created) {
+    return { error: "An account with this phone number or email already exists." };
+  }
 
   refresh();
-  return { ok: true, at: Date.now(), name, email, password };
+  return { ok: true, at: Date.now(), name, phone, email, password };
 }
 
 export async function addAccountLead(

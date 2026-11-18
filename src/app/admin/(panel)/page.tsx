@@ -126,7 +126,7 @@ export default async function AdminDashboardPage() {
                       {lead.name}
                     </span>
                     <span className="block truncate text-xs text-faint">
-                      {lead.accountName || lead.accountEmail}
+                      {lead.accountName}
                       {lead.city ? ` · ${lead.city}` : ""}
                     </span>
                   </span>

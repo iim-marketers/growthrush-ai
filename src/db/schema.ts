@@ -174,8 +174,8 @@ export const receiptCounters = pgTable("receipt_counters", {
 export const leadAccounts = pgTable("lead_accounts", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull().default(""),
-  phone: text("phone").notNull().default(""),
-  email: text("email").notNull().unique(),
+  phone: text("phone").notNull().unique(),
+  email: text("email").unique(),
   passwordHash: text("password_hash").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
@@ -196,7 +196,7 @@ export const accountLeads = pgTable(
       .notNull()
       .references(() => leadAccounts.id, { onDelete: "cascade" }),
     accountName: text("account_name").notNull().default(""),
-    accountEmail: text("account_email").notNull(),
+    accountEmail: text("account_email"),
     name: text("name").notNull(),
     phone: text("phone").notNull(),
     city: text("city").notNull().default(""),
