@@ -38,9 +38,7 @@ export async function requestOtp(
     if (pending?.phone !== phone) return startError(result);
   }
 
-  /* Outside any try: redirect() works by throwing. Replace, not push, so the
-     login screens leave history as the customer moves through them — Back
-     from the app then goes to where they came from, not to a stale form. */
+  /* Outside any try: redirect() works by throwing. */
   redirect("/login/verify", RedirectType.replace);
 }
 

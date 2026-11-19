@@ -213,7 +213,6 @@ export function CheckoutButton({
       prefill: { contact: data.contact, email: data.email ?? undefined },
       handler: (response) => void confirm(charge, response),
       modal: {
-        // Closing after a success must not overwrite "confirming" or "paid".
         ondismiss: () =>
           setStatus((s) =>
             s.kind !== "opening"

@@ -1,7 +1,8 @@
 import { faqs } from "@/lib/landing-data";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
-const ORG_ID = `${SITE_URL}/#organization`;
+const HOME_URL = `${SITE_URL}/`;
+const ORG_ID = `${HOME_URL}#organization`;
 
 export function landingJsonLd(description: string) {
   return {
@@ -12,8 +13,11 @@ export function landingJsonLd(description: string) {
         "@id": ORG_ID,
         name: SITE_NAME,
         legalName: "Estrellingent Technology Private Limited",
-        url: SITE_URL,
-        logo: `${SITE_URL}/icon-256.png`,
+        url: HOME_URL,
+        logo: {
+          "@type": "ImageObject",
+          url: `${SITE_URL}/icon-256.png`,
+        },
         email: "hello@growthrush.ai",
         address: {
           "@type": "PostalAddress",
@@ -26,14 +30,15 @@ export function landingJsonLd(description: string) {
       },
       {
         "@type": "WebSite",
-        "@id": `${SITE_URL}/#website`,
+        "@id": `${HOME_URL}#website`,
+        url: HOME_URL,
         name: SITE_NAME,
-        url: SITE_URL,
         inLanguage: "en-IN",
         publisher: { "@id": ORG_ID },
       },
       {
         "@type": "Service",
+        "@id": `${HOME_URL}#service`,
         name: "AI-run Facebook ads for local businesses",
         serviceType: "Lead generation",
         description,
@@ -42,6 +47,8 @@ export function landingJsonLd(description: string) {
       },
       {
         "@type": "FAQPage",
+        "@id": `${HOME_URL}#faq`,
+        url: HOME_URL,
         mainEntity: faqs.map((faq) => ({
           "@type": "Question",
           name: faq.q,

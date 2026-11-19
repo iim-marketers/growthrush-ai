@@ -25,8 +25,7 @@ export default function LoginPage() {
           Enter your mobile number to continue
         </p>
 
-        {/* The number goes to the server in the POST body, never the URL —
-            a phone number in a URL ends up in history and access logs. */}
+        {/* POST, never GET: a phone number in a URL ends up in access logs. */}
         <form action={action} noValidate>
           <input type="hidden" name="consent" value={agreed ? "on" : ""} />
           <div className="rhythm-md flex items-center rounded-xl border border-hairline bg-surface-subtle px-3 py-2 transition-all focus-within:border-brand focus-within:bg-surface-hover focus-within:ring-[3px] focus-within:ring-brand/15 sm:px-4">

@@ -6,12 +6,6 @@ import { getDb } from "@/db";
 import { businesses } from "@/db/schema";
 import { getSessionUser } from "./session";
 
-/**
- * The gatekeepers every signed-in screen and action goes through. proxy.ts
- * only bounces browsers with no cookie at all; these check the session
- * against the database, so they are the check that counts.
- */
-
 export function homeFor(user: { onboardedAt: Date | null }) {
   return user.onboardedAt ? "/dashboard" : "/onboarding";
 }

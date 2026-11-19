@@ -21,7 +21,7 @@ export function PageHeader({
             {eyebrow}
           </p>
         )}
-        <h1 className="text-[clamp(1.6rem,1.35rem+1vw,2.1rem)] leading-tight text-ink">
+        <h1 className="text-[clamp(1.6rem,1.35rem+1vw,2.1rem)] leading-tight [overflow-wrap:anywhere] text-ink">
           {title}
         </h1>
         {subtitle && (

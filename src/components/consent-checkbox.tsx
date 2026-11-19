@@ -4,15 +4,7 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/**
- * Clickwrap consent for the policies under /legal.
- *
- * Deliberately unticked by default and never pre-checked: under the DPDP Act
- * consent must be a free, specific and unambiguous affirmative action, which a
- * pre-ticked box or a passive "by continuing…" line does not give you. The
- * caller is responsible for keeping its submit control disabled until this is
- * ticked.
- */
+/* Never pre-check: the DPDP Act needs an affirmative action. Callers keep submit disabled until ticked. */
 export function ConsentCheckbox({
   id = "policy-consent",
   checked,

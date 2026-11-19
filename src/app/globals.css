@@ -104,14 +104,7 @@ body:has([data-light-portals]) {
   --sidebar-accent: #ffffff;
 }
 
-/*
- * The shadcn tokens that are just aliases of the palette above.
- *
- * These have to be restated per theme rather than living in `:root` alone: a
- * custom property declared as `var(--other)` is substituted where it is
- * declared, so a `--background: var(--bg-color)` on `:root` would inherit into
- * `.theme-light` already resolved to the dark value.
- */
+/* Restated per theme: a `var()` alias on `:root` alone would inherit already resolved to the dark value. */
 :root,
 .theme-light,
 body:has([data-light-portals]) {
@@ -233,12 +226,7 @@ body:has([data-fixed-frame]) {
 }
 
 @layer utilities {
-  /*
-   * Full-bleed shell. Each screen sets its own max width per breakpoint.
-   * `clip` rather than `hidden`: `overflow-x: hidden` forces `overflow-y: auto`,
-   * which would turn the shell into a scroll container and surface a scrollbar
-   * for any decorative overflow. `clip` trims without scrolling.
-   */
+  /* `clip`, not `hidden`: `hidden` would make the shell a scroll container. */
   .app-shell {
     @apply relative min-h-dvh w-full bg-background;
     overflow-x: clip;

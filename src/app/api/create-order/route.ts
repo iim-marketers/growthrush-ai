@@ -22,7 +22,6 @@ export async function POST(request: Request) {
 
   const body = await request.json().catch(() => null);
 
-  // The client only names the plan; the price always comes from the server.
   const plan = (await getOfferedPlans()).find((p) => p.id === body?.planId);
   if (!plan) {
     return Response.json({ error: "Unknown plan." }, { status: 400 });
@@ -168,8 +167,6 @@ export async function POST(request: Request) {
   return checkout(invoice.order_id);
 }
 
-/* An unpaid order can be paid again as long as its invoice is still open
-   and nothing on it has changed since it was issued. */
 async function findOpenOrder(match: {
   userId: string;
   planId: string;
@@ -206,9 +203,7 @@ async function findOpenOrder(match: {
   }
 }
 
-/* Razorpay only takes letters, digits, spaces, . ' ( ) in a customer name,
-   and rejects the whole invoice otherwise. The exact name still goes in the
-   invoice description. */
+/* Razorpay rejects the invoice if the name has anything but letters, digits, spaces, . ' ( ) */
 function customerName(name: string) {
   const cleaned = name
     .replace(/&/g, " and ")

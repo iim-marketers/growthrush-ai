@@ -2,14 +2,7 @@ import "server-only";
 import { verify } from "@/lib/app-data";
 import { newOtpCode } from "./tokens";
 
-/**
- * Where the one-time code goes. There is no SMS gateway yet, so outside
- * production (or with AUTH_OTP_STUB=true) every code is STUB_CODE and nothing
- * is sent — the verify screen shows it in a mock message instead.
- *
- * To go live, replace the body of `deliver` with a call to the gateway
- * (MSG91, Twilio, …) and leave AUTH_OTP_STUB unset in production.
- */
+/* To go live, call an SMS gateway in `deliver` and leave AUTH_OTP_STUB unset in production. */
 
 export const STUB_CODE = "000000";
 
