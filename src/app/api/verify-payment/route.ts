@@ -64,7 +64,6 @@ export async function POST(request: Request) {
       .where(eq(orders.razorpayOrderId, orderId))
       .limit(1);
 
-    /* Someone else's order looks the same as a missing one. */
     if (!order || order.userId !== user.id) {
       console.error("Verified payment for an unknown order", orderId, paymentId);
       return Response.json({ error: "Unknown order." }, { status: 400 });

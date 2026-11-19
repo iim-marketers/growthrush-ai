@@ -124,7 +124,7 @@ export const plans = pgTable("plans", {
   name: text("name").notNull(),
   badge: text("badge").notNull().default(""),
   description: text("description").notNull().default(""),
-  /* GST excluded. ₹25,000 is 2500000. */
+  /* GST excluded. */
   pricePaise: integer("price_paise").notNull(),
   compareAtPaise: integer("compare_at_paise"),
   billingPeriod: billingPeriod("billing_period").notNull(),

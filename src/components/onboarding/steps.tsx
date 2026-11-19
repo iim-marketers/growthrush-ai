@@ -506,8 +506,7 @@ export function PlanStep({
   plans,
 }: StepProps & { plans: Plan[] }) {
   const chosen = plans.find((plan) => plan.id === answers.plan) ?? plans[0];
-  /* Hidden until leads can be sent to WhatsApp; the landing page shares
-     the plan rows, so they are filtered here rather than edited at source. */
+  /* Hidden until leads can be sent to WhatsApp. */
   const features = (chosen?.features ?? []).filter(
     (feature) => !/whatsapp/i.test(feature),
   );
