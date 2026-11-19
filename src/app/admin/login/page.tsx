@@ -5,7 +5,7 @@ import { Logo } from "@/components/logo";
 import { adminConfigured, isAdmin } from "@/lib/admin/auth";
 
 export const metadata: Metadata = {
-  title: "Admin login",
+  title: "Log in",
 };
 
 export default async function AdminLoginPage() {
