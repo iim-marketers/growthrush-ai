@@ -15,7 +15,10 @@ import {
   SearchX,
 } from "lucide-react";
 import { toast } from "sonner";
-import { PortalLeadAvatar, PortalStatusBadge } from "@/components/portal/primitives";
+import {
+  PortalLeadAvatar,
+  PortalStatusBadge,
+} from "@/components/portal/primitives";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -33,7 +36,11 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import {
   formatLeadDate,
   formatLeadTime,
@@ -70,9 +77,15 @@ type StatusFilter = "all" | PortalLeadStatus;
 function pageList(current: number, count: number): (number | "gap")[] {
   if (count <= 7) return Array.from({ length: count }, (_, i) => i + 1);
   const near =
-    current <= 4 ? [2, 3, 4, 5] : current >= count - 3 ? [count - 4, count - 3, count - 2, count - 1] : [current - 1, current, current + 1];
+    current <= 4
+      ? [2, 3, 4, 5]
+      : current >= count - 3
+        ? [count - 4, count - 3, count - 2, count - 1]
+        : [current - 1, current, current + 1];
   const pages = [1, ...near, count];
-  return pages.flatMap((page, i) => (i > 0 && page - pages[i - 1] > 1 ? ["gap" as const, page] : [page]));
+  return pages.flatMap((page, i) =>
+    i > 0 && page - pages[i - 1] > 1 ? ["gap" as const, page] : [page],
+  );
 }
 
 function range(preset: DatePreset, from: string, to: string): [string, string] {
@@ -90,7 +103,8 @@ function sortLeads(list: PortalLead[], sort: SortId) {
   const byText = (key: "name" | "city") => (a: PortalLead, b: PortalLead) =>
     a[key].localeCompare(b[key], "en", { sensitivity: "base" }) ||
     b.createdAt.localeCompare(a.createdAt);
-  if (sort === "oldest") return list.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+  if (sort === "oldest")
+    return list.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
   if (sort === "name") return list.sort(byText("name"));
   if (sort === "city") return list.sort(byText("city"));
   return list.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -138,12 +152,19 @@ export function PortalLeadsBoard({
 
   const counts = useMemo(() => {
     const tally: Record<string, number> = { all: dated.length };
-    for (const lead of dated) tally[lead.status] = (tally[lead.status] ?? 0) + 1;
+    for (const lead of dated)
+      tally[lead.status] = (tally[lead.status] ?? 0) + 1;
     return tally;
   }, [dated]);
 
   const visible = useMemo(
-    () => sortLeads(status === "all" ? [...dated] : dated.filter((l) => l.status === status), sort),
+    () =>
+      sortLeads(
+        status === "all"
+          ? [...dated]
+          : dated.filter((l) => l.status === status),
+        sort,
+      ),
     [dated, status, sort],
   );
 
@@ -163,7 +184,13 @@ export function PortalLeadsBoard({
 
   const setStatus = (next: StatusFilter) => {
     setStatusState(next);
-    window.history.replaceState(null, "", next === "all" ? "/customer-portal/leads" : `/customer-portal/leads?status=${next}`);
+    window.history.replaceState(
+      null,
+      "",
+      next === "all"
+        ? "/customer-portal/leads"
+        : `/customer-portal/leads?status=${next}`,
+    );
   };
 
   const clear = () => {
@@ -176,11 +203,18 @@ export function PortalLeadsBoard({
 
   const tabs = [
     { id: "all" as const, label: "All", dot: "bg-ink" },
-    ...portalLeadStatuses.map((s) => ({ id: s.id, label: s.label, dot: s.dot })),
+    ...portalLeadStatuses.map((s) => ({
+      id: s.id,
+      label: s.label,
+      dot: s.dot,
+    })),
   ];
 
   return (
-    <section ref={top} className="scroll-mt-20 rounded-2xl border border-hairline bg-white">
+    <section
+      ref={top}
+      className="scroll-mt-20 rounded-2xl border border-hairline bg-white"
+    >
       <div className="border-b border-hairline">
         <div
           role="tablist"
@@ -201,7 +235,10 @@ export function PortalLeadsBoard({
                   : "border-transparent text-subtle hover:text-ink",
               )}
             >
-              <span aria-hidden className={cn("size-2 rounded-full", tab.dot)} />
+              <span
+                aria-hidden
+                className={cn("size-2 rounded-full", tab.dot)}
+              />
               {tab.label}
               <span className="rounded-full bg-surface-subtle px-2 text-xs leading-5 font-semibold text-subtle tabular-nums">
                 {(counts[tab.id] ?? 0).toLocaleString("en-IN")}
@@ -236,7 +273,10 @@ export function PortalLeadsBoard({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="min-w-44">
               <DropdownMenuLabel>Received</DropdownMenuLabel>
-              <DropdownMenuRadioGroup value={preset} onValueChange={(v) => setPreset(v as DatePreset)}>
+              <DropdownMenuRadioGroup
+                value={preset}
+                onValueChange={(v) => setPreset(v as DatePreset)}
+              >
                 {datePresets.map((option) => (
                   <DropdownMenuRadioItem key={option.id} value={option.id}>
                     {option.label}
@@ -278,7 +318,10 @@ export function PortalLeadsBoard({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="min-w-44">
               <DropdownMenuLabel>Sort by</DropdownMenuLabel>
-              <DropdownMenuRadioGroup value={sort} onValueChange={(v) => setSort(v as SortId)}>
+              <DropdownMenuRadioGroup
+                value={sort}
+                onValueChange={(v) => setSort(v as SortId)}
+              >
                 {sortOptions.map((option) => (
                   <DropdownMenuRadioItem key={option.id} value={option.id}>
                     {option.label}
@@ -287,16 +330,22 @@ export function PortalLeadsBoard({
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-
         </div>
 
         <div className="flex items-center justify-between gap-3 sm:ml-auto">
           <p className="text-xs text-faint" aria-live="polite">
-            <span className="font-semibold text-ink tabular-nums">{visible.length.toLocaleString("en-IN")}</span>{" "}
+            <span className="font-semibold text-ink tabular-nums">
+              {visible.length.toLocaleString("en-IN")}
+            </span>{" "}
             {visible.length === 1 ? "lead" : "leads"}
           </p>
           {filtered && (
-            <Button variant="ghost" size="sm" className="text-subtle" onClick={clear}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-subtle"
+              onClick={clear}
+            >
               Clear filters
             </Button>
           )}
@@ -307,7 +356,11 @@ export function PortalLeadsBoard({
         <Empty className="py-16">
           <EmptyHeader>
             <EmptyMedia variant="icon" className="size-11 rounded-xl">
-              {leads.length === 0 ? <Inbox className="size-5" /> : <SearchX className="size-5" />}
+              {leads.length === 0 ? (
+                <Inbox className="size-5" />
+              ) : (
+                <SearchX className="size-5" />
+              )}
             </EmptyMedia>
             <EmptyTitle className="font-display text-base font-bold text-ink">
               {leads.length === 0 ? "No leads yet" : "No matches"}
@@ -332,23 +385,35 @@ export function PortalLeadsBoard({
                 <th className="py-3 pr-3 pl-5 font-semibold">Lead</th>
                 <th className="px-3 py-3 font-semibold">Phone</th>
                 <th className="px-3 py-3 font-semibold">City</th>
-                <th className="hidden px-3 py-3 font-semibold lg:table-cell">Note</th>
+                <th className="hidden px-3 py-3 font-semibold lg:table-cell">
+                  Note
+                </th>
                 <th className="px-3 py-3 font-semibold">Status</th>
-                <th className="py-3 pr-5 pl-3 text-right font-semibold">Received</th>
+                <th className="py-3 pr-5 pl-3 text-right font-semibold">
+                  Received
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-hairline">
               {rows.map((lead) => (
-                <tr key={lead.id} className="transition-colors hover:bg-surface-hover/60">
+                <tr
+                  key={lead.id}
+                  className="transition-colors hover:bg-surface-hover/60"
+                >
                   <td className="py-3 pr-3 pl-5">
                     <span className="flex items-center gap-3">
                       <PortalLeadAvatar name={lead.name} />
-                      <span className="max-w-52 truncate font-semibold text-ink">{lead.name}</span>
+                      <span className="max-w-52 truncate font-semibold text-ink">
+                        {lead.name}
+                      </span>
                     </span>
                   </td>
                   <td className="px-3 py-3">
-                    <span className="flex items-center gap-1">
-                      <a href={`tel:${lead.phone}`} className="text-subtle tabular-nums hover:text-brand">
+                    <span className="flex items-center">
+                      <a
+                        href={`tel:${lead.phone}`}
+                        className="text-subtle tabular-nums hover:text-brand"
+                      >
                         {lead.phone}
                       </a>
                       <Button
@@ -364,7 +429,10 @@ export function PortalLeadsBoard({
                   </td>
                   <td className="px-3 py-3 text-subtle">{lead.city || "—"}</td>
                   <td className="hidden max-w-64 px-3 py-3 lg:table-cell">
-                    <span title={lead.comment || undefined} className="line-clamp-2 text-subtle">
+                    <span
+                      title={lead.comment || undefined}
+                      className="line-clamp-2 text-subtle"
+                    >
                       {lead.comment || "—"}
                     </span>
                   </td>
@@ -372,7 +440,9 @@ export function PortalLeadsBoard({
                     <PortalStatusBadge status={lead.status} />
                   </td>
                   <td className="py-3 pr-5 pl-3 text-right text-xs whitespace-nowrap text-faint">
-                    <span className="block text-ink">{formatLeadDate(lead.createdAt)}</span>
+                    <span className="block text-ink">
+                      {formatLeadDate(lead.createdAt)}
+                    </span>
                     {formatLeadTime(lead.createdAt)}
                   </td>
                 </tr>
@@ -386,9 +456,12 @@ export function PortalLeadsBoard({
                 <div className="flex items-start gap-3">
                   <PortalLeadAvatar name={lead.name} />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-semibold text-ink">{lead.name}</p>
+                    <p className="truncate font-semibold text-ink">
+                      {lead.name}
+                    </p>
                     <p className="text-xs text-faint">
-                      {formatLeadDate(lead.createdAt)}, {formatLeadTime(lead.createdAt)}
+                      {formatLeadDate(lead.createdAt)},{" "}
+                      {formatLeadTime(lead.createdAt)}
                     </p>
                   </div>
                   <PortalStatusBadge status={lead.status} />
@@ -401,11 +474,16 @@ export function PortalLeadsBoard({
                         {lead.city}
                       </span>
                     )}
-                    {lead.comment && <p className="line-clamp-3">{lead.comment}</p>}
+                    {lead.comment && (
+                      <p className="line-clamp-3">{lead.comment}</p>
+                    )}
                   </div>
                 )}
                 <div className="flex gap-2">
-                  <Button asChild className="h-10 flex-1 rounded-lg font-semibold">
+                  <Button
+                    asChild
+                    className="h-10 flex-1 rounded-lg font-semibold"
+                  >
                     <a href={`tel:${lead.phone}`}>
                       <Phone data-icon="inline-start" />
                       <span className="tabular-nums">{lead.phone}</span>
@@ -428,7 +506,11 @@ export function PortalLeadsBoard({
             <div className="flex items-center justify-between gap-3 sm:justify-start">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="gap-1.5 rounded-lg">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5 rounded-lg"
+                  >
                     <span className="text-faint">Rows</span>
                     <span className="tabular-nums">{pageSize}</span>
                     <ChevronDown className="text-faint" />
@@ -436,7 +518,10 @@ export function PortalLeadsBoard({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="min-w-36">
                   <DropdownMenuLabel>Rows per page</DropdownMenuLabel>
-                  <DropdownMenuRadioGroup value={String(pageSize)} onValueChange={(v) => setPageSize(Number(v))}>
+                  <DropdownMenuRadioGroup
+                    value={String(pageSize)}
+                    onValueChange={(v) => setPageSize(Number(v))}
+                  >
                     {PAGE_SIZES.map((size) => (
                       <DropdownMenuRadioItem key={size} value={String(size)}>
                         {size}
@@ -447,14 +532,18 @@ export function PortalLeadsBoard({
               </DropdownMenu>
               <p className="text-xs text-faint tabular-nums">
                 <span className="font-semibold text-ink">
-                  {(start + 1).toLocaleString("en-IN")}–{(start + rows.length).toLocaleString("en-IN")}
+                  {(start + 1).toLocaleString("en-IN")}–
+                  {(start + rows.length).toLocaleString("en-IN")}
                 </span>{" "}
                 of {visible.length.toLocaleString("en-IN")}
               </p>
             </div>
 
             {pageCount > 1 && (
-              <nav aria-label="Pagination" className="flex items-center justify-between gap-1 sm:justify-end">
+              <nav
+                aria-label="Pagination"
+                className="flex items-center justify-between gap-1 sm:justify-end"
+              >
                 <Button
                   variant="outline"
                   size="sm"
@@ -468,13 +557,18 @@ export function PortalLeadsBoard({
                 </Button>
 
                 <span className="px-2 text-xs text-subtle tabular-nums sm:hidden">
-                  Page <span className="font-semibold text-ink">{page}</span> of {pageCount}
+                  Page <span className="font-semibold text-ink">{page}</span> of{" "}
+                  {pageCount}
                 </span>
 
                 <div className="hidden items-center gap-1 sm:flex">
                   {pageList(page, pageCount).map((item, index) =>
                     item === "gap" ? (
-                      <span key={`gap-${index}`} aria-hidden className="w-8 text-center text-xs text-faint">
+                      <span
+                        key={`gap-${index}`}
+                        aria-hidden
+                        className="w-8 text-center text-xs text-faint"
+                      >
                         …
                       </span>
                     ) : (

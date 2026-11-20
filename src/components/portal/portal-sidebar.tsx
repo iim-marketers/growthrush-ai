@@ -1,11 +1,21 @@
 "use client";
 
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ChevronsUpDown, Headset, Inbox, LayoutGrid, LogOut } from "lucide-react";
 import { portalSignOut } from "@/app/customer-portal/actions";
 import { Logo, LogoMark } from "@/components/logo";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -90,11 +100,8 @@ export function PortalSidebar({
               className="h-12 hover:bg-transparent active:bg-transparent group-data-[collapsible=icon]:justify-center"
             >
               <Link href="/customer-portal" aria-label="Portal home" onClick={close}>
-                <span className="grid gap-0.5 px-1 group-data-[collapsible=icon]:hidden">
+                <span className="px-1 group-data-[collapsible=icon]:hidden">
                   <Logo size="sm" tone="dark" className="[&_img]:h-6!" eager />
-                  <span className="text-[0.65rem] font-semibold tracking-[0.16em] text-faint uppercase">
-                    Customer portal
-                  </span>
                 </span>
                 <LogoMark className="hidden group-data-[collapsible=icon]:block" />
               </Link>
@@ -193,6 +200,7 @@ export function PortalSidebar({
 
 function AccountMenu({ profile }: { profile: PortalSidebarProfile }) {
   const { isMobile } = useSidebar();
+  const [confirmSignOut, setConfirmSignOut] = useState(false);
   const initial = profile.name.trim().charAt(0).toUpperCase() || "G";
 
   const avatar = (
@@ -234,18 +242,64 @@ function AccountMenu({ profile }: { profile: PortalSidebarProfile }) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <form action={portalSignOut}>
-              <DropdownMenuItem asChild>
-                <button type="submit" className="w-full">
-                  <LogOut />
-                  Sign out
-                </button>
-              </DropdownMenuItem>
-            </form>
+            <DropdownMenuItem onSelect={() => setConfirmSignOut(true)}>
+              <LogOut />
+              Sign out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <SignOutDialog open={confirmSignOut} onOpenChange={setConfirmSignOut} name={profile.name} />
       </SidebarMenuItem>
     </SidebarMenu>
+  );
+}
+
+function SignOutDialog({
+  open,
+  onOpenChange,
+  name,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  name: string;
+}) {
+  const [pending, startTransition] = useTransition();
+
+  return (
+    <Dialog open={open} onOpenChange={(next) => !pending && onOpenChange(next)}>
+      <DialogContent showCloseButton={false} className="sm:max-w-md">
+        <DialogHeader className="flex-row items-start gap-3.5">
+          <span
+            aria-hidden
+            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand"
+          >
+            <LogOut className="size-5" />
+          </span>
+          <div className="flex flex-col gap-1.5 pt-0.5">
+            <DialogTitle className="font-display text-lg font-bold text-ink">
+              Sign out of the portal?
+            </DialogTitle>
+            <DialogDescription>
+              You&apos;ll need to log in again to view your leads. Signed in as{" "}
+              <span className="font-semibold text-ink">{name}</span>.
+            </DialogDescription>
+          </div>
+        </DialogHeader>
+        <DialogFooter>
+          <Button type="button" variant="outline" disabled={pending} onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            disabled={pending}
+            onClick={() => startTransition(() => portalSignOut())}
+            className="font-semibold"
+          >
+            {pending ? "Signing out…" : "Sign out"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -261,18 +315,23 @@ export function PortalTopbar({ today }: { today: number }) {
       <SidebarTrigger className="-ml-1 text-subtle" />
       <Separator orientation="vertical" className="mr-1 h-4!" />
       <span className="text-sm font-semibold text-ink">{title}</span>
-      {today > 0 && (
-        <Link
-          href="/customer-portal/leads"
-          className="ml-auto inline-flex h-7 items-center gap-2 rounded-full border border-success/25 bg-success/8 px-3 text-xs font-semibold text-success transition-colors hover:bg-success/12"
-        >
-          <span className="relative flex size-1.5">
-            <span className="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60" />
-            <span className="relative inline-flex size-1.5 rounded-full bg-success" />
-          </span>
-          {today.toLocaleString("en-IN")} new today
-        </Link>
-      )}
+      <div className="ml-auto flex items-center gap-3">
+        {today > 0 && (
+          <Link
+            href="/customer-portal/leads"
+            className="inline-flex h-7 items-center gap-2 rounded-full border border-success/25 bg-success/8 px-3 text-xs font-semibold text-success transition-colors hover:bg-success/12"
+          >
+            <span className="relative flex size-1.5">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60" />
+              <span className="relative inline-flex size-1.5 rounded-full bg-success" />
+            </span>
+            {today.toLocaleString("en-IN")} new today
+          </Link>
+        )}
+        <span className="text-[0.65rem] font-semibold tracking-[0.16em] text-faint uppercase">
+          Customer portal
+        </span>
+      </div>
     </header>
   );
 }
