@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useActionState, useEffect, useRef, useState, useTransition } from "react";
 import { ArrowLeft, ArrowRight, KeyRound } from "lucide-react";
-import { resendPortalOtp, verifyPortalOtp } from "@/app/customer-portal/actions";
+import {
+  resendPortalOtp,
+  verifyPortalOtp,
+  type PortalFormState,
+  type PortalResendState,
+} from "@/app/customer-portal/actions";
 import { PortalFormError } from "@/components/portal/login-shell";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -13,13 +18,21 @@ export function PortalVerifyForm({
   length,
   initialWait,
   demoCode,
+  verifyAction = verifyPortalOtp,
+  resendAction = resendPortalOtp,
+  back = { href: "/customer-portal/login", label: "Use a different number" },
+  submitLabel = "Verify & sign in",
 }: {
   masked: string;
   length: number;
   initialWait: number;
   demoCode: string | null;
+  verifyAction?: (state: PortalFormState, formData: FormData) => Promise<PortalFormState>;
+  resendAction?: () => Promise<PortalResendState>;
+  back?: { href: string; label: string };
+  submitLabel?: string;
 }) {
-  const [state, action, pending] = useActionState(verifyPortalOtp, undefined);
+  const [state, action, pending] = useActionState(verifyAction, undefined);
   const [digits, setDigits] = useState(() => Array.from({ length }, () => ""));
   const [secondsLeft, setSecondsLeft] = useState(initialWait);
   const [dismissed, setDismissed] = useState<typeof state>(undefined);
@@ -70,7 +83,7 @@ export function PortalVerifyForm({
 
   const resend = () =>
     startResend(async () => {
-      const result = await resendPortalOtp();
+      const result = await resendAction();
       setResendError(result.ok ? null : result.error);
       if (result.waitSeconds) setSecondsLeft(result.waitSeconds);
     });
@@ -78,11 +91,11 @@ export function PortalVerifyForm({
   return (
     <>
       <Link
-        href="/customer-portal/login"
+        href={back.href}
         className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-subtle hover:text-ink"
       >
         <ArrowLeft className="size-4" />
-        Use a different number
+        {back.label}
       </Link>
 
       <h1 className="text-[clamp(1.6rem,1.3rem+1vw,2rem)] leading-tight text-ink">Enter your code</h1>
@@ -140,7 +153,7 @@ export function PortalVerifyForm({
           className="h-12 w-full rounded-xl text-base font-semibold"
           disabled={code.length !== length || pending}
         >
-          {pending ? "Verifying…" : "Verify & sign in"}
+          {pending ? "Verifying…" : submitLabel}
           {!pending && <ArrowRight data-icon="inline-end" />}
         </Button>
       </form>

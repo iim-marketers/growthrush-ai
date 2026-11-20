@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { ArrowRight, Eye, EyeOff, Lock, Mail, Smartphone } from "lucide-react";
 import {
   requestPortalOtp,
@@ -144,7 +145,19 @@ function EmailForm({ onUsePhone }: { onUsePhone: () => void }) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="portal-password">Password</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="portal-password">Password</Label>
+          <Link
+            href={
+              email.trim()
+                ? `/customer-portal/login/forgot-password?email=${encodeURIComponent(email.trim())}`
+                : "/customer-portal/login/forgot-password"
+            }
+            className="text-sm font-semibold text-brand hover:underline"
+          >
+            Forgot password?
+          </Link>
+        </div>
         <InputGroup className={fieldClass}>
           <InputGroupInput
             ref={passwordRef}

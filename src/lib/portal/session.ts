@@ -19,7 +19,7 @@ const accountColumns = {
   passwordHash: leadAccounts.passwordHash,
 };
 
-type AccountRow = {
+export type AccountRow = {
   id: string;
   name: string;
   phone: string;
@@ -40,6 +40,16 @@ export async function findAccountByEmail(email: string) {
     .select(accountColumns)
     .from(leadAccounts)
     .where(eq(leadAccounts.email, email.trim().toLowerCase()))
+    .limit(1);
+  return account ?? null;
+}
+
+export async function findAccountById(id: string) {
+  if (!isUuid(id)) return null;
+  const [account] = await getDb()
+    .select(accountColumns)
+    .from(leadAccounts)
+    .where(eq(leadAccounts.id, id))
     .limit(1);
   return account ?? null;
 }

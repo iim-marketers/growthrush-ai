@@ -98,7 +98,7 @@ export async function verifyPortalOtp(
       };
     }
 
-    const account = await findAccountByPhone(result.phone);
+    const account = await findAccountByPhone(result.key);
     if (!account) return { error: NO_ACCOUNT };
     await createPortalSession(account);
   } catch (error) {
