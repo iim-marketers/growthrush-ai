@@ -1,5 +1,6 @@
 "use server";
 
+import { randomBytes } from "node:crypto";
 import { and, eq, sql } from "drizzle-orm";
 import { refresh } from "next/cache";
 import { redirect, RedirectType } from "next/navigation";
@@ -52,7 +53,7 @@ export async function adminSignIn(
   }
 
   const email = field(formData, "email");
-  const password = String(formData.get("password") ?? "");
+  const password = email ? String(formData.get("password") ?? "") : "";
   if (!email || !password) return { error: "Enter your email and password." };
 
   if (!checkAdminCredentials(email, password)) {
@@ -85,7 +86,7 @@ export async function createLeadAccount(
     return { error: "Enter a valid phone number (10–15 digits)." };
   }
   if (email && !EMAIL.test(email)) return { error: "Enter a valid email address." };
-  if (password.length < MIN_PASSWORD) {
+  if (email && password.length < MIN_PASSWORD) {
     return { error: `Password must be at least ${MIN_PASSWORD} characters.` };
   }
 
@@ -95,7 +96,7 @@ export async function createLeadAccount(
       name,
       phone,
       email: email || null,
-      passwordHash: await hashPassword(password),
+      passwordHash: await hashPassword(password || randomBytes(32).toString("base64url")),
     })
     .onConflictDoNothing()
     .returning({ id: leadAccounts.id });
