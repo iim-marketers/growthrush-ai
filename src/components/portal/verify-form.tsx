@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState, useEffect, useRef, useState, useTransition } from "react";
-import { ArrowLeft, ArrowRight, KeyRound } from "lucide-react";
+import { ArrowLeft, ArrowRight, MessageSquare } from "lucide-react";
 import {
   resendPortalOtp,
   verifyPortalOtp,
@@ -135,17 +135,27 @@ export function PortalVerifyForm({
         <PortalFormError message={error} />
 
         {demoCode && (
-          <button
-            type="button"
-            onClick={() => fill(0, demoCode)}
-            className="flex items-center gap-3 rounded-xl border border-dashed border-brand/30 bg-brand/5 px-3 py-2.5 text-left text-sm transition-colors hover:bg-brand/10"
-          >
-            <KeyRound className="size-4 shrink-0 text-brand" />
-            <span className="flex-1 text-subtle">
-              Test mode: use code <span className="font-semibold text-ink tabular-nums">{demoCode}</span>
+          <div className="flex items-center gap-3 rounded-xl border border-hairline bg-surface-subtle p-3">
+            <span
+              aria-hidden
+              className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand/15 text-brand"
+            >
+              <MessageSquare className="size-4.5" />
             </span>
-            <span className="font-semibold text-brand">Fill</span>
-          </button>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[0.7rem] font-bold tracking-wide text-faint">GRWTHR · now</span>
+              <span className="block truncate text-[0.85rem] text-ink">
+                <span className="tabular-nums">{demoCode}</span> is your growthrush.ai code
+              </span>
+            </span>
+            <button
+              type="button"
+              onClick={() => fill(0, demoCode)}
+              className="shrink-0 rounded-lg border border-hairline bg-white px-3 py-1.5 text-[0.8rem] font-semibold text-brand transition-colors hover:border-brand/40 hover:bg-brand/10"
+            >
+              Paste
+            </button>
+          </div>
         )}
 
         <Button
