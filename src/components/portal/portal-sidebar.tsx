@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { ChevronsUpDown, Headset, Inbox, LayoutGrid, LogOut } from "lucide-react";
+import { ChevronsUpDown, Headset, Inbox, LayoutGrid, LogOut, Settings } from "lucide-react";
 import { portalSignOut } from "@/app/customer-portal/actions";
 import { Logo, LogoMark } from "@/components/logo";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -71,6 +71,7 @@ function useActive() {
   const status = useSearchParams().get("status");
   return (href: string, forStatus?: string) => {
     if (href === "/customer-portal") return pathname === "/customer-portal";
+    if (href === "/customer-portal/settings") return pathname.startsWith(href);
     if (!pathname.startsWith("/customer-portal/leads")) return false;
     return forStatus ? status === forStatus : !status;
   };
@@ -87,6 +88,7 @@ export function PortalSidebar({
   const menu = [
     { href: "/customer-portal", label: "Overview", icon: LayoutGrid, badge: null },
     { href: "/customer-portal/leads", label: "All leads", icon: Inbox, badge: profile.total },
+    { href: "/customer-portal/settings", label: "Settings", icon: Settings, badge: null },
   ];
 
   return (
@@ -199,7 +201,8 @@ export function PortalSidebar({
 }
 
 function AccountMenu({ profile }: { profile: PortalSidebarProfile }) {
-  const { isMobile } = useSidebar();
+  const { isMobile, setOpenMobile } = useSidebar();
+  const close = () => isMobile && setOpenMobile(false);
   const [confirmSignOut, setConfirmSignOut] = useState(false);
   const initial = profile.name.trim().charAt(0).toUpperCase() || "G";
 
@@ -242,6 +245,12 @@ function AccountMenu({ profile }: { profile: PortalSidebarProfile }) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/customer-portal/settings" onClick={close}>
+                <Settings />
+                Settings
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem onSelect={() => setConfirmSignOut(true)}>
               <LogOut />
               Sign out
@@ -308,7 +317,13 @@ export function PortalTopbar({ today }: { today: number }) {
   const status = useSearchParams().get("status");
   const statusLabel = portalLeadStatuses.find((s) => s.id === status)?.label;
   const title =
-    pathname === "/customer-portal" ? "Overview" : statusLabel ? `${statusLabel} leads` : "All leads";
+    pathname === "/customer-portal"
+      ? "Overview"
+      : pathname.startsWith("/customer-portal/settings")
+        ? "Settings"
+        : statusLabel
+          ? `${statusLabel} leads`
+          : "All leads";
 
   return (
     <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b border-hairline bg-background/85 px-4 backdrop-blur-md md:rounded-t-xl lg:px-6">
