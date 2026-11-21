@@ -165,7 +165,7 @@ export function LeadAccountsTable({ accounts }: { accounts: LeadAccountSummary[]
             </EmptyTitle>
             <EmptyDescription>
               {accounts.length === 0
-                ? "Create an account with an email and password to start adding leads."
+                ? "Create an account to start adding leads."
                 : "No account email matches that search."}
             </EmptyDescription>
           </EmptyHeader>

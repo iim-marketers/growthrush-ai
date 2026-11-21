@@ -24,6 +24,8 @@ import {
 } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export function CreateAccountDialog() {
   const [open, setOpen] = useState(false);
   const [formKey, setFormKey] = useState(0);
@@ -54,8 +56,10 @@ export function CreateAccountDialog() {
 
 function CreateAccountForm({ onDone }: { onDone: () => void }) {
   const [state, action, pending] = useActionState(createLeadAccount, {});
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
+  const hasEmail = EMAIL.test(email.trim());
 
   useEffect(() => {
     if (state.error) toast.error(state.error);
@@ -130,6 +134,8 @@ function CreateAccountForm({ onDone }: { onDone: () => void }) {
           name="email"
           type="email"
           autoComplete="off"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
           placeholder="e.g. john.doe@company.com"
           aria-describedby="account-email-note"
           className="h-10"
@@ -145,21 +151,25 @@ function CreateAccountForm({ onDone }: { onDone: () => void }) {
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="account-password">Password</Label>
-        <InputGroup className="h-10">
+        <InputGroup className="h-10" data-disabled={!hasEmail}>
           <InputGroupInput
             id="account-password"
             name="password"
             type={show ? "text" : "password"}
             autoComplete="new-password"
-            required
+            required={hasEmail}
+            disabled={!hasEmail}
             minLength={8}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            placeholder="At least 8 characters"
+            placeholder={
+              hasEmail ? "At least 8 characters" : "Enter a valid email first"
+            }
           />
           <InputGroupAddon align="inline-end">
             <InputGroupButton
               size="icon-xs"
+              disabled={!hasEmail}
               onClick={() => setShow((value) => !value)}
               aria-label={show ? "Hide password" : "Show password"}
             >
@@ -202,7 +212,11 @@ function CreatedAccount({
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(
-        [`Phone: ${phone}`, email && `Email: ${email}`, `Password: ${password}`]
+        [
+          `Phone: ${phone}`,
+          email && `Email: ${email}`,
+          password && `Password: ${password}`,
+        ]
           .filter(Boolean)
           .join("\n"),
       );
@@ -220,8 +234,9 @@ function CreatedAccount({
           Account created
         </DialogTitle>
         <DialogDescription>
-          Share these login details with {name}. The password can&apos;t be
-          shown again after you close this.
+          Share these login details with {name}.
+          {password &&
+            " The password can\u2019t be shown again after you close this."}
         </DialogDescription>
       </DialogHeader>
 
@@ -236,12 +251,14 @@ function CreatedAccount({
             <dd className="font-semibold break-all text-ink">{email}</dd>
           </div>
         )}
-        <div>
-          <dt className="text-xs text-faint">Password</dt>
-          <dd className="font-mono font-semibold break-all text-ink">
-            {password}
-          </dd>
-        </div>
+        {password && (
+          <div>
+            <dt className="text-xs text-faint">Password</dt>
+            <dd className="font-mono font-semibold break-all text-ink">
+              {password}
+            </dd>
+          </div>
+        )}
       </dl>
 
       <DialogFooter>
